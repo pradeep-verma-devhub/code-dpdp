@@ -1,0 +1,5 @@
+--- a/data/static/codefixes/redirectChallenge_2.ts
++++ b/data/static/codefixes/redirectChallenge_2.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',

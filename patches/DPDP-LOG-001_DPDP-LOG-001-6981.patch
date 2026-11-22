@@ -1,0 +1,5 @@
+--- a/server.ts
++++ b/server.ts
+@@ -159,1 +159,1 @@
+-console.error('Error in timed startup function: ' + name, err)
++// [DPDP-LOG-001] Redacted PII logging call

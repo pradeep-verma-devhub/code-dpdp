@@ -1,0 +1,36 @@
+- id: DPDP-CHD-001
+  title: Missing age verification / age gate on user onboarding flow
+  category: children
+  severity: high
+  dpdpRef: ACT_SEC_9_1
+  description: User registration and sign-up models do not collect or verify age / date of birth to distinguish children under 18 years.
+  piiTypes: [dob, children_data]
+  dataFlow: collected
+  targetFiles: ["*register*.ts", "*register*.js", "*signup*.ts", "*signup*.js", "*user*.ts"]
+  targetType: schema
+  remediation: Incorporate age-verification gating during onboarding before requesting personal identifiers.
+
+- id: DPDP-CHD-002
+  title: Tracking or behavioural analytics applied to minor profiles
+  category: children
+  severity: critical
+  dpdpRef: ACT_SEC_9_3
+  description: Behavioural tracking, profiling, or targeted ad instrumentation active on services without suppressing analytics for child accounts.
+  piiTypes: [children_data, device_id]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.tsx"]
+  targetType: regex
+  pattern: "(trackEvent|recordBehavior|userActivityTracker|analytics\\.track).*child|minor"
+  remediation: Explicitly disable all telemetry, behavioral monitoring, and profiling when user is identified as a child.
+
+- id: DPDP-CHD-003
+  title: Absence of verifiable parental consent mechanism for minors
+  category: children
+  severity: critical
+  dpdpRef: RULE_5
+  description: Processing child data without capturing verifiable parental consent record, tokenized parent identifier, or relationship proof.
+  piiTypes: [children_data]
+  dataFlow: collected
+  targetFiles: ["*schema*.ts", "*model*.ts", "*user*.ts", "*.prisma"]
+  targetType: schema
+  remediation: Implement verifiable parental consent flow adhering to Rule 5 before onboarding child users.

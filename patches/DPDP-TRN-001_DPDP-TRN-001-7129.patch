@@ -1,0 +1,5 @@
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -111,1 +111,1 @@
+-req.url = 'http://juice-sh.op/public/i18n/tlh_AA.json'
++req.url = 'https://juice-sh.op/public/i18n/tlh_AA.json'

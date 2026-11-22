@@ -1,0 +1,5 @@
+--- a/frontend/src/app/order-history/order-history.component.spec.ts
++++ b/frontend/src/app/order-history/order-history.component.spec.ts
+@@ -53,1 +53,1 @@
+-basketService = { hostServer: 'http://host.example' }
++basketService = { hostServer: 'https://host.example' }

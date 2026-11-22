@@ -1,0 +1,5 @@
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -108,1 +108,1 @@
+-logger.warn(`Product ${colors.italic(product.name)} is used as ${appliedSpecials.map(({ name }) => `${colors.italic(name)}`).join(' and ')} but can only be used for one challenge (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call

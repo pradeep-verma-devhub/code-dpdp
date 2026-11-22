@@ -1,0 +1,5 @@
+--- a/frontend/src/app/deluxe-user/deluxe-user.component.spec.ts
++++ b/frontend/src/app/deluxe-user/deluxe-user.component.spec.ts
+@@ -116,1 +116,1 @@
+-configurationService.getApplicationConfiguration.mockReturnValue(of({ application: { logo: 'http://test.com/logo.jpg' } }))
++configurationService.getApplicationConfiguration.mockReturnValue(of({ application: { logo: 'https://test.com/logo.jpg' } }))

@@ -1,0 +1,5 @@
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -201,1 +201,1 @@
+-console.log(`Starting instructions for challenge "${challengeName}"`)
++// [DPDP-LOG-001] Redacted PII logging call

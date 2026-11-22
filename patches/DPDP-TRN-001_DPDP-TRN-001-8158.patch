@@ -1,0 +1,5 @@
+--- a/frontend/src/app/order-history/order-history.component.spec.ts
++++ b/frontend/src/app/order-history/order-history.component.spec.ts
+@@ -163,1 +163,1 @@
+-expect(openSpy).toHaveBeenCalledWith('http://host.example/ftp/order_abc123.pdf', '_blank')
++expect(openSpy).toHaveBeenCalledWith('https://host.example/ftp/order_abc123.pdf', '_blank')

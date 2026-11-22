@@ -1,0 +1,80 @@
+- id: DPDP-TRN-001
+  title: Insecure plaintext HTTP endpoint configured for data transfer
+  category: transfer
+  severity: high
+  dpdpRef: RULE_6
+  description: Use of plaintext http:// schemes for external API requests, webhook destinations, or internal service transfers.
+  piiTypes: [email, phone, aadhaar, pan, financial]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.env", "*.yaml", "*.yml"]
+  targetType: regex
+  pattern: "['\"]http://(?!localhost|127\\.0\\.0\\.1)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}[^'\"]*['\"]"
+  remediation: Enforce TLS 1.3 by updating endpoint URIs from http:// to https://.
+  patchTemplate: enforce_https
+
+- id: DPDP-TRN-002
+  title: TLS certificate verification explicitly disabled
+  category: transfer
+  severity: critical
+  dpdpRef: RULE_6
+  description: "Disabling TLS verification via rejectUnauthorized: false or NODE_TLS_REJECT_UNAUTHORIZED=0, enabling adversary Man-in-the-Middle eavesdropping."
+  piiTypes: [password, email, phone, aadhaar, financial]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.env"]
+  targetType: regex
+  pattern: "(rejectUnauthorized\\s*:\\s*false|NODE_TLS_REJECT_UNAUTHORIZED\\s*=\\s*['\"]?0['\"]?)"
+  remediation: "Remove rejectUnauthorized: false and install proper CA certificates in trust stores."
+  patchTemplate: fix_tls_verification
+
+- id: DPDP-TRN-003
+  title: Third-party advertising SDK receiving user identifiers
+  category: transfer
+  severity: high
+  dpdpRef: ACT_SEC_6_1
+  description: Advertising trackers (e.g. Meta Pixel, TikTok Pixel, Google Ads) initialized without explicit consent check or sending user identifiers.
+  piiTypes: [email, phone, device_id]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.html", "*.tsx"]
+  targetType: regex
+  pattern: "(fbq\\s*\\(\\s*['\"]init['\"]|ttq\\.load|gtag\\s*\\(\\s*['\"]config['\"].*['\"]AW-)"
+  remediation: Gate advertising tracker scripts behind verified consent gating (Rule 3/4).
+
+- id: DPDP-TRN-004
+  title: Third-party analytics SDK receiving raw user personal identifiers
+  category: transfer
+  severity: medium
+  dpdpRef: ACT_SEC_6_1
+  description: User email, name, or phone passed to third-party analytics services (Google Analytics, Mixpanel, Segment) without pseudonymization.
+  piiTypes: [email, phone, name]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+  targetType: regex
+  pattern: "(analytics|mixpanel|amplitude|ga)\\.identify\\s*\\([^)]*(email|phone|name)"
+  remediation: Pseudonymize user identifiers with a one-way salt before forwarding to analytics providers.
+
+- id: DPDP-TRN-005
+  title: Cross-border personal data transfer to unauthorized regions
+  category: transfer
+  severity: high
+  dpdpRef: ACT_SEC_16
+  description: Cloud storage or processing endpoints configured in restricted foreign regions without verification of cross-border compliance.
+  piiTypes: [email, phone, aadhaar, pan, financial]
+  dataFlow: transferred
+  targetFiles: ["*.tf", "*.yaml", "*.yml", "*.json"]
+  targetType: regex
+  pattern: "(region\\s*[:=]\\s*['\"](cn-north-1|cn-northwest-1|ru-central1)['\"])"
+  remediation: Migrate data storage to Indian regions (ap-south-1, me-central-1, etc.) or verified adequacy jurisdictions.
+
+- id: DPDP-TRN-006
+  title: Deprecated TLS protocol versions (TLS 1.0 or 1.1) configured
+  category: transfer
+  severity: high
+  dpdpRef: RULE_6
+  description: Server or client TLS configuration permitting deprecated protocol versions TLSv1 or TLSv1.1.
+  piiTypes: [password, financial]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js", "*.conf"]
+  targetType: regex
+  pattern: "minVersion\\s*:\\s*['\"](TLSv1|TLSv1\\.1)['\"]"
+  remediation: "Set minVersion: 'TLSv1.2' or 'TLSv1.3' on all server and client HTTPS agents."
+  patchTemplate: set_min_tls_version

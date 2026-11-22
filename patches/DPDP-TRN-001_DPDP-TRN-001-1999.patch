@@ -1,0 +1,5 @@
+--- a/test/api/passkey.test.ts
++++ b/test/api/passkey.test.ts
+@@ -396,1 +396,1 @@
+-'different origin': buildAttestation(credentialID, challenge, { origin: 'http://evil.example:3000' }).attestation,
++'different origin': buildAttestation(credentialID, challenge, { origin: 'https://evil.example:3000' }).attestation,

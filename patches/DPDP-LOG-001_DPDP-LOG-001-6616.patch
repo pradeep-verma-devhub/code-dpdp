@@ -1,0 +1,5 @@
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -203,1 +203,1 @@
+-logger.info(`Required file ${colors.bold(fileName)} is present (${colors.green('SUCCESS')})`)
++// [DPDP-LOG-001] Redacted PII logging call

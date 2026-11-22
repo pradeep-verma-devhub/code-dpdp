@@ -1,0 +1,5 @@
+--- a/routes/updateProductReviews.ts
++++ b/routes/updateProductReviews.ts
+@@ -27,1 +27,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })

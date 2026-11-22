@@ -1,0 +1,5 @@
+--- a/data/static/codefixes/forgedReviewChallenge_1.ts
++++ b/data/static/codefixes/forgedReviewChallenge_1.ts
+@@ -12,1 +12,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })

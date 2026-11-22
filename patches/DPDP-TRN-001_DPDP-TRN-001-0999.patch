@@ -1,0 +1,5 @@
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',

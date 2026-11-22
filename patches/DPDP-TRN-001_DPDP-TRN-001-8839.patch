@@ -1,0 +1,5 @@
+--- a/test/cypress/e2e/profile.spec.ts
++++ b/test/cypress/e2e/profile.spec.ts
+@@ -74,1 +74,1 @@
+-cy.visit('http://htmledit.squarefree.com')
++cy.visit('https://htmledit.squarefree.com')

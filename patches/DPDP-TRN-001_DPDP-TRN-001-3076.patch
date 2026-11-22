@@ -1,0 +1,5 @@
+--- a/test/server/configValidation.unit.test.ts
++++ b/test/server/configValidation.unit.test.ts
+@@ -300,1 +300,1 @@
+-const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'http://example.com/notify', pollFrequencySeconds: 0 } } }
++const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'https://example.com/notify', pollFrequencySeconds: 0 } } }

@@ -1,0 +1,23 @@
+- id: DPDP-BRC-001
+  title: Missing audit logging on sensitive personal data access and exports
+  category: breach
+  severity: high
+  dpdpRef: RULE_6
+  description: Access to bulk PII, export operations, or administrative data reads not captured in immutable audit trail.
+  piiTypes: [aadhaar, pan, financial, health]
+  dataFlow: exposed
+  targetFiles: ["*export*.ts", "*export*.js", "*admin*.ts", "*admin*.js"]
+  targetType: schema
+  remediation: Record structured audit log events (timestamp, actor ID, action, record count) for all sensitive data access operations.
+
+- id: DPDP-BRC-002
+  title: Absence of automated security incident alerting or breach reporting hooks
+  category: breach
+  severity: high
+  dpdpRef: RULE_7
+  description: Absence of automated alerting hooks (e.g. PagerDuty, Slack, webhook) on security anomaly detection to meet 6-hour breach notice timelines.
+  piiTypes: []
+  dataFlow: exposed
+  targetFiles: ["config*.ts", "config*.json", "*.env*", "alert*.ts"]
+  targetType: config
+  remediation: Configure automated incident dispatch channels for immediate breach triage and regulatory reporting.

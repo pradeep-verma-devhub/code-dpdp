@@ -1,0 +1,5 @@
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -102,1 +102,1 @@
+-assert.equal(await agent.getProxyForUrl('https://example.com/avatar.png', undefined as never), 'http://proxy.example:8080')
++assert.equal(await agent.getProxyForUrl('https://example.com/avatar.png', undefined as never), 'https://proxy.example:8080')

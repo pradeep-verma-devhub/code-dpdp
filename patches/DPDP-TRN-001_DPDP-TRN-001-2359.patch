@@ -1,0 +1,5 @@
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -121,1 +121,1 @@
+-req.url = 'http://juice-sh.op/public/images/products/test.dxf'
++req.url = 'https://juice-sh.op/public/images/products/test.dxf'

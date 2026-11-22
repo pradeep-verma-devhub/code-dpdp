@@ -1,0 +1,73 @@
+- id: DPDP-LOG-001
+  title: Direct logging of PII in console or logger calls
+  category: logging
+  severity: high
+  dpdpRef: ACT_SEC_8_6
+  description: Personal data (email, phone, Aadhaar, PAN, names) logged via console.log or logger functions, exposing data to log collectors and potential exfiltration.
+  piiTypes: [email, phone, aadhaar, pan, name, dob, address, financial]
+  dataFlow: logged
+  targetFiles: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+  targetType: ast
+  astQuery:
+    type: CallExpression
+    callee: "(console\\.(log|info|warn|error|debug)|logger\\.(info|debug|warn|error)|winston\\.(info|error))"
+    context: pii_argument
+  remediation: Redact, mask, or hash personal data before passing it to logging invocations.
+  patchTemplate: mask_log_argument
+
+- id: DPDP-LOG-002
+  title: Direct logging of incoming HTTP request body
+  category: logging
+  severity: high
+  dpdpRef: ACT_SEC_8_6
+  description: Entire request body (req.body) logged without field-level redaction, exposing customer passwords, tokens, and PII in application logs.
+  piiTypes: [password, email, phone, name, financial]
+  dataFlow: logged
+  targetFiles: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+  targetType: ast
+  astQuery:
+    type: CallExpression
+    callee: "(console|logger)\\.(log|info|warn|error|debug)"
+    property: "req\\.body"
+  remediation: Avoid dumping raw req.body. Log only operation identifiers or apply an automated field-masking serializer.
+  patchTemplate: replace_req_body_log
+
+- id: DPDP-LOG-003
+  title: Raw exception stack traces logged with user context
+  category: logging
+  severity: medium
+  dpdpRef: RULE_6
+  description: Unhandled error stacks or error objects logged directly, which can leak database query parameters containing personal data.
+  piiTypes: [password, name, email]
+  dataFlow: logged
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "console\\.(error|log)\\s*\\(\\s*(err|error)\\.stack"
+  remediation: Log structured error codes and messages without full stack traces or sanitise error objects before output.
+  patchTemplate: sanitize_error_log
+
+- id: DPDP-LOG-004
+  title: Logger writing authorization headers or token credentials
+  category: logging
+  severity: critical
+  dpdpRef: ACT_SEC_8_6
+  description: Authentication tokens or Authorization headers printed in application logs, enabling credential theft and unauthorized data access.
+  piiTypes: [password]
+  dataFlow: logged
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "(console|logger)\\.(log|info|debug|error)\\([^)]*(authorization|bearer|auth_token|req\\.headers)"
+  remediation: Mask or strip Authorization headers from request metadata before passing to logging middleware.
+
+- id: DPDP-LOG-005
+  title: Absence of log retention or automated log purging policy
+  category: logging
+  severity: medium
+  dpdpRef: RULE_8
+  description: Technical and access logs configured without retention limits (TTL or log rotation), retaining user technical telemetry indefinitely.
+  piiTypes: [ip, device_id]
+  dataFlow: stored
+  targetFiles: ["*.json", "*.yaml", "*.yml", "*.conf", "winston*.ts", "logger*.ts"]
+  targetType: regex
+  pattern: "(maxFiles|maxsize|rotation|retentionDays)\\s*:\\s*(undefined|null|0|-1)"
+  remediation: Configure automated log rotation with a maximum retention period consistent with your privacy policy (e.g. 90-180 days).

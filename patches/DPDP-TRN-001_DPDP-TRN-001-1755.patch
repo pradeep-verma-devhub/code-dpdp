@@ -1,0 +1,5 @@
+--- a/frontend/src/app/login/login.component.spec.ts
++++ b/frontend/src/app/login/login.component.spec.ts
+@@ -391,1 +391,1 @@
+-{ uri: 'http://other.host' }
++{ uri: 'https://other.host' }

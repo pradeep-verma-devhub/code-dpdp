@@ -1,0 +1,815 @@
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/datacreator.ts:85)
+--- a/data/datacreator.ts
++++ b/data/datacreator.ts
+@@ -85,1 +85,1 @@
+-description = description.replace('http://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge'))
++description = description.replace('https://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge'))
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/datacreator.ts:172)
+--- a/data/datacreator.ts
++++ b/data/datacreator.ts
+@@ -172,1 +172,1 @@
+-.replace('http://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge')),
++.replace('https://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge')),
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/forgedReviewChallenge_1.ts:12)
+--- a/data/static/codefixes/forgedReviewChallenge_1.ts
++++ b/data/static/codefixes/forgedReviewChallenge_1.ts
+@@ -12,1 +12,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/forgedReviewChallenge_2_correct.ts:12)
+--- a/data/static/codefixes/forgedReviewChallenge_2_correct.ts
++++ b/data/static/codefixes/forgedReviewChallenge_2_correct.ts
+@@ -12,1 +12,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/forgedReviewChallenge_3.ts:11)
+--- a/data/static/codefixes/forgedReviewChallenge_3.ts
++++ b/data/static/codefixes/forgedReviewChallenge_3.ts
+@@ -11,1 +11,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/noSqlReviewsChallenge_1.ts:17)
+--- a/data/static/codefixes/noSqlReviewsChallenge_1.ts
++++ b/data/static/codefixes/noSqlReviewsChallenge_1.ts
+@@ -17,1 +17,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/noSqlReviewsChallenge_2.ts:11)
+--- a/data/static/codefixes/noSqlReviewsChallenge_2.ts
++++ b/data/static/codefixes/noSqlReviewsChallenge_2.ts
+@@ -11,1 +11,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (data/static/codefixes/noSqlReviewsChallenge_3_correct.ts:17)
+--- a/data/static/codefixes/noSqlReviewsChallenge_3_correct.ts
++++ b/data/static/codefixes/noSqlReviewsChallenge_3_correct.ts
+@@ -17,1 +17,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_1.ts:6)
+--- a/data/static/codefixes/redirectChallenge_1.ts
++++ b/data/static/codefixes/redirectChallenge_1.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_1.ts:7)
+--- a/data/static/codefixes/redirectChallenge_1.ts
++++ b/data/static/codefixes/redirectChallenge_1.ts
+@@ -7,1 +7,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_1.ts:9)
+--- a/data/static/codefixes/redirectChallenge_1.ts
++++ b/data/static/codefixes/redirectChallenge_1.ts
+@@ -9,1 +9,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_2.ts:6)
+--- a/data/static/codefixes/redirectChallenge_2.ts
++++ b/data/static/codefixes/redirectChallenge_2.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_2.ts:7)
+--- a/data/static/codefixes/redirectChallenge_2.ts
++++ b/data/static/codefixes/redirectChallenge_2.ts
+@@ -7,1 +7,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_2.ts:9)
+--- a/data/static/codefixes/redirectChallenge_2.ts
++++ b/data/static/codefixes/redirectChallenge_2.ts
+@@ -9,1 +9,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_3.ts:6)
+--- a/data/static/codefixes/redirectChallenge_3.ts
++++ b/data/static/codefixes/redirectChallenge_3.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_3.ts:7)
+--- a/data/static/codefixes/redirectChallenge_3.ts
++++ b/data/static/codefixes/redirectChallenge_3.ts
+@@ -7,1 +7,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_3.ts:9)
+--- a/data/static/codefixes/redirectChallenge_3.ts
++++ b/data/static/codefixes/redirectChallenge_3.ts
+@@ -9,1 +9,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_4_correct.ts:6)
+--- a/data/static/codefixes/redirectChallenge_4_correct.ts
++++ b/data/static/codefixes/redirectChallenge_4_correct.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_4_correct.ts:7)
+--- a/data/static/codefixes/redirectChallenge_4_correct.ts
++++ b/data/static/codefixes/redirectChallenge_4_correct.ts
+@@ -7,1 +7,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectChallenge_4_correct.ts:9)
+--- a/data/static/codefixes/redirectChallenge_4_correct.ts
++++ b/data/static/codefixes/redirectChallenge_4_correct.ts
+@@ -9,1 +9,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts:5)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
+@@ -5,1 +5,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts:6)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts:8)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_1.ts
+@@ -8,1 +8,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts:5)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
+@@ -5,1 +5,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts:6)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts:8)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_2.ts
+@@ -8,1 +8,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts:3)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
+@@ -3,1 +3,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts:4)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
+@@ -4,1 +4,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts:6)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_3_correct.ts
+@@ -6,1 +6,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts:5)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
+@@ -5,1 +5,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts:6)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
+@@ -6,1 +6,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts:8)
+--- a/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
++++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
+@@ -8,1 +8,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts:28)
+--- a/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
++++ b/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
+@@ -28,1 +28,1 @@
+-service.fetchNotification('http://example.com/notify').subscribe((data) => { response = data })
++service.fetchNotification('https://example.com/notify').subscribe((data) => { response = data })
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts:30)
+--- a/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
++++ b/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
+@@ -30,1 +30,1 @@
+-const request = httpMock.expectOne('http://example.com/notify')
++const request = httpMock.expectOne('https://example.com/notify')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts:24)
+--- a/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
++++ b/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
+@@ -24,1 +24,1 @@
+-url: 'http://example.com/notify',
++url: 'https://example.com/notify',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts:90)
+--- a/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
++++ b/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
+@@ -90,1 +90,1 @@
+-ctf: { systemWideNotifications: { url: 'http://example.com/notify' } }
++ctf: { systemWideNotifications: { url: 'https://example.com/notify' } }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/deluxe-user/deluxe-user.component.spec.ts:116)
+--- a/frontend/src/app/deluxe-user/deluxe-user.component.spec.ts
++++ b/frontend/src/app/deluxe-user/deluxe-user.component.spec.ts
+@@ -116,1 +116,1 @@
+-configurationService.getApplicationConfiguration.mockReturnValue(of({ application: { logo: 'http://test.com/logo.jpg' } }))
++configurationService.getApplicationConfiguration.mockReturnValue(of({ application: { logo: 'https://test.com/logo.jpg' } }))
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/login/login.component.spec.ts:375)
+--- a/frontend/src/app/login/login.component.spec.ts
++++ b/frontend/src/app/login/login.component.spec.ts
+@@ -375,1 +375,1 @@
+-{ uri: 'http://localhost:4200', proxy: 'http://proxy.local' }
++{ uri: 'https://localhost:4200', proxy: 'https://proxy.local' }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/login/login.component.spec.ts:381)
+--- a/frontend/src/app/login/login.component.spec.ts
++++ b/frontend/src/app/login/login.component.spec.ts
+@@ -381,1 +381,1 @@
+-expect(component.redirectUri).toBe('http://proxy.local')
++expect(component.redirectUri).toBe('https://proxy.local')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/login/login.component.spec.ts:391)
+--- a/frontend/src/app/login/login.component.spec.ts
++++ b/frontend/src/app/login/login.component.spec.ts
+@@ -391,1 +391,1 @@
+-{ uri: 'http://other.host' }
++{ uri: 'https://other.host' }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/order-history/order-history.component.spec.ts:53)
+--- a/frontend/src/app/order-history/order-history.component.spec.ts
++++ b/frontend/src/app/order-history/order-history.component.spec.ts
+@@ -53,1 +53,1 @@
+-basketService = { hostServer: 'http://host.example' }
++basketService = { hostServer: 'https://host.example' }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/order-history/order-history.component.spec.ts:163)
+--- a/frontend/src/app/order-history/order-history.component.spec.ts
++++ b/frontend/src/app/order-history/order-history.component.spec.ts
+@@ -163,1 +163,1 @@
+-expect(openSpy).toHaveBeenCalledWith('http://host.example/ftp/order_abc123.pdf', '_blank')
++expect(openSpy).toHaveBeenCalledWith('https://host.example/ftp/order_abc123.pdf', '_blank')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts:164)
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -164,1 +164,1 @@
+-ChallengeDependencies: [{ name: 'Foo', missing: true, documentation: 'http://docs.example.com' }]
++ChallengeDependencies: [{ name: 'Foo', missing: true, documentation: 'https://docs.example.com' }]
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts:167)
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -167,1 +167,1 @@
+-expect(component.getDependencyDocumentation('Requires Foo')).toBe('http://docs.example.com')
++expect(component.getDependencyDocumentation('Requires Foo')).toBe('https://docs.example.com')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts:173)
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -173,1 +173,1 @@
+-ChallengeDependencies: [{ name: 'Bar', missing: true, documentation: 'http://docs.example.com' }]
++ChallengeDependencies: [{ name: 'Bar', missing: true, documentation: 'https://docs.example.com' }]
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts:266)
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -266,1 +266,1 @@
+-ChallengeDependencies: [{ name: 'Foo', missing: true, documentation: 'http://docs.example.com' }]
++ChallengeDependencies: [{ name: 'Foo', missing: true, documentation: 'https://docs.example.com' }]
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts:271)
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -271,1 +271,1 @@
+-expect(tag.getAttribute('href')).toBe('http://docs.example.com')
++expect(tag.getAttribute('href')).toBe('https://docs.example.com')
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (pan) (frontend/src/assets/private/OrbitControls.js:181)
+--- a/frontend/src/assets/private/OrbitControls.js
++++ b/frontend/src/assets/private/OrbitControls.js
+@@ -181,1 +181,1 @@
+-console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (children_data) (frontend/src/assets/private/three.js:7810)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -7810,1 +7810,1 @@
+-console.warn( 'THREE.Object3D.add: An object can\'t be added as a child of itself.' );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (children_data) (frontend/src/assets/private/three.js:7953)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -7953,1 +7953,1 @@
+-console.warn( 'DEPRECATED: Object3D\'s .getChildByName() has been renamed to .getObjectByName().' );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-STO-002: Deprecated or broken hash algorithm (MD5/SHA1) for credentials (lib/insecurity.ts:41)
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -41,1 +41,1 @@
+-export const hash = (data: string) => crypto.createHash('md5').update(data).digest('hex')
++export const hash = (data: string) => crypto.createHash('sha256').update(data).digest('hex')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (lib/insecurity.ts:127)
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -127,1 +127,1 @@
+-'http://shop.spreadshirt.com/juiceshop',
++'https://shop.spreadshirt.com/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (lib/insecurity.ts:128)
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -128,1 +128,1 @@
+-'http://shop.spreadshirt.de/juiceshop',
++'https://shop.spreadshirt.de/juiceshop',
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (lib/insecurity.ts:130)
+--- a/lib/insecurity.ts
++++ b/lib/insecurity.ts
+@@ -130,1 +130,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (routes/likeProductReviews.ts:56)
+--- a/routes/likeProductReviews.ts
++++ b/routes/likeProductReviews.ts
+@@ -56,1 +56,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-EXP-004: Verbose error leakage in HTTP response (routes/updateProductReviews.ts:27)
+--- a/routes/updateProductReviews.ts
++++ b/routes/updateProductReviews.ts
+@@ -27,1 +27,1 @@
+-res.status(500).json(err)
++res.status(500).json({ error: "Internal Server Error" })
+
+# Fix for DPDP-STO-002: Deprecated or broken hash algorithm (MD5/SHA1) for credentials (scripts/package.mjs:122)
+--- a/scripts/package.mjs
++++ b/scripts/package.mjs
+@@ -122,1 +122,1 @@
+-const hash = crypto.createHash('md5').update(content).digest('hex')
++const hash = crypto.createHash('sha256').update(content).digest('hex')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/passkey.test.ts:236)
+--- a/test/api/passkey.test.ts
++++ b/test/api/passkey.test.ts
+@@ -236,1 +236,1 @@
+-'http://shop.example.com:8080': { host: 'shop.example.com:8080' },
++'https://shop.example.com:8080': { host: 'shop.example.com:8080' },
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/passkey.test.ts:254)
+--- a/test/api/passkey.test.ts
++++ b/test/api/passkey.test.ts
+@@ -254,1 +254,1 @@
+-const res = await loginVerify({ assertion: sign(victim, challenge, { origin: 'http://evil.example:3000' }), authToken })
++const res = await loginVerify({ assertion: sign(victim, challenge, { origin: 'https://evil.example:3000' }), authToken })
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/passkey.test.ts:396)
+--- a/test/api/passkey.test.ts
++++ b/test/api/passkey.test.ts
+@@ -396,1 +396,1 @@
+-'different origin': buildAttestation(credentialID, challenge, { origin: 'http://evil.example:3000' }).attestation,
++'different origin': buildAttestation(credentialID, challenge, { origin: 'https://evil.example:3000' }).attestation,
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/product.test.ts:104)
+--- a/test/api/product.test.ts
++++ b/test/api/product.test.ts
+@@ -104,1 +104,1 @@
+-description: '<a href="http://kimminich.de" target="_blank">More...</a>'
++description: '<a href='https://kimminich.de" target="_blank">More...</a>'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/product.test.ts:108)
+--- a/test/api/product.test.ts
++++ b/test/api/product.test.ts
+@@ -108,1 +108,1 @@
+-assert.equal(res.body.data.description, '<a href="http://kimminich.de" target="_blank">More...</a>')
++assert.equal(res.body.data.description, '<a href='https://kimminich.de" target="_blank">More...</a>')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/api/user-profile.test.ts:194)
+--- a/test/api/user-profile.test.ts
++++ b/test/api/user-profile.test.ts
+@@ -194,1 +194,1 @@
+-.set('Origin', 'http://attacker.com')
++.set('Origin', 'https://attacker.com')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/cypress/e2e/profile.spec.ts:74)
+--- a/test/cypress/e2e/profile.spec.ts
++++ b/test/cypress/e2e/profile.spec.ts
+@@ -74,1 +74,1 @@
+-cy.visit('http://htmledit.squarefree.com')
++cy.visit('https://htmledit.squarefree.com')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/cypress/e2e/profile.spec.ts:107)
+--- a/test/cypress/e2e/profile.spec.ts
++++ b/test/cypress/e2e/profile.spec.ts
+@@ -107,1 +107,1 @@
+-Origin: 'http://htmledit.squarefree.com', // FIXME Not allowed by browser due to "unsafe header not permitted"
++Origin: 'https://htmledit.squarefree.com', // FIXME Not allowed by browser due to "unsafe header not permitted"
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/challengeUtils.unit.test.ts:114)
+--- a/test/server/challengeUtils.unit.test.ts
++++ b/test/server/challengeUtils.unit.test.ts
+@@ -114,1 +114,1 @@
+-process.env.SOLUTIONS_WEBHOOK = 'http://webhook.test'
++process.env.SOLUTIONS_WEBHOOK = 'https://webhook.test'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/configValidation.unit.test.ts:290)
+--- a/test/server/configValidation.unit.test.ts
++++ b/test/server/configValidation.unit.test.ts
+@@ -290,1 +290,1 @@
+-const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'http://example.com/notify', pollFrequencySeconds: 30 } } }
++const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'https://example.com/notify', pollFrequencySeconds: 30 } } }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/configValidation.unit.test.ts:295)
+--- a/test/server/configValidation.unit.test.ts
++++ b/test/server/configValidation.unit.test.ts
+@@ -295,1 +295,1 @@
+-const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'http://example.com/notify' } } }
++const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'https://example.com/notify' } } }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/configValidation.unit.test.ts:300)
+--- a/test/server/configValidation.unit.test.ts
++++ b/test/server/configValidation.unit.test.ts
+@@ -300,1 +300,1 @@
+-const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'http://example.com/notify', pollFrequencySeconds: 0 } } }
++const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'https://example.com/notify', pollFrequencySeconds: 0 } } }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/configValidation.unit.test.ts:305)
+--- a/test/server/configValidation.unit.test.ts
++++ b/test/server/configValidation.unit.test.ts
+@@ -305,1 +305,1 @@
+-const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'http://example.com/notify', pollFrequencySeconds: -10 } } }
++const config = { ...BASE_CONFIG, ctf: { ...BASE_CONFIG.ctf, systemWideNotifications: { url: 'https://example.com/notify', pollFrequencySeconds: -10 } } }
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/preconditionValidation.unit.test.ts:107)
+--- a/test/server/preconditionValidation.unit.test.ts
++++ b/test/server/preconditionValidation.unit.test.ts
+@@ -107,1 +107,1 @@
+-assert.equal(isOllamaUrl('http://myserver.example.com/ollama/v1'), true)
++assert.equal(isOllamaUrl('https://myserver.example.com/ollama/v1'), true)
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/redirect.unit.test.ts:42)
+--- a/test/server/redirect.unit.test.ts
++++ b/test/server/redirect.unit.test.ts
+@@ -42,1 +42,1 @@
+-req.query.to = 'http://kimminich.de'
++req.query.to = 'https://kimminich.de'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/redirect.unit.test.ts:79)
+--- a/test/server/redirect.unit.test.ts
++++ b/test/server/redirect.unit.test.ts
+@@ -79,1 +79,1 @@
+-req.query.to = 'http://kimminich.de?to=https://github.com/juice-shop/juice-shop'
++req.query.to = 'https://kimminich.de?to=https://github.com/juice-shop/juice-shop'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:48)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -48,1 +48,1 @@
+-assert.equal(utils.extractFilename('http://bla.blubb/test.exe'), 'test.exe')
++assert.equal(utils.extractFilename('https://bla.blubb/test.exe'), 'test.exe')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:52)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -52,1 +52,1 @@
+-assert.equal(utils.extractFilename('http://bla.blubb/test.exe?bla=blubb&a=b'), 'test.exe')
++assert.equal(utils.extractFilename('https://bla.blubb/test.exe?bla=blubb&a=b'), 'test.exe')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:66)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -66,1 +66,1 @@
+-process.env.HTTPS_PROXY = 'http://proxy.example:8080'
++process.env.HTTPS_PROXY = 'https://proxy.example:8080'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:67)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -67,1 +67,1 @@
+-process.env.https_proxy = 'http://proxy.example:8080'
++process.env.https_proxy = 'https://proxy.example:8080'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:102)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -102,1 +102,1 @@
+-assert.equal(await agent.getProxyForUrl('https://example.com/avatar.png', undefined as never), 'http://proxy.example:8080')
++assert.equal(await agent.getProxyForUrl('https://example.com/avatar.png', undefined as never), 'https://proxy.example:8080')
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/utils.unit.test.ts:332)
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -332,1 +332,1 @@
+-assert.ok(utils.isUrl('http://test.com'))
++assert.ok(utils.isUrl('https://test.com'))
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:84)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -84,1 +84,1 @@
+-req.url = 'http://juice-sh.op/public/images/padding/1px.png'
++req.url = 'https://juice-sh.op/public/images/padding/1px.png'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:93)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -93,1 +93,1 @@
+-req.url = 'http://juice-sh.op/public/images/padding/19px.png'
++req.url = 'https://juice-sh.op/public/images/padding/19px.png'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:102)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -102,1 +102,1 @@
+-req.url = 'http://juice-sh.op/public/images/padding/56px.png'
++req.url = 'https://juice-sh.op/public/images/padding/56px.png'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:111)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -111,1 +111,1 @@
+-req.url = 'http://juice-sh.op/public/i18n/tlh_AA.json'
++req.url = 'https://juice-sh.op/public/i18n/tlh_AA.json'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:121)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -121,1 +121,1 @@
+-req.url = 'http://juice-sh.op/public/images/products/test.dxf'
++req.url = 'https://juice-sh.op/public/images/products/test.dxf'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:130)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -130,1 +130,1 @@
+-req.url = 'http://juice-sh.op/public/images/uploads/%E1%93%9A%E1%98%8F%E1%97%A2-%23zatschi-%23whoneedsfourlegs-1572600969477.jpg'
++req.url = 'https://juice-sh.op/public/images/uploads/%E1%93%9A%E1%98%8F%E1%97%A2-%23zatschi-%23whoneedsfourlegs-1572600969477.jpg'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:139)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -139,1 +139,1 @@
+-req.url = 'http://juice-sh.op/support/logs/access.log.2019-01-15'
++req.url = 'https://juice-sh.op/support/logs/access.log.2019-01-15'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:148)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -148,1 +148,1 @@
+-req.url = 'http://juice-sh.op/infrastructure/terraform/main.tf'
++req.url = 'https://juice-sh.op/infrastructure/terraform/main.tf'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:157)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -157,1 +157,1 @@
+-req.url = 'http://juice-sh.op/infrastructure/Dockerfile'
++req.url = 'https://juice-sh.op/infrastructure/Dockerfile'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:166)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -166,1 +166,1 @@
+-req.url = 'http://juice-sh.op/infrastructure/docker-compose.yml'
++req.url = 'https://juice-sh.op/infrastructure/docker-compose.yml'
+
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (test/server/verify.unit.test.ts:252)
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -252,1 +252,1 @@
+-products.osaft.description = 'O-Saft, nooo! <a href="http://arbitrary.url" target="_blank">More...</a>'
++products.osaft.description = 'O-Saft, nooo! <a href='https://arbitrary.url" target="_blank">More...</a>'
+
+# Fix for DPDP-CFG-002: Dockerfile missing non-root USER instruction (test/smoke/Dockerfile:7)
+--- a/test/smoke/Dockerfile
++++ b/test/smoke/Dockerfile
+@@ -7,0 +8,1 @@
++USER node
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (address) (data/datacreator.ts:263)
+--- a/data/datacreator.ts
++++ b/data/datacreator.ts
+@@ -263,1 +263,1 @@
+-logger.error(`Could not create address: ${utils.getErrorMessage(err)}`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (data/datacreator.ts:450)
+--- a/data/datacreator.ts
++++ b/data/datacreator.ts
+@@ -450,1 +450,1 @@
+-logger.error(`Could not insert Product ${product.name}: ${utils.getErrorMessage(err)}`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (frontend/src/app/search-result/search-result.component.ts:201)
+--- a/frontend/src/app/search-result/search-result.component.ts
++++ b/frontend/src/app/search-result/search-result.component.ts
+@@ -201,1 +201,1 @@
+-console.log(`Starting instructions for challenge "${challengeName}"`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (frontend/src/assets/private/three.js:15603)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -15603,1 +15603,1 @@
+-console.log( "THREE.Mesh.getMorphTargetIndexByName: morph target " + name + " does not exist. Returning 0." );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (frontend/src/assets/private/three.js:31431)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -31431,1 +31431,1 @@
+-console.log( "THREE.AnimationHandler.add: Warning! " + data.name + " already exists in library. Overwriting." );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (frontend/src/assets/private/three.js:31444)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -31444,1 +31444,1 @@
+-console.log( "THREE.AnimationHandler.add: Warning! " + name + " doesn't exists in library. Doing nothing." );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (frontend/src/assets/private/three.js:36855)
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -36855,1 +36855,1 @@
+-console.warn( "animation[" + name + "] undefined" );
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/challengeUtils.ts:99)
+--- a/lib/challengeUtils.ts
++++ b/lib/challengeUtils.ts
+@@ -99,1 +99,1 @@
+-logger.warn('Missing challenge with name: ' + challengeName)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:81)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -81,1 +81,1 @@
+-logger.warn(`No product is configured as ${colors.italic(name)} but one is required (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:84)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -84,1 +84,1 @@
+-logger.warn(`${matchingProducts.length} products are configured as ${colors.italic(name)} but only one is allowed (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:96)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -96,1 +96,1 @@
+-logger.warn(`Product ${colors.italic(matchingProducts[0].name)} configured as ${colors.italic(name)} does't contain necessary ${colors.italic(`${extra.name}`)} (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:108)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -108,1 +108,1 @@
+-logger.warn(`Product ${colors.italic(product.name)} is used as ${appliedSpecials.map(({ name }) => `${colors.italic(name)}`).join(' and ')} but can only be used for one challenge (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:129)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -129,1 +129,1 @@
+-logger.warn(`No memory is configured as ${colors.italic(name)} but one is required (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:132)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -132,1 +132,1 @@
+-logger.warn(`${matchingMemories.length} memories are configured as ${colors.italic(name)} but only one is allowed (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validateConfig.ts:144)
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -144,1 +144,1 @@
+-logger.warn(`Memory configured as ${colors.italic(name)} must belong to user ${colors.italic(user)} but was linked to ${colors.italic(matchingMemories[0].user ?? 'unknown')} user (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validatePreconditions.ts:151)
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -151,1 +151,1 @@
+-logger.info(`Environment variable ${colors.bold(varName)} is present (${colors.green('SUCCESS')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validatePreconditions.ts:154)
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -154,1 +154,1 @@
+-logger.warn(`Environment variable ${colors.bold(varName)} is not present (${colors.yellow('WARNING')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validatePreconditions.ts:203)
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -203,1 +203,1 @@
+-logger.info(`Required file ${colors.bold(fileName)} is present (${colors.green('SUCCESS')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (lib/startup/validatePreconditions.ts:206)
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -206,1 +206,1 @@
+-logger.warn(`Required file ${colors.bold(fileName)} is missing (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (address) (rsn/rsnOutput.ts:5)
+--- a/rsn/rsnOutput.ts
++++ b/rsn/rsnOutput.ts
+@@ -5,1 +5,1 @@
+-console.log(colors.green(colors.bold('All codefix files match the locked state. No action required.')))
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (rsn/rsnOutput.ts:18)
+--- a/rsn/rsnOutput.ts
++++ b/rsn/rsnOutput.ts
+@@ -18,1 +18,1 @@
+-console.log(colors.cyan(colors.bold(`  Challenge: ${diff.challengeName}`)))
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (address) (rsn/rsnOutput.ts:39)
+--- a/rsn/rsnOutput.ts
++++ b/rsn/rsnOutput.ts
+@@ -39,1 +39,1 @@
+-console.log('Only if diffs are intentional and codefixes are updated, lock the new state with ' + colors.bold('npm run rsn:update'))
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-LOG-001: Direct logging of sensitive PII (name) (server.ts:159)
+--- a/server.ts
++++ b/server.ts
+@@ -159,1 +159,1 @@
+-console.error('Error in timed startup function: ' + name, err)
++// [DPDP-LOG-001] Redacted PII logging call
+
+# Fix for DPDP-CFG-003: Dockerfile missing HEALTHCHECK instruction (Dockerfile:1)
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,0 +1,1 @@
++HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000/health || exit 1
+
+# Fix for DPDP-CFG-003: Dockerfile missing HEALTHCHECK instruction (infrastructure/Dockerfile:1)
+--- a/infrastructure/Dockerfile
++++ b/infrastructure/Dockerfile
+@@ -1,0 +1,1 @@
++HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000/health || exit 1
+
+# Fix for DPDP-CFG-003: Dockerfile missing HEALTHCHECK instruction (test/smoke/Dockerfile:1)
+--- a/test/smoke/Dockerfile
++++ b/test/smoke/Dockerfile
+@@ -1,0 +1,1 @@
++HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000/health || exit 1
+

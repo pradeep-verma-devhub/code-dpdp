@@ -1,0 +1,51 @@
+{
+  "name": "dpdp-audit",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Automated compliance scanner for India's Digital Personal Data Protection Act 2023 & DPDP Rules 2025",
+  "main": "dist/index.js",
+  "bin": {
+    "dpdp-audit": "./bin/dpdp-audit.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate-docs": "tsx src/docs/generate.ts",
+    "scan": "tsx src/cli.ts scan",
+    "consent": "tsx src/cli.ts consent",
+    "live": "tsx src/cli.ts live",
+    "list-rules": "tsx src/cli.ts list-rules"
+  },
+  "keywords": [
+    "dpdp",
+    "dpdp-act-2023",
+    "compliance",
+    "privacy",
+    "security-scanner",
+    "pii",
+    "ast",
+    "india-privacy"
+  ],
+  "author": "Antigravity Senior Security & Privacy Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@babel/parser": "^7.24.0",
+    "@babel/traverse": "^7.24.0",
+    "@babel/types": "^7.24.0",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0",
+    "picocolors": "^1.0.0",
+    "puppeteer-core": "^22.4.0"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.20.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.11.24",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
+  }
+}

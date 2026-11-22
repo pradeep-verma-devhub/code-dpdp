@@ -1,0 +1,5 @@
+--- a/test/server/preconditionValidation.unit.test.ts
++++ b/test/server/preconditionValidation.unit.test.ts
+@@ -107,1 +107,1 @@
+-assert.equal(isOllamaUrl('http://myserver.example.com/ollama/v1'), true)
++assert.equal(isOllamaUrl('https://myserver.example.com/ollama/v1'), true)

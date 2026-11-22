@@ -1,0 +1,5 @@
+--- a/lib/startup/validatePreconditions.ts
++++ b/lib/startup/validatePreconditions.ts
+@@ -151,1 +151,1 @@
+-logger.info(`Environment variable ${colors.bold(varName)} is present (${colors.green('SUCCESS')})`)
++// [DPDP-LOG-001] Redacted PII logging call

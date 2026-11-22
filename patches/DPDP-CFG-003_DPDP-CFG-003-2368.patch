@@ -1,0 +1,4 @@
+--- a/test/smoke/Dockerfile
++++ b/test/smoke/Dockerfile
+@@ -1,0 +1,1 @@
++HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000/health || exit 1

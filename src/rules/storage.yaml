@@ -1,0 +1,138 @@
+- id: DPDP-STO-001
+  title: Plaintext password assignment or storage without hashing
+  category: storage
+  severity: critical
+  dpdpRef: ACT_SEC_8_6
+  description: Passwords stored or assigned in plaintext without cryptographic one-way salted hashing (e.g. bcrypt or argon2).
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js"]
+  targetType: ast
+  astQuery:
+    type: AssignmentExpression
+    property: "password"
+    context: plaintext_assignment
+  remediation: Hash credentials using Argon2id or bcrypt with an adaptive work factor before persisting to storage.
+  patchTemplate: hash_password_assignment
+
+- id: DPDP-STO-002
+  title: Deprecated or broken hash algorithm (MD5/SHA1) for credentials
+  category: storage
+  severity: critical
+  dpdpRef: RULE_6
+  description: Use of insecure and broken hashing algorithms like MD5 or SHA1 for passwords or personal data integrity.
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "crypto\\.createHash\\s*\\(\\s*['\"](md5|sha1)['\"]\\)"
+  remediation: Replace MD5 and SHA-1 with modern collision-resistant algorithms (SHA-256/SHA-512) for integrity, or bcrypt/Argon2 for passwords.
+  patchTemplate: replace_md5_sha1
+
+- id: DPDP-STO-003
+  title: Weak cryptographic cipher (DES/3DES/RC4/AES-ECB)
+  category: storage
+  severity: high
+  dpdpRef: RULE_6
+  description: Use of deprecated or broken encryption ciphers (DES, RC4, or AES in Electronic Codebook ECB mode) which fail to protect data confidentiality.
+  piiTypes: [financial, aadhaar, pan, health]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "crypto\\.createCipher(iv)?\\s*\\(\\s*['\"](des|des-ede3|rc4|aes-\\d+-ecb)['\"]"
+  remediation: Upgrade to AES-256-GCM or ChaCha20-Poly1305 with random nonces and authenticated integrity tags.
+  patchTemplate: upgrade_cipher_gcm
+
+- id: DPDP-STO-004
+  title: Hardcoded secret keys or credentials in source code
+  category: storage
+  severity: critical
+  dpdpRef: ACT_SEC_8_6
+  description: Cryptographic keys, JWT secrets, or cloud credentials embedded directly as literals in source code.
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js", "*.json"]
+  targetType: regex
+  pattern: "(jwtSecret|jwt_secret|private_key|secret_key|api_secret)\\s*[:=]\\s*['\"][a-zA-Z0-9_!@#$%^&*+=]{8,}['\"]"
+  remediation: Extract credentials into environment variables or dedicated secret management services (e.g. AWS Secrets Manager, HashiCorp Vault).
+  patchTemplate: extract_to_env
+
+- id: DPDP-STO-005
+  title: Unencrypted sensitive PII columns in database schema
+  category: storage
+  severity: high
+  dpdpRef: RULE_6
+  description: High-risk personal data columns (Aadhaar, PAN, Credit Card, Medical History) defined in DB schemas without field-level encryption.
+  piiTypes: [aadhaar, pan, financial, health]
+  dataFlow: stored
+  targetFiles: ["*.prisma", "*.sql", "*schema*.ts", "*model*.ts"]
+  targetType: schema
+  remediation: Implement transparent field-level envelope encryption (AES-256-GCM) for sensitive financial, health, and national identifier columns.
+
+- id: DPDP-STO-006
+  title: Personal data stored in browser localStorage or sessionStorage
+  category: storage
+  severity: high
+  dpdpRef: ACT_SEC_8_6
+  description: Personal data or auth tokens stored in client-side Web Storage (localStorage/sessionStorage), making it accessible to any XSS payload.
+  piiTypes: [email, phone, aadhaar, pan, password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+  targetType: regex
+  pattern: "(localStorage|sessionStorage)\\.setItem\\s*\\(\\s*['\"][^'\"]*(token|user|email|phone|profile|aadhaar|pan)"
+  remediation: Store session tokens in secure, HttpOnly, SameSite cookies instead of accessible localStorage.
+
+- id: DPDP-STO-007
+  title: Sensitive session cookies missing HttpOnly flag
+  category: storage
+  severity: high
+  dpdpRef: ACT_SEC_8_6
+  description: "Cookies containing session identifiers or personal tokens created without httpOnly: true, vulnerable to script theft."
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "res\\.cookie\\s*\\([^)]*\\{[^}]*httpOnly\\s*:\\s*false"
+  remediation: "Ensure all session cookies explicitly specify httpOnly: true."
+  patchTemplate: set_cookie_httponly
+
+- id: DPDP-STO-008
+  title: Sensitive session cookies missing Secure flag
+  category: storage
+  severity: high
+  dpdpRef: RULE_6
+  description: "Cookies containing session tokens or user identifiers created without secure: true, transmitting over plaintext HTTP."
+  piiTypes: [password]
+  dataFlow: transferred
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "res\\.cookie\\s*\\([^)]*\\{[^}]*secure\\s*:\\s*false"
+  remediation: "Enable secure: true on all session cookies to restrict transmission to TLS connections."
+  patchTemplate: set_cookie_secure
+
+- id: DPDP-STO-009
+  title: Cookies missing SameSite attribute protection
+  category: storage
+  severity: medium
+  dpdpRef: ACT_SEC_8_6
+  description: "Cookies created without strict or lax sameSite attribute, exposing sessions to Cross-Site Request Forgery (CSRF)."
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js"]
+  targetType: regex
+  pattern: "res\\.cookie\\s*\\([^)]*\\{[^}]*sameSite\\s*:\\s*['\"]none['\"]"
+  remediation: "Configure sameSite: 'lax' or sameSite: 'strict' for cookies carrying sensitive user state."
+  patchTemplate: set_cookie_samesite
+
+- id: DPDP-STO-010
+  title: Database connection string with embedded plaintext credentials
+  category: storage
+  severity: high
+  dpdpRef: ACT_SEC_8_6
+  description: Database URI containing plaintext username and password hardcoded in configuration or source code.
+  piiTypes: [password]
+  dataFlow: stored
+  targetFiles: ["*.ts", "*.js", "*.json", "*.yaml", "*.yml"]
+  targetType: regex
+  pattern: "(mongodb|postgres|postgresql|mysql)://[^:]+:[^@]+@[^/]+"
+  remediation: Ingest DB credentials through environment variables or IAM role-based authentication.

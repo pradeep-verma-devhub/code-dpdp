@@ -1,0 +1,5 @@
+--- a/scripts/package.mjs
++++ b/scripts/package.mjs
+@@ -122,1 +122,1 @@
+-const hash = crypto.createHash('md5').update(content).digest('hex')
++const hash = crypto.createHash('sha256').update(content).digest('hex')

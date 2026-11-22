@@ -1,0 +1,4 @@
+--- a/test/smoke/Dockerfile
++++ b/test/smoke/Dockerfile
+@@ -7,0 +8,1 @@
++USER node
