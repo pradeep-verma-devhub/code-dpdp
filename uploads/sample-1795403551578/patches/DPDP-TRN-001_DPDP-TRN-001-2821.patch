@@ -1,0 +1,5 @@
+--- a/test/server/verify.unit.test.ts
++++ b/test/server/verify.unit.test.ts
+@@ -252,1 +252,1 @@
+-products.osaft.description = 'O-Saft, nooo! <a href="http://arbitrary.url" target="_blank">More...</a>'
++products.osaft.description = 'O-Saft, nooo! <a href='https://arbitrary.url" target="_blank">More...</a>'

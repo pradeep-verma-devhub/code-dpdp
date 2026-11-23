@@ -1,0 +1,5 @@
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -129,1 +129,1 @@
+-logger.warn(`No memory is configured as ${colors.italic(name)} but one is required (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call

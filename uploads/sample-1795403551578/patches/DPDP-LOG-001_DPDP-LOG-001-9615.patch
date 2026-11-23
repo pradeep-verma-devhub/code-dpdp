@@ -1,0 +1,5 @@
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -96,1 +96,1 @@
+-logger.warn(`Product ${colors.italic(matchingProducts[0].name)} configured as ${colors.italic(name)} does't contain necessary ${colors.italic(`${extra.name}`)} (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call

@@ -1,0 +1,5 @@
+--- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
++++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
+@@ -167,1 +167,1 @@
+-expect(component.getDependencyDocumentation('Requires Foo')).toBe('http://docs.example.com')
++expect(component.getDependencyDocumentation('Requires Foo')).toBe('https://docs.example.com')

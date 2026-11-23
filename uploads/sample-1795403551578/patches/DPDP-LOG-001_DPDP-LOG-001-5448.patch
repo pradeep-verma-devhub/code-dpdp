@@ -1,0 +1,5 @@
+--- a/frontend/src/assets/private/three.js
++++ b/frontend/src/assets/private/three.js
+@@ -7953,1 +7953,1 @@
+-console.warn( 'DEPRECATED: Object3D\'s .getChildByName() has been renamed to .getObjectByName().' );
++// [DPDP-LOG-001] Redacted PII logging call

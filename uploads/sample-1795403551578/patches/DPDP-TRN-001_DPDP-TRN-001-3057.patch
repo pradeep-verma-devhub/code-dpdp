@@ -1,0 +1,5 @@
+--- a/test/server/utils.unit.test.ts
++++ b/test/server/utils.unit.test.ts
+@@ -67,1 +67,1 @@
+-process.env.https_proxy = 'http://proxy.example:8080'
++process.env.https_proxy = 'https://proxy.example:8080'

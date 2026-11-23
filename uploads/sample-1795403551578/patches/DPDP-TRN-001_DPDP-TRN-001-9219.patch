@@ -1,0 +1,5 @@
+--- a/data/static/codefixes/redirectChallenge_3.ts
++++ b/data/static/codefixes/redirectChallenge_3.ts
+@@ -9,1 +9,1 @@
+-'http://leanpub.com/juice-shop'
++'https://leanpub.com/juice-shop'

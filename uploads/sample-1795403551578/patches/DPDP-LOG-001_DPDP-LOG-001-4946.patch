@@ -1,0 +1,5 @@
+--- a/lib/startup/validateConfig.ts
++++ b/lib/startup/validateConfig.ts
+@@ -144,1 +144,1 @@
+-logger.warn(`Memory configured as ${colors.italic(name)} must belong to user ${colors.italic(user)} but was linked to ${colors.italic(matchingMemories[0].user ?? 'unknown')} user (${colors.red('ERROR')})`)
++// [DPDP-LOG-001] Redacted PII logging call

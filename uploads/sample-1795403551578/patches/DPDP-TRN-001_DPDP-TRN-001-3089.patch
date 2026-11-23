@@ -1,0 +1,5 @@
+--- a/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
++++ b/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
+@@ -24,1 +24,1 @@
+-url: 'http://example.com/notify',
++url: 'https://example.com/notify',

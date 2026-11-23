@@ -1,0 +1,5 @@
+--- a/test/api/passkey.test.ts
++++ b/test/api/passkey.test.ts
+@@ -236,1 +236,1 @@
+-'http://shop.example.com:8080': { host: 'shop.example.com:8080' },
++'https://shop.example.com:8080': { host: 'shop.example.com:8080' },
