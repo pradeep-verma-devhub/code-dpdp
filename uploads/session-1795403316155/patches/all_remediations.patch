@@ -1,0 +1,7 @@
+# Fix for DPDP-TRN-001: Insecure plaintext HTTP endpoint configured for data transfer (analytics.js:11)
+--- a/analytics.js
++++ b/analytics.js
+@@ -11,1 +11,1 @@
+-axios.post('http://api.partner.com/sync', {
++axios.post('https://api.partner.com/sync', {
+

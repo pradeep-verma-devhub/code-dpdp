@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPDP-Audit | Automated Privacy & Security Scanner</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-area">
+        <div class="logo-icon">🛡️</div>
+        <div class="logo-text">
+          <h1>DPDP-Audit Platform</h1>
+          <p>Automated Compliance Scanner for India's DPDP Act 2023 & DPDP Rules 2025</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge-tag">🇮🇳 DPDP Act 2023 Ready</span>
+        <span class="badge-tag">⚡ 46 Active Rules</span>
+      </div>
+    </header>
+
+    <!-- Upload Card -->
+    <div id="uploadCard" class="upload-card">
+      <div class="upload-icon">📦</div>
+      <h2 class="upload-title">Drop your Codebase Folder (.zip) to Scan</h2>
+      <p class="upload-subtitle">
+        Upload your application's source code archive to detect <b>Privacy Leaks</b>, <b>Code Malfunctions</b>, and <b>Unauthorized Third-Party Data Egress</b>.
+      </p>
+
+      <input type="file" id="fileInput" accept=".zip" style="display: none;" />
+
+      <div class="btn-group">
+        <button id="browseBtn" class="btn btn-primary">
+          <span>📁 Select .ZIP File</span>
+        </button>
+        <button id="sampleBtn" class="btn btn-secondary">
+          <span>🚀 Try Sample: OWASP Juice Shop</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scan Progress State -->
+    <div id="scanProgress" class="scan-progress">
+      <div class="spinner"></div>
+      <h3 id="progressStatus" style="font-size: 18px; font-weight: 700; margin-bottom: 6px;">Extracting and Analyzing Repository...</h3>
+      <p id="progressDetail" style="color: var(--text-muted); font-size: 13px;">Parsing TypeScript/JS ASTs, Database Schemas, and Third-Party Egress points.</p>
+      <div class="progress-bar-bg">
+        <div id="progressBar" class="progress-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- Results Dashboard -->
+    <div id="dashboard" class="dashboard">
+      <!-- Top Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card score">
+          <div class="metric-label">Compliance Health</div>
+          <div id="metricScore" class="metric-val" style="color: #38BDF8;">--</div>
+          <div class="metric-sub">Out of 100 Posture Score</div>
+        </div>
+
+        <div class="metric-card fine">
+          <div class="metric-label">Max Statutory Fine Risk</div>
+          <div id="metricFine" class="metric-val" style="color: #EF4444;">₹250 Cr</div>
+          <div class="metric-sub">Under DPDP Act Section 8(6)</div>
+        </div>
+
+        <div class="metric-card leaks">
+          <div class="metric-label">Unauthorized Third-Party Leaks</div>
+          <div id="metricLeaks" class="metric-val" style="color: #F97316;">--</div>
+          <div class="metric-sub">External SDKs without consent</div>
+        </div>
+
+        <div class="metric-card bugs">
+          <div class="metric-label">Code Malfunctions & Vulnerabilities</div>
+          <div id="metricBugs" class="metric-val" style="color: #F59E0B;">--</div>
+          <div class="metric-sub">Crashes & security exploits</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tabLeaks">
+          🚨 Unauthorized Third-Party Data Egress (<span id="countLeaks">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="tabBugs">
+          ⚙️ Code Malfunctions & Bugs (<span id="countBugs">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="tabPrivacy">
+          🛡️ DPDP Privacy Violations (<span id="countPrivacy">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="tabConsent">
+          📋 5-Pillar Consent Scorecard
+        </button>
+      </div>
+
+      <!-- Tab 1: Third-Party Leaks -->
+      <div id="tabLeaks" class="tab-content active">
+        <div style="background: rgba(249, 115, 22, 0.1); border-left: 4px solid #F97316; padding: 14px 18px; border-radius: 6px; margin-bottom: 20px;">
+          <h4 style="color: #FDBA74; margin-bottom: 4px;">Third-Party Data Egress Without Consent</h4>
+          <p style="font-size: 13px; color: #CBD5E1;">
+            India's DPDP Act Section 6(1) and Section 16 mandate that personal data cannot be transmitted to third-party SDKs, CDNs, or foreign analytics services without unambiguous affirmative consent.
+          </p>
+        </div>
+        <div id="leaksContainer"></div>
+      </div>
+
+      <!-- Tab 2: Malfunctions & Bugs -->
+      <div id="tabBugs" class="tab-content">
+        <div id="bugsContainer"></div>
+      </div>
+
+      <!-- Tab 3: Privacy Findings -->
+      <div id="tabPrivacy" class="tab-content">
+        <div class="filter-bar">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search by file name, rule ID, or keyword..." />
+          <div class="pills-group">
+            <button class="pill-btn active" data-filter="all">All</button>
+            <button class="pill-btn" data-filter="critical">Critical</button>
+            <button class="pill-btn" data-filter="high">High</button>
+            <button class="pill-btn" data-filter="medium">Medium</button>
+            <button class="pill-btn" data-filter="low">Low</button>
+          </div>
+        </div>
+        <div id="findingsContainer"></div>
+      </div>
+
+      <!-- Tab 4: Consent Scorecard -->
+      <div id="tabConsent" class="tab-content">
+        <div id="consentContainer"></div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <button id="rescanBtn" class="btn btn-secondary">
+          <span>🔄 Scan Another Project</span>
+        </button>
+        <a id="downloadPatchBtn" class="btn btn-secondary" href="#" target="_blank">
+          <span>🛠️ Download Patches (.patch)</span>
+        </a>
+        <a id="downloadPdfBtn" class="btn btn-primary" href="#" target="_blank">
+          <span>📄 Download Official PDF Report</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -87,4 +87,14 @@ program
     runPythonCli(['list-rules']);
   });
 
+// 5. web command
+program
+  .command('web')
+  .description('Launch the interactive DPDP-Audit web platform for drag-and-drop zip analysis')
+  .option('-p, --port <port>', 'Port number to run web server on', '4000')
+  .action(async (options) => {
+    const { startServer } = await import('./server.js');
+    startServer(parseInt(options.port, 10));
+  });
+
 program.parse(process.argv);

@@ -11,6 +11,8 @@ from ..analyzers.config_analyzer import ConfigAnalyzer
 from ..analyzers.schema_analyzer import SchemaAnalyzer
 from ..analyzers.ast_analyzer import AstAnalyzer
 from ..analyzers.consent_analyzer import ConsentAnalyzer
+from ..analyzers.third_party_analyzer import ThirdPartyAnalyzer
+from ..analyzers.malfunction_analyzer import MalfunctionAnalyzer
 
 class RulesEngine:
     """Core rules orchestration, evaluation, and aggregation engine."""
@@ -72,6 +74,8 @@ class RulesEngine:
         rules = cls.load_rules()
 
         all_findings: List[Finding] = []
+        all_third_party: List[Dict[str, Any]] = []
+        all_malfunctions: List[Dict[str, Any]] = []
         scanned_count = 0
 
         for file_path in FileWalker.walk(str(root)):
@@ -95,6 +99,8 @@ class RulesEngine:
             # 3. Code (TS, JS, JSX, TSX)
             if ext in (".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs"):
                 all_findings.extend(AstAnalyzer.analyze_file(file_path, rules, root))
+                all_third_party.extend(ThirdPartyAnalyzer.analyze_file(file_path, root))
+                all_malfunctions.extend(MalfunctionAnalyzer.analyze_file(file_path, root))
 
         # Deduplicate findings by (file, line, rule_id)
         deduped_findings: List[Finding] = []
@@ -154,4 +160,6 @@ class RulesEngine:
             summary=summary,
             findings=deduped_findings,
             consent_scorecard=consent_sc,
+            third_party_egress=all_third_party,
+            malfunctions=all_malfunctions,
         )

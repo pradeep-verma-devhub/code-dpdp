@@ -123,6 +123,27 @@ python3 -m venv .venv
 
 ---
 
+## Web Platform (Interactive Dashboard & ZIP Upload)
+
+Launch the full-featured, real interactive web platform:
+
+```bash
+# Start the Web Platform on http://localhost:4000
+npm run web
+# or:
+./bin/dpdp-audit.js web --port 4000
+```
+
+Features in the Web UI:
+- **Drag-and-Drop `.zip` Upload**: Upload any codebase as a `.zip` archive for immediate automated extraction and deep analysis.
+- **One-Click Sample Analysis**: Includes a *"🚀 Try Sample: OWASP Juice Shop"* button for instantaneous live judge demonstrations.
+- **Unauthorized Third-Party Egress Radar**: Explicitly detects tracking SDKs (Meta Pixel, Google Analytics, Mixpanel, Segment, TikTok) and external unencrypted HTTP endpoints transferring personal data without verified consent (DPDP Section 6(1) & Section 16).
+- **Code Malfunctions & Bugs Panel**: Flags empty catch blocks, SQLi via concatenation, dangerous `eval()`, prototype pollution, and unhandled promise rejections.
+- **Interactive DPDP Privacy Findings Explorer**: Searchable and filterable by severity and category with syntax-highlighted and masked code snippets.
+- **Direct Downloads**: 1-click downloads for official ReportLab PDF reports and unified diff `.patch` files.
+
+---
+
 ## CLI Usage
 
 ### 1. Static & Config Compliance Scan

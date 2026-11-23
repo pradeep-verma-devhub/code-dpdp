@@ -128,6 +128,8 @@ class ScanResult:
     summary: ScanSummary
     findings: List[Finding]
     consent_scorecard: Optional[ConsentScorecard] = None
+    third_party_egress: List[Dict[str, Any]] = field(default_factory=list)
+    malfunctions: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -136,6 +138,8 @@ class ScanResult:
             "summary": self.summary.to_dict(),
             "findings": [f.to_dict() for f in self.findings],
             "consent_scorecard": self.consent_scorecard.to_dict() if self.consent_scorecard else None,
+            "third_party_egress": self.third_party_egress,
+            "malfunctions": self.malfunctions,
         }
 
 @dataclass
