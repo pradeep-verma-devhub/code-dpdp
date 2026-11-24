@@ -3,11 +3,11 @@ import { PiiClassifier, validateVerhoeff, validateLuhn } from '../src/pii/index.
 
 describe('PII Detection Engine', () => {
   it('correctly validates Aadhaar using Verhoeff algorithm', () => {
-    // Valid Aadhaar numbers generated via Verhoeff
+
     expect(validateVerhoeff('234567890124')).toBe(true);
-    // Invalid checksum
+
     expect(validateVerhoeff('234567890120')).toBe(false);
-    // Disallowed starting digit (0 or 1)
+
     expect(validateVerhoeff('012345678901')).toBe(false);
   });
 
@@ -18,9 +18,9 @@ describe('PII Detection Engine', () => {
   });
 
   it('validates Credit Card using Luhn algorithm', () => {
-    // Sample test card (Visa valid)
+
     expect(validateLuhn('4532015112830366')).toBe(true);
-    // Invalid card
+
     expect(validateLuhn('4532015112830367')).toBe(false);
   });
 

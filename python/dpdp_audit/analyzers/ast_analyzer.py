@@ -8,10 +8,6 @@ from ..core.dpdp_mapper import DpdpMapper
 from ..core.file_walker import FileWalker
 
 class AstAnalyzer:
-    """
-    Code AST and semantic flow analyzer for TypeScript and JavaScript files.
-    Identifies dangerous function calls, unsafe configurations, and personal data leakage.
-    """
 
     @classmethod
     def analyze_file(cls, file_path: Path, rules: List[RuleDefinition], root: Path) -> List[Finding]:
@@ -26,12 +22,10 @@ class AstAnalyzer:
 
         content = "".join(lines)
 
-        # Iterate through all active code rules
         for rule in rules:
             if rule.category in ("config",) and not rule.target_type == "regex":
                 continue
 
-            # 1. Regex-based pattern matching on code
             if rule.pattern:
                 try:
                     pat = re.compile(rule.pattern, re.IGNORECASE)
@@ -49,7 +43,6 @@ class AstAnalyzer:
                         sev, just = RiskScorer.calculate_risk(piis, rule.data_flow, rule.category, rule.severity)
                         prov = DpdpMapper.get_provision(rule.dpdp_ref)
 
-                        # Generate unified diff patch if patch template available
                         patch_diff = cls._generate_patch(rule, rel_path, idx, clean_line)
 
                         findings.append(Finding(
@@ -73,7 +66,6 @@ class AstAnalyzer:
                             patch_unified_diff=patch_diff,
                         ))
 
-            # 2. Semantic AST-level checks for logging & request bodies
             elif rule.id == "DPDP-LOG-001":
                 cls._check_pii_logging(lines, rel_path, rule, findings)
 
@@ -90,7 +82,6 @@ class AstAnalyzer:
 
     @classmethod
     def _check_pii_logging(cls, lines: List[str], rel_path: str, rule: RuleDefinition, findings: List[Finding]):
-        """Detect console.log(piiVar) or logger.info(user.email)."""
         log_pattern = re.compile(r"""(?:console|logger|winston)\.(?:log|info|warn|error|debug)\s*\(([^)]+)\)""")
         for idx, line in enumerate(lines, 1):
             if FileWalker.has_ignore_comment(line, rule.id):
@@ -98,7 +89,6 @@ class AstAnalyzer:
             m = log_pattern.search(line)
             if m:
                 args = m.group(1)
-                # Check if arguments reference known PII keywords
                 tokens = re.split(r"[,+.\s\"'()\[\]{}]+", args)
                 detected_pii = []
                 for tok in tokens:
@@ -132,7 +122,6 @@ class AstAnalyzer:
 
     @classmethod
     def _check_req_body_logging(cls, lines: List[str], rel_path: str, rule: RuleDefinition, findings: List[Finding]):
-        """Detect console.log(req.body)."""
         pattern = re.compile(r"""(?:console|logger|winston)\.(?:log|info|warn|error|debug)\s*\([^)]*req\.body[^)]*\)""")
         for idx, line in enumerate(lines, 1):
             if FileWalker.has_ignore_comment(line, rule.id):
@@ -164,7 +153,6 @@ class AstAnalyzer:
 
     @classmethod
     def _check_plaintext_passwords(cls, lines: List[str], rel_path: str, rule: RuleDefinition, findings: List[Finding]):
-        """Detect user.password = req.body.password without bcrypt/hash."""
         pattern = re.compile(r"""(?:user|account)\.password\s*=\s*(?:req\.body\.password|password\b)(?!\s*hash)""")
         for idx, line in enumerate(lines, 1):
             if FileWalker.has_ignore_comment(line, rule.id):
@@ -196,7 +184,6 @@ class AstAnalyzer:
 
     @classmethod
     def _check_entity_response_leak(cls, lines: List[str], rel_path: str, rule: RuleDefinition, findings: List[Finding]):
-        """Detect res.json(user) returning raw DB entity."""
         pattern = re.compile(r"""res\.(?:json|send)\s*\(\s*(?:user|userData|account)\s*\)""")
         for idx, line in enumerate(lines, 1):
             if FileWalker.has_ignore_comment(line, rule.id):
@@ -228,7 +215,6 @@ class AstAnalyzer:
 
     @classmethod
     def _generate_patch(cls, rule: RuleDefinition, rel_path: str, line_no: int, original_line: str) -> Optional[str]:
-        """Generate targeted unified diff patches for fixable findings."""
         if not rule.patch_template:
             return None
 

@@ -18,9 +18,7 @@ export interface ScanServiceResult {
 }
 
 export class AuditService {
-  /**
-   * Process and scan an uploaded .zip codebase archive.
-   */
+
   public static async scanZipArchive(
     zipFilePath: string,
     originalFileName: string
@@ -32,18 +30,16 @@ export class AuditService {
     PathUtil.ensureDirSync(extractDir);
 
     try {
-      // 1. Extract zip archive
+
       const extractResult = ArchiveUtil.extractZip(zipFilePath, extractDir);
       if (!extractResult.success) {
         throw new Error(extractResult.error || 'Failed to extract .zip archive');
       }
 
-      // 2. Clean up temporary uploaded zip file
       if (fs.existsSync(zipFilePath)) {
         fs.unlinkSync(zipFilePath);
       }
 
-      // 3. Execute central audit pipeline
       const pipelineResult = await ScanPipeline.execute({
         targetPath: extractDir,
         sessionDir,
@@ -74,9 +70,6 @@ export class AuditService {
     }
   }
 
-  /**
-   * Scan pre-configured benchmark sample (OWASP Juice Shop).
-   */
   public static async scanSampleCodebase(): Promise<ScanServiceResult> {
     const sampleDir = appConfig.paths.sampleTarget;
 
@@ -120,16 +113,12 @@ export class AuditService {
     };
   }
 
-  /**
-   * Retrieve PDF report file path for downloading.
-   */
   public static getPdfReportPath(sessionId: string): string | null {
     const sessionPdf = path.join(appConfig.paths.uploads, sessionId, 'report.pdf');
     if (fs.existsSync(sessionPdf)) {
       return sessionPdf;
     }
 
-    // Fallback to root report.pdf
     const rootPdf = path.resolve(appConfig.paths.root, 'report.pdf');
     if (fs.existsSync(rootPdf)) {
       return rootPdf;
@@ -138,9 +127,6 @@ export class AuditService {
     return null;
   }
 
-  /**
-   * Retrieve unified diff patch file path for downloading.
-   */
   public static getPatchesPath(sessionId: string): string | null {
     const sessionPatch = path.join(appConfig.paths.uploads, sessionId, 'patches', 'all_remediations.patch');
     if (fs.existsSync(sessionPatch)) {
@@ -155,9 +141,6 @@ export class AuditService {
     return null;
   }
 
-  /**
-   * Retrieve all registered DPDP rules and statutory provisions.
-   */
   public static getRegisteredRules(): { rules: RuleDefinition[]; dpdpMap: Record<string, DPDPRef> } {
     const { dpdpMap, rules } = RuleLoader.loadRules(appConfig.paths.rules);
     return { rules, dpdpMap };

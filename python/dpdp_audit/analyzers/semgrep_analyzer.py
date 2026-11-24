@@ -10,22 +10,18 @@ from ..core.models import Finding, Severity, DataFlow
 from ..core.rag_pipeline import RagPipeline
 
 class SemgrepAnalyzer:
-    """Invokes and parses Semgrep static code analysis with DPDP Act & OWASP rules."""
 
     @classmethod
     def find_semgrep_binary(cls) -> Optional[str]:
-        # 1. Check current virtualenv
         venv_bin = Path(sys.prefix) / "bin" / "semgrep"
         if venv_bin.exists() and os.access(venv_bin, os.X_OK):
             return str(venv_bin)
 
-        # 2. Check local project .venv
         project_root = Path(__file__).resolve().parent.parent.parent.parent
         proj_venv = project_root / ".venv" / "bin" / "semgrep"
         if proj_venv.exists() and os.access(proj_venv, os.X_OK):
             return str(proj_venv)
 
-        # 3. Check system PATH
         which_path = shutil.which("semgrep")
         if which_path:
             return which_path
@@ -81,7 +77,6 @@ class SemgrepAnalyzer:
             if not stdout:
                 return []
 
-            # Extract json object from stdout (ignoring any warning banners)
             brace_start = stdout.find("{")
             brace_end = stdout.rfind("}")
             if brace_start == -1 or brace_end == -1:
@@ -110,7 +105,6 @@ class SemgrepAnalyzer:
         except Exception:
             rel_path = raw_path
 
-        # Ignore results in internal vendor dependencies or environment directories
         if "node_modules" in rel_path or ".venv" in rel_path or "/.git/" in rel_path or rel_path.startswith(".git"):
             return None
 
@@ -123,7 +117,6 @@ class SemgrepAnalyzer:
         metadata = extra.get("metadata", {})
         lines = extra.get("lines", "").strip()
 
-        # Severity mapping
         raw_sev = extra.get("severity", "ERROR").upper()
         if raw_sev == "ERROR":
             severity: Severity = "critical"
@@ -139,7 +132,6 @@ class SemgrepAnalyzer:
         category = metadata.get("category", "storage")
         remediation = metadata.get("remediation", "Implement strict input validation and defense-in-depth security safeguards.")
 
-        # Data flow mapping
         if "transit" in category or "tls" in check_id.lower() or "ssl" in check_id.lower():
             df: DataFlow = "transferred"
         elif "logging" in category or "exposure" in category or "xss" in category:
@@ -150,10 +142,8 @@ class SemgrepAnalyzer:
         short_name = check_id.split(".")[-1].replace("semgrep-dpdp-", "").replace("-", " ").title()
         title = f"{short_name} ({cwe.split(':')[0].strip() if ':' in cwe else 'Security Flaw'})"
 
-        # Unique ID
         fid = f"DPDP-SEM-{line_num:04d}"
 
-        # Generate a patch diff if possible
         patch_diff = cls._build_patch(lines, rel_path, line_num, check_id)
 
         finding = Finding(

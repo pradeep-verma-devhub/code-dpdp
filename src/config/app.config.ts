@@ -46,7 +46,7 @@ export const appConfig: AppConfig = {
     pythonVenv: resolvePythonBinary(),
   },
   upload: {
-    maxSizeBytes: 100 * 1024 * 1024, // 100 MB
+    maxSizeBytes: 100 * 1024 * 1024,
     allowedMimeTypes: ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'],
     allowedExtensions: ['.zip'],
   },

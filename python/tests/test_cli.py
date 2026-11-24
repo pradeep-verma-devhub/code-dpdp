@@ -83,18 +83,14 @@ def test_rag_retrieval_and_cli():
     kb = RagPipeline.load_knowledge_base()
     assert len(kb) >= 30
 
-    # Test Section 9 for children
     child_matches = RagPipeline.retrieve_statutory_context("children minor tracking targeted ads", top_k=2)
     assert any("9" in m["section"] for m in child_matches)
 
-    # Test Section 8(5) for security safeguards / sql injection
     sqli_matches = RagPipeline.retrieve_statutory_context("sql injection parameterized query safeguards", top_k=2)
     assert any("8(5)" in m["section"] or "Rule 6" in m["section"] for m in sqli_matches)
 
-    # Test Section 6(4) for withdrawal
     withdraw_matches = RagPipeline.retrieve_statutory_context("withdraw consent opt-out comparable ease", top_k=2)
     assert any("6(4)" in m["section"] or "Rule 4" in m["section"] for m in withdraw_matches)
 
-    # Test CLI rag command
     with patch.object(sys, "argv", ["code-dpdp", "rag", "parental consent for child"]):
         main()

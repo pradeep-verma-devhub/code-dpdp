@@ -1,9 +1,4 @@
-﻿# ==============================================================================
-# code-dpdp | PowerShell Automated Setup & Installation Script (Windows)
-# India Digital Personal Data Protection Act 2023 & DPDP Rules 2025 Scanner
-# ==============================================================================
-
-Write-Host "==================================================================" -ForegroundColor Cyan
+﻿Write-Host "==================================================================" -ForegroundColor Cyan
 Write-Host "   🛡️   CODE-DPDP: Automated Installation & Setup (PowerShell)   " -ForegroundColor White
 Write-Host "   India Digital Personal Data Protection Act 2023 & Rules 2025   " -ForegroundColor Yellow
 Write-Host "==================================================================" -ForegroundColor Cyan
@@ -12,7 +7,6 @@ Write-Host ""
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $ScriptDir
 
-# Step 1: Detect Python
 Write-Host "[1/5] Detecting Python 3 environment..." -ForegroundColor White
 $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
 if (-not $pythonCmd) {
@@ -31,7 +25,6 @@ if ([int]$pyMajor -lt 3 -or ([int]$pyMajor -eq 3 -and [int]$pyMinor -lt 10)) {
 }
 Write-Host "✓ Found Python $pyVer" -ForegroundColor Green
 
-# Step 2: Create Python Virtual Environment (.venv)
 Write-Host "[2/5] Creating isolated virtual environment (.venv)..." -ForegroundColor White
 if (-not (Test-Path ".venv")) {
     & python -m venv .venv
@@ -40,7 +33,6 @@ if (-not (Test-Path ".venv")) {
     Write-Host "✓ Existing .venv directory found." -ForegroundColor Green
 }
 
-# Step 3: Install dependencies
 Write-Host "[3/5] Installing Python dependencies from requirements.txt..." -ForegroundColor White
 & .venv\Scripts\python.exe -m pip install --upgrade pip --quiet
 if (Test-Path "requirements.txt") {
@@ -51,7 +43,6 @@ if (Test-Path "requirements.txt") {
     Write-Host "✓ Core dependencies installed." -ForegroundColor Green
 }
 
-# Step 4: Optional Node/npm
 Write-Host "[4/5] Checking Node.js environment (optional)..." -ForegroundColor White
 $npmCmd = Get-Command npm -ErrorAction SilentlyContinue
 if ($npmCmd) {
@@ -61,7 +52,6 @@ if ($npmCmd) {
     Write-Host "[-] Node/npm not found. Python standalone engine will be used." -ForegroundColor Yellow
 }
 
-# Step 5: Verification & CLI setup
 Write-Host "[5/5] Configuring command-line launcher..." -ForegroundColor White
 $userBin = "$env:USERPROFILE\.local\bin"
 if (-not (Test-Path $userBin)) {
@@ -71,7 +61,6 @@ Copy-Item "code-dpdp.cmd" "$userBin\code-dpdp.cmd" -Force
 Write-Host "✓ Local launcher 'code-dpdp.cmd' configured." -ForegroundColor Green
 Write-Host ""
 
-# Verification
 Write-Host "[*] Verifying installation with self-test..." -ForegroundColor White
 & .\code-dpdp.cmd --version
 

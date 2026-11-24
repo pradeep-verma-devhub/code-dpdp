@@ -8,7 +8,6 @@ from ..core.dpdp_mapper import DpdpMapper
 from ..core.file_walker import FileWalker
 
 class ConfigAnalyzer:
-    """Specialized analyzer for .env, Dockerfile, docker-compose, and cloud configs."""
 
     @classmethod
     def analyze_file(cls, file_path: Path, rules: List[RuleDefinition], root: Path) -> List[Finding]:
@@ -22,7 +21,6 @@ class ConfigAnalyzer:
         except Exception:
             return findings
 
-        # 1. Analyze .env files for committed secrets (DPDP-CFG-001)
         if fname.startswith(".env"):
             rule = next((r for r in rules if r.id == "DPDP-CFG-001"), None)
             if rule:
@@ -36,9 +34,7 @@ class ConfigAnalyzer:
                         key, _, val = clean.partition("=")
                         key = key.strip()
                         val = val.strip().strip("'\"")
-                        # Check for sensitive secret keys
                         if re.search(r"(SECRET|PASSWORD|PASSWD|KEY|TOKEN|API_KEY|AUTH)", key, re.IGNORECASE) and len(val) > 4:
-                            # Not dummy/placeholder
                             if val.lower() not in ("dummy", "change_me", "placeholder", "your_secret_here"):
                                 sev, just = RiskScorer.calculate_risk(["password"], "stored", "config", rule.severity)
                                 prov = DpdpMapper.get_provision(rule.dpdp_ref)
@@ -62,7 +58,6 @@ class ConfigAnalyzer:
                                     patch_available=False,
                                 ))
 
-        # 2. Analyze Dockerfile for USER root and HEALTHCHECK (DPDP-CFG-002, DPDP-CFG-003)
         if "dockerfile" in fname:
             has_user = False
             has_healthcheck = False
@@ -100,7 +95,6 @@ class ConfigAnalyzer:
                 if re.match(r"^HEALTHCHECK\s+", clean, re.IGNORECASE):
                     has_healthcheck = True
 
-            # If no USER instruction found at all in Dockerfile
             if not has_user:
                 rule = next((r for r in rules if r.id == "DPDP-CFG-002"), None)
                 if rule:
@@ -127,7 +121,6 @@ class ConfigAnalyzer:
                         patch_unified_diff=f"--- a/{rel_path}\n+++ b/{rel_path}\n@@ -{len(lines)},0 +{len(lines)+1},1 @@\n+USER node",
                     ))
 
-            # Missing HEALTHCHECK
             if not has_healthcheck:
                 rule = next((r for r in rules if r.id == "DPDP-CFG-003"), None)
                 if rule:
@@ -154,10 +147,8 @@ class ConfigAnalyzer:
                         patch_unified_diff=f"--- a/{rel_path}\n+++ b/{rel_path}\n@@ -1,0 +1,1 @@\n+HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000/health || exit 1",
                     ))
 
-        # 3. Analyze docker-compose files for open ports and privileged containers
         if "docker-compose" in fname or fname.endswith((".yml", ".yaml")):
             content = "".join(lines)
-            # Open DB ports (DPDP-EXP-007)
             rule_port = next((r for r in rules if r.id == "DPDP-EXP-007"), None)
             if rule_port:
                 for idx, line in enumerate(lines, 1):
@@ -188,7 +179,6 @@ class ConfigAnalyzer:
                                 patch_unified_diff=f"--- a/{rel_path}\n+++ b/{rel_path}\n@@ -{idx},1 +{idx},1 @@\n-{clean}\n+{fix_line}",
                             ))
 
-            # Privileged mode (DPDP-CFG-004)
             rule_priv = next((r for r in rules if r.id == "DPDP-CFG-004"), None)
             if rule_priv:
                 for idx, line in enumerate(lines, 1):

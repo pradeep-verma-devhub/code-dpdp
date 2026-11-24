@@ -16,7 +16,7 @@ export class RuleLoader {
   private static cachedData: LoadedRulesData | null = null;
 
   public static getRulesDir(): string {
-    // Check both src/rules and compiled dist/rules
+
     const possiblePaths = [
       path.resolve(__dirname),
       path.resolve(process.cwd(), 'src/rules'),

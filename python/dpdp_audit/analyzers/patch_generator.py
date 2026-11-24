@@ -6,7 +6,6 @@ from typing import List, Dict, Any
 from ..core.models import Finding
 
 class PatchGenerator:
-    """Generates unified diff patches for fixable findings and optionally creates a PR branch."""
 
     @classmethod
     def generate_patches(
@@ -22,7 +21,6 @@ class PatchGenerator:
         patchable_findings = [f for f in findings if f.patch_available and f.patch_unified_diff]
         patch_files: List[str] = []
 
-        # 1. Write individual unified diff files
         for f in patchable_findings:
             patch_name = f"{f.rule_id}_{f.id}.patch".replace("/", "_")
             file_dest = out_path / patch_name
@@ -30,7 +28,6 @@ class PatchGenerator:
                 pf.write(f.patch_unified_diff + "\n")
             patch_files.append(str(file_dest))
 
-        # Write combined master patch
         master_patch = out_path / "all_remediations.patch"
         with open(master_patch, "w", encoding="utf-8") as mf:
             for f in patchable_findings:
@@ -61,11 +58,8 @@ class PatchGenerator:
         timestamp = int(time.time())
         branch_name = f"dpdp-remediation-{timestamp}"
 
-        # Check git repo status
         try:
-            # Create branch
             subprocess.run(["git", "checkout", "-b", branch_name], cwd=str(target), capture_output=True, text=True, check=True)
-            # Apply patch via git apply or fallback
             apply_res = subprocess.run(
                 ["git", "apply", "--ignore-whitespace", str(master_patch)],
                 cwd=str(target),
@@ -76,7 +70,6 @@ class PatchGenerator:
         except Exception:
             applied_success = False
 
-        # Generate PR-ready Markdown description
         pr_md_path = target / "PR_REMEDIATION.md"
         pr_content = cls._generate_pr_markdown(branch_name, findings)
         with open(pr_md_path, "w", encoding="utf-8") as f:

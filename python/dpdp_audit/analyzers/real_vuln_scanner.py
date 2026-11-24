@@ -10,9 +10,7 @@ from ..core.risk_scorer import RiskScorer
 from ..core.file_walker import FileWalker
 from ..core.rag_pipeline import RagPipeline
 
-# Comprehensive Real Vulnerability Ruleset (OWASP Top 10 + DPDP Act 2023 Statutory Safeguards)
 VULNERABILITY_DEFINITIONS = [
-    # 1. SQL Injection (SQLi)
     {
         "id": "SEC-SQLI-001",
         "title": "SQL Injection via Dynamic String Concatenation",
@@ -40,7 +38,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- cursor.execute(f'SELECT * FROM users WHERE id = {user_id}')\n+ cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))",
     },
 
-    # 2. Cross-Site Scripting (XSS)
     {
         "id": "SEC-XSS-001",
         "title": "Cross-Site Scripting (DOM XSS) via innerHTML/outerHTML",
@@ -81,7 +78,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- res.send('<h1>Hello ' + req.query.name + '</h1>')\n+ res.send('<h1>Hello ' + escapeHtml(req.query.name) + '</h1>')",
     },
 
-    # 3. Command Injection & Remote Code Execution (RCE)
     {
         "id": "SEC-RCE-001",
         "title": "OS Command Injection Hazard via child_process.exec",
@@ -122,7 +118,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- const res = eval(inputExpression)\n+ const res = JSON.parse(inputExpression)",
     },
 
-    # 4. Path Traversal & Local File Inclusion (LFI)
     {
         "id": "SEC-LFI-001",
         "title": "Path Traversal & Arbitrary File Read Hazard",
@@ -137,7 +132,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- res.sendFile(path.join(__dirname, req.query.file))\n+ const safe = path.resolve(__dirname, 'public', path.basename(req.query.file)); res.sendFile(safe)",
     },
 
-    # 5. Server-Side Request Forgery (SSRF)
     {
         "id": "SEC-SSRF-001",
         "title": "Server-Side Request Forgery (SSRF) via Dynamic URL Fetch",
@@ -152,7 +146,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- axios.get(req.query.url)\n+ if (!ALLOWED_DOMAINS.includes(new URL(req.query.url).hostname)) throw new Error('Untrusted domain'); axios.get(req.query.url)",
     },
 
-    # 6. Hardcoded Secrets & Cloud Credentials
     {
         "id": "SEC-CRED-001",
         "title": "Hardcoded AWS Access Key ID Detected",
@@ -219,7 +212,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- const secret = 'mySuperSecretKey123'\n+ const secret = process.env.JWT_SECRET",
     },
 
-    # 7. Cryptographic Weaknesses
     {
         "id": "SEC-CRYP-001",
         "title": "Broken Hash Algorithm (MD5/SHA-1) Used for Cryptography",
@@ -247,7 +239,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- const token = Math.random().toString(36)\n+ const token = crypto.randomBytes(32).toString('hex')",
     },
 
-    # 8. Insecure Transport & SSL/TLS Verification
     {
         "id": "SEC-TLS-001",
         "title": "TLS Certificate Verification Explicitly Disabled",
@@ -275,7 +266,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- 'http://api.domain.com/v1'\n+ 'https://api.domain.com/v1'",
     },
 
-    # 9. Insecure Cookie Management
     {
         "id": "SEC-COOK-001",
         "title": "Sensitive Session Cookie Missing HttpOnly Flag",
@@ -303,7 +293,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- res.cookie('session', sid, { secure: false })\n+ res.cookie('session', sid, { secure: true, httpOnly: true })",
     },
 
-    # 10. CORS Wildcard Misconfiguration
     {
         "id": "SEC-CORS-001",
         "title": "Insecure CORS Policy Allowing Any Origin with Credentials",
@@ -318,7 +307,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- cors({ origin: '*' })\n+ cors({ origin: process.env.ALLOWED_ORIGIN || 'https://app.mydomain.com', credentials: true })",
     },
 
-    # 11. Cloud Credentials & API Keys
     {
         "id": "SEC-CRED-006",
         "title": "Hardcoded AWS Secret Access Key",
@@ -385,7 +373,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- const apiKey = 'secret_token_12345678'\n+ const apiKey = process.env.API_KEY",
     },
 
-    # 12. Deserialization & Open Redirects
     {
         "id": "SEC-DESER-001",
         "title": "Unsafe Object Deserialization (Pickle / Unsafe YAML)",
@@ -413,7 +400,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- res.redirect(req.query.url)\n+ if (isAllowed(req.query.url)) res.redirect(req.query.url)",
     },
 
-    # 13. Go Language Security Flaws
     {
         "id": "SEC-GO-001",
         "title": "Go SQL Injection via Dynamic Query Construction",
@@ -454,7 +440,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": '- exec.Command("sh", "-c", cmdStr)\n+ exec.Command(binaryPath, arg1, arg2)',
     },
 
-    # 14. Broken Ciphers & Modes
     {
         "id": "SEC-CRYP-003",
         "title": "Deprecated Cipher or Insecure Electronic Codebook (ECB) Mode",
@@ -482,7 +467,6 @@ VULNERABILITY_DEFINITIONS = [
         "remediation_diff": "- curl -sSL https://example.com/install.sh | bash\n+ # Download, verify SHA-256 hash, then execute locally",
     },
 
-    # 15. Code Malfunctions & Crash Hazards
     {
         "id": "MALF-001",
         "title": "Silent Exception Swallowing / Empty Catch Block",
@@ -512,10 +496,6 @@ VULNERABILITY_DEFINITIONS = [
 ]
 
 class RealVulnScanner:
-    """
-    High-speed real vulnerability scanner detecting OWASP Top 10 flaws,
-    cloud credential leaks, cryptographic defects, and DPDP Act statutory violations.
-    """
 
     compiled_rules: Optional[List[Dict[str, Any]]] = None
 
@@ -553,7 +533,6 @@ class RealVulnScanner:
 
     @classmethod
     def scan_file(cls, file_path: Path, root: Path) -> List[Finding]:
-        """Scan a source file against all real vulnerability patterns."""
         findings: List[Finding] = []
         rel_path = str(file_path.relative_to(root))
 
@@ -570,7 +549,6 @@ class RealVulnScanner:
             if not clean or clean.startswith("//") or clean.startswith("#") or clean.startswith("/*"):
                 continue
 
-            # Check all real vulnerability patterns
             for r in rules:
                 if FileWalker.has_ignore_comment(line, r["id"]):
                     continue
@@ -581,7 +559,6 @@ class RealVulnScanner:
                     piis = r["pii_types"]
                     sev, just = RiskScorer.calculate_risk(piis, r["data_flow"], r["category"], r["severity"])
 
-                    # Ground finding in official DPDP Act 2023 rulebook via real RAG
                     statutory_res = RagPipeline.resolve_statutory_reference(
                         title=r["title"],
                         category=r["category"],
@@ -617,7 +594,6 @@ class RealVulnScanner:
                         patch_unified_diff=patch_diff,
                     ))
 
-            # Scan for Indian Personal Identifiable Information leaks (Aadhaar, PAN, Cards, Phone, Credentials)
             pii_matches = PiiDetector.scan_text(clean, line_no=line_no)
             for pm in pii_matches:
                 if pm.type in ("aadhaar", "pan", "financial", "password"):

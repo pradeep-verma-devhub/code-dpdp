@@ -1,8 +1,3 @@
-"""
-DPDP-Audit Central Execution Pipeline
-Systematically extracts, reads codebase files in-memory, triggers all analyzers,
-and generates structured compliance results without terminal print clutter.
-"""
 
 import sys
 import os
@@ -11,7 +6,6 @@ import argparse
 import time
 from pathlib import Path
 
-# Ensure python directory is in sys.path
 _python_root = Path(__file__).resolve().parent.parent
 if str(_python_root) not in sys.path:
     sys.path.insert(0, str(_python_root))
@@ -24,7 +18,6 @@ from dpdp_audit.analyzers.patch_generator import PatchGenerator
 from dpdp_audit.report.pdf_generator import PdfGenerator
 
 class CompliancePipeline:
-    """Central orchestration pipeline for code analysis and report compilation."""
 
     @classmethod
     def execute(
@@ -42,14 +35,11 @@ class CompliancePipeline:
         json_path = session / "out.json"
         patches_dir = session / "patches"
 
-        # 1. Execute full scanning & code reading engine
         scan_result: ScanResult = RulesEngine.scan_target(str(target), run_consent=True)
 
-        # 2. Compile Vector PDF Report
         if generate_pdf:
             PdfGenerator.generate(scan_result, str(pdf_path))
 
-        # 3. Generate Unified Diff Patches
         if generate_patches:
             PatchGenerator.generate_patches(
                 scan_result.findings,
@@ -58,7 +48,6 @@ class CompliancePipeline:
                 apply=False
             )
 
-        # 4. Serialize to out.json
         result_dict = scan_result.to_dict()
         with open(json_path, "w", encoding="utf-8") as jf:
             json.dump(result_dict, jf, indent=2)
@@ -73,7 +62,6 @@ def main():
 
     try:
         res = CompliancePipeline.execute(args.target, args.session_dir)
-        # Output clean JSON on stdout for Node IPC
         print(json.dumps({"success": True, "data": res}))
     except Exception as e:
         print(json.dumps({"success": False, "error": str(e)}), file=sys.stderr)

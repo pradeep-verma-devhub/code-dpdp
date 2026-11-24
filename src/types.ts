@@ -1,6 +1,3 @@
-/**
- * Core type definitions for DPDP-Audit
- */
 
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
 
@@ -25,7 +22,7 @@ export type PiiType =
 
 export interface PiiDetection {
   type: PiiType;
-  confidence: number; // 0 to 1
+  confidence: number;
   matchedTerm: string;
   dataFlow: DataFlow;
   line: number;
@@ -35,7 +32,7 @@ export interface PiiDetection {
 }
 
 export interface DPDPRef {
-  provision: string; // e.g. "Section 8(6)", "Rule 6"
+  provision: string;
   law: 'Act 2023' | 'Rules 2025';
   title: string;
   summary: string;
@@ -55,13 +52,13 @@ export interface RuleDefinition {
     | 'children'
     | 'breach';
   severity: Severity;
-  dpdpRef: string; // Key in dpdp-map.yaml
+  dpdpRef: string;
   description: string;
   piiTypes: PiiType[];
   dataFlow: DataFlow;
-  targetFiles: string[]; // file patterns e.g. ["*.ts", "*.js"]
+  targetFiles: string[];
   targetType: 'ast' | 'regex' | 'config' | 'schema';
-  pattern?: string; // Regex pattern if regex-based
+  pattern?: string;
   astQuery?: {
     type: string;
     callee?: string;
@@ -73,7 +70,7 @@ export interface RuleDefinition {
 }
 
 export interface Finding {
-  id: string; // Unique finding ID (e.g. DPDP-LOG-001-A1B2)
+  id: string;
   ruleId: string;
   title: string;
   file: string;
@@ -102,7 +99,7 @@ export interface ScanSummary {
   byCategory: Record<string, number>;
   byDataFlow: Record<DataFlow, number>;
   topViolations: Array<{ ruleId: string; title: string; count: number }>;
-  complianceScore: number; // 0 to 100
+  complianceScore: number;
   dpdpCoverage: Array<{
     provision: string;
     law: string;
@@ -131,7 +128,7 @@ export interface ConsentCheck {
 }
 
 export interface ConsentScorecard {
-  overallScore: number; // 0 to 100
+  overallScore: number;
   grade: 'A' | 'B' | 'C' | 'D' | 'F';
   pillars: {
     recorded: { score: number; passed: boolean; details: string };

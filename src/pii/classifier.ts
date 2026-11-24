@@ -3,19 +3,15 @@ import { PII_DICTIONARY } from './dictionary.js';
 import { PII_PATTERNS } from './patterns.js';
 
 export class PiiClassifier {
-  /**
-   * Match an identifier (variable name, object key, column name) to PII types
-   */
+
   public static matchIdentifier(identifier: string): PiiType | null {
     if (!identifier || identifier.length < 2) return null;
     const cleanId = identifier.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-    // Extract word tokens
     const tokens = (identifier.match(/[A-Z]?[a-z0-9]+|[A-Z]+(?=[A-Z][a-z]|\b)/g) || [])
       .map((t) => t.toLowerCase());
     const tokenSet = new Set(tokens);
 
-    // 1. Check exact matches first
     for (const entry of PII_DICTIONARY) {
       if (entry.exactMatches) {
         for (const exact of entry.exactMatches) {
@@ -27,7 +23,6 @@ export class PiiClassifier {
       }
     }
 
-    // 2. Check keyword inclusion
     for (const entry of PII_DICTIONARY) {
       for (const kw of entry.keywords) {
         if (kw.length < 5) {
@@ -45,9 +40,6 @@ export class PiiClassifier {
     return null;
   }
 
-  /**
-   * Scan text content (literals, logs, configs) for PII patterns
-   */
   public static scanTextForPii(
     text: string,
     defaultFlow: DataFlow = 'exposed',
@@ -56,14 +48,13 @@ export class PiiClassifier {
     const detections: PiiDetection[] = [];
 
     for (const piiRegex of PII_PATTERNS) {
-      // Reset regex state
+
       piiRegex.pattern.lastIndex = 0;
       let match: RegExpExecArray | null;
 
       while ((match = piiRegex.pattern.exec(text)) !== null) {
         const value = match[0];
 
-        // Run custom validator if present (e.g. Verhoeff for Aadhaar, Luhn for cards)
         if (piiRegex.validator && !piiRegex.validator(value)) {
           continue;
         }
@@ -83,9 +74,6 @@ export class PiiClassifier {
     return detections;
   }
 
-  /**
-   * Classify data flow context based on surrounding AST/code semantics
-   */
   public static classifyDataFlow(context: {
     isLogCall?: boolean;
     isDbOperation?: boolean;
@@ -102,9 +90,6 @@ export class PiiClassifier {
     return 'collected';
   }
 
-  /**
-   * Mask sensitive PII values to prevent accidental leakage in reports
-   */
   public static maskPiiValue(type: PiiType, value: string): string {
     if (!value) return '';
     const clean = value.trim();
@@ -158,19 +143,14 @@ export class PiiClassifier {
     }
   }
 
-  /**
-   * Mask snippets containing PII or secrets
-   */
   public static maskSnippet(snippet: string): string {
     let result = snippet;
 
-    // Mask secret values in assignments e.g. password = "...", secret = '...'
     result = result.replace(
       /(password|passwd|secret|apikey|token|private_key|auth_token)\s*[:=]\s*["']([^"']+)["']/gi,
       (_m, k) => `${k}: "[REDACTED_SECRET]"`
     );
 
-    // Mask PII patterns
     for (const p of PII_PATTERNS) {
       p.pattern.lastIndex = 0;
       result = result.replace(p.pattern, (matched) => {

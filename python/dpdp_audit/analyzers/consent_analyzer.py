@@ -5,10 +5,6 @@ from ..core.models import ConsentCheck, ConsentScorecard
 from ..core.file_walker import FileWalker
 
 class ConsentAnalyzer:
-    """
-    Evaluates consent mechanisms against DPDP Act 2023 (Sections 5 & 6) and DPDP Rules 2025 (Rules 3 & 4).
-    Assesses 5 pillars: Recorded, Withdrawable, Enforced, Granular, Plain Notice.
-    """
 
     @classmethod
     def assess_project(cls, target_path: str) -> ConsentScorecard:
@@ -20,27 +16,21 @@ class ConsentAnalyzer:
 
         checks: List[ConsentCheck] = []
 
-        # Pillar 1: Recorded with timestamp, purpose, and notice version
         p1_res = cls._check_recorded(all_code_files)
         checks.extend(p1_res["checks"])
 
-        # Pillar 2: Withdrawable via endpoint / UI
         p2_res = cls._check_withdrawable(all_code_files)
         checks.extend(p2_res["checks"])
 
-        # Pillar 3: Enforced in backend before processing
         p3_res = cls._check_enforced(all_code_files)
         checks.extend(p3_res["checks"])
 
-        # Pillar 4: Granular per purpose (discrete checkboxes/flags)
         p4_res = cls._check_granular(all_code_files)
         checks.extend(p4_res["checks"])
 
-        # Pillar 5: Plain language notice with itemised disclosure
         p5_res = cls._check_plain_notice(all_code_files)
         checks.extend(p5_res["checks"])
 
-        # Calculate scores
         pillars = {
             "recorded": {"score": p1_res["score"], "passed": p1_res["score"] >= 12, "details": p1_res["summary"]},
             "withdrawable": {"score": p2_res["score"], "passed": p2_res["score"] >= 12, "details": p2_res["summary"]},

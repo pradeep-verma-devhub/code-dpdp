@@ -27,10 +27,6 @@ MANDATORY_HEADERS = [
 ]
 
 class LiveTester:
-    """
-    Non-destructive live API compliance tester for DPDP Act 2023 & Rules 2025.
-    Evaluates running application endpoints for transport security, missing auth, PII leaks, and headers.
-    """
 
     WARNING_NOTICE = (
         "================================================================================\n"
@@ -48,7 +44,6 @@ class LiveTester:
         findings: List[LiveTestFinding] = []
         tested_count = 0
 
-        # 1. Transport Security Check: HTTP vs HTTPS
         if clean_url.startswith("http://") and "localhost" not in clean_url and "127.0.0.1" not in clean_url:
             findings.append(LiveTestFinding(
                 id="LIVE-TRN-01",
@@ -62,7 +57,6 @@ class LiveTester:
                 evidence=f"Base URL: {clean_url}",
             ))
 
-        # 2. Probe Base URL for Security Headers
         resp_headers, status_code, body = cls._probe_endpoint(clean_url, "GET")
         tested_count += 1
 
@@ -81,7 +75,6 @@ class LiveTester:
                         evidence=f"Status: {status_code}",
                     ))
 
-        # 3. Rate Limiting Check
         rate_limit_headers = [k for k in resp_headers.keys() if "ratelimit" in k.lower()]
         if not rate_limit_headers:
             findings.append(LiveTestFinding(
@@ -96,7 +89,6 @@ class LiveTester:
                 evidence="No RateLimit headers detected in response.",
             ))
 
-        # 4. Probe Discovery Routes
         routes_to_test = list(DISCOVERY_ROUTES)
         if custom_routes:
             for cr in custom_routes:
@@ -110,7 +102,6 @@ class LiveTester:
             r_hdrs, r_status, r_body = cls._probe_endpoint(target_ep, method)
             tested_count += 1
 
-            # Check for PII leakage in unauthenticated responses
             if r_status in (200, 201) and r_body:
                 pii_detections = PiiDetector.scan_text(r_body)
                 if pii_detections:
@@ -127,7 +118,6 @@ class LiveTester:
                         evidence=f"Detections: {len(pii_detections)} PII items",
                     ))
 
-                # Check if sensitive route allowed unauthenticated access
                 if any(k in route.lower() for k in ("users", "profile", "account")) and r_status == 200:
                     findings.append(LiveTestFinding(
                         id="LIVE-AUT-01",
@@ -141,15 +131,12 @@ class LiveTester:
                         evidence=f"Response status: {r_status}",
                     ))
 
-            # Statutory Right to Access / Export
             if "export" in route.lower() and r_status not in (404, 502, 503):
                 has_export = True
 
-            # Statutory Right to Erasure / Deletion
             if "delete" in route.lower() and r_status not in (404, 502, 503):
                 has_delete = True
 
-        # 5. Check Verbose Error Disclosure
         err_ep = clean_url + "/api/users/non_existent_invalid_%27%22"
         _, err_status, err_body = cls._probe_endpoint(err_ep, "GET")
         tested_count += 1
@@ -166,7 +153,6 @@ class LiveTester:
                 evidence=f"Status: {err_status}, leaked stack indicators.",
             ))
 
-        # Statutory Endpoints Verdict
         if not has_export:
             findings.append(LiveTestFinding(
                 id="LIVE-LIF-EXP",
@@ -207,7 +193,6 @@ class LiveTester:
 
     @classmethod
     def _probe_endpoint(cls, url: str, method: str) -> tuple[Dict[str, str], int, str]:
-        """Execute a safe, non-destructive probe request with timeout."""
         try:
             req = urllib.request.Request(
                 url,

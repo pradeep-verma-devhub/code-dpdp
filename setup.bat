@@ -1,9 +1,4 @@
 @echo off
-REM ==============================================================================
-REM code-dpdp | One-Click Automated Setup & Installation Script (Windows)
-REM India Digital Personal Data Protection Act 2023 & DPDP Rules 2025 Scanner
-REM ==============================================================================
-
 setlocal enabledelayedexpansion
 title CODE-DPDP Setup & Installation
 
@@ -15,7 +10,6 @@ echo.
 
 cd /d "%~dp0"
 
-REM Step 1: Detect Python
 echo [1/5] Detecting Python environment...
 where python >nul 2>nul
 if %ERRORLEVEL% neq 0 (
@@ -37,7 +31,6 @@ for /f "tokens=*" %%i in ('python --version') do set "PY_VER=%%i"
 echo [v] %PY_VER% detected.
 echo.
 
-REM Step 2: Create Python Virtual Environment (.venv)
 echo [2/5] Creating isolated virtual environment (.venv)...
 if not exist ".venv" (
     python -m venv .venv
@@ -47,7 +40,6 @@ if not exist ".venv" (
 )
 echo.
 
-REM Step 3: Install dependencies
 echo [3/5] Installing Python dependencies from requirements.txt...
 .venv\Scripts\python.exe -m pip install --upgrade pip --quiet
 if exist "requirements.txt" (
@@ -59,7 +51,6 @@ if exist "requirements.txt" (
 )
 echo.
 
-REM Step 4: Check Node.js / npm (Optional)
 echo [4/5] Checking Node.js environment (optional)...
 where npm >nul 2>nul
 if %ERRORLEVEL% equ 0 (
@@ -70,10 +61,8 @@ if %ERRORLEVEL% equ 0 (
 )
 echo.
 
-REM Step 5: Configure CLI wrappers & user PATH
 echo [5/5] Configuring Windows command-line launcher...
 
-REM Create user local bin if possible
 set "USER_BIN=%USERPROFILE%\.local\bin"
 if not exist "%USER_BIN%" mkdir "%USER_BIN%" >nul 2>nul
 copy /y "code-dpdp.cmd" "%USER_BIN%\code-dpdp.cmd" >nul 2>nul
@@ -81,7 +70,6 @@ copy /y "code-dpdp.cmd" "%USER_BIN%\code-dpdp.cmd" >nul 2>nul
 echo [v] Local launcher 'code-dpdp.cmd' created in project root and %USER_BIN%.
 echo.
 
-REM Run Self-Test
 echo [*] Verifying installation with self-test...
 call code-dpdp.cmd --version
 echo.

@@ -73,10 +73,6 @@ THIRD_PARTY_SERVICES = [
 ]
 
 class ThirdPartyAnalyzer:
-    """
-    Scans codebase for unauthorized third-party data egress, external tracking SDKs,
-    and unconsented data sharing under DPDP Section 6(1) and Section 16.
-    """
 
     @classmethod
     def analyze_file(cls, file_path: Path, root: Path) -> List[Dict[str, Any]]:
@@ -99,7 +95,6 @@ class ThirdPartyAnalyzer:
             for service in THIRD_PARTY_SERVICES:
                 for pat in service["patterns"]:
                     if re.search(pat, line, re.IGNORECASE):
-                        # Check whether surrounding lines (window of -3 to +3) have consent guards
                         start_win = max(0, idx - 4)
                         end_win = min(len(lines), idx + 2)
                         window_text = "".join(lines[start_win:end_win])

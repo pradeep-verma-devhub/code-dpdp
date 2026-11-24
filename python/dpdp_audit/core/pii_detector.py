@@ -2,7 +2,6 @@ import re
 from typing import List, Optional, Tuple, Dict, Any
 from .models import PiiType, DataFlow, PiiDetection
 
-# Verhoeff algorithm multiplication table d
 VERHOEFF_D = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
@@ -16,7 +15,6 @@ VERHOEFF_D = [
     [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
 ]
 
-# Verhoeff permutation table p
 VERHOEFF_P = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
@@ -54,7 +52,6 @@ def validate_luhn(card_str: str) -> bool:
         checksum += d
     return checksum % 10 == 0
 
-# PII dictionary definitions
 PII_FIELD_DICTIONARY: Dict[PiiType, Dict[str, Any]] = {
     "aadhaar": {
         "keywords": ["aadhaar", "aadhar", "uidai", "aadhaarno", "aadharnumber"],
@@ -146,9 +143,7 @@ PII_FIELD_DICTIONARY: Dict[PiiType, Dict[str, Any]] = {
 }
 
 class PiiDetector:
-    """Core PII identification, verification, and masking engine."""
 
-    # Pre-compiled Regex patterns
     AADHAAR_REGEX = re.compile(r"\b[2-9]\d{3}[-\s]?\d{4}[-\s]?\d{4}\b")
     PAN_REGEX = re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b")
     PHONE_REGEX = re.compile(r"(?:\+91[-\s]?|91[-\s]?|0)?[6-9]\d{4}[-\s]?\d{5}\b")
@@ -163,37 +158,30 @@ class PiiDetector:
 
     @classmethod
     def match_identifier(cls, identifier: str) -> Optional[PiiType]:
-        """Classify an identifier (variable name, column, json key) to PII type."""
         if not identifier or len(identifier) < 2:
             return None
 
-        # Clean string without separators
         clean = re.sub(r"[^a-z0-9]", "", identifier.lower())
 
-        # Split identifier into word tokens (e.g. user_email -> ['user', 'email'], userPhone -> ['user', 'phone'])
         tokens = [t.lower() for t in re.findall(r"[A-Z]?[a-z0-9]+|[A-Z]+(?=[A-Z][a-z]|\b)", identifier) if t]
         clean_tokens = set(tokens)
 
-        # 1. Exact match on full identifier
         for pii_type, defs in PII_FIELD_DICTIONARY.items():
             for exact in defs.get("exact", []):
                 clean_exact = re.sub(r"[^a-z0-9]", "", exact.lower())
                 if clean == clean_exact:
                     return pii_type
 
-        # 2. Match against word tokens
         for pii_type, defs in PII_FIELD_DICTIONARY.items():
             for exact in defs.get("exact", []):
                 clean_exact = re.sub(r"[^a-z0-9]", "", exact.lower())
                 if clean_exact in clean_tokens:
                     return pii_type
             for kw in defs.get("keywords", []):
-                # Short keywords (< 5 chars, e.g. 'lat', 'dob', 'pan', 'upi') must match a full token
                 if len(kw) < 5:
                     if kw in clean_tokens:
                         return pii_type
                 else:
-                    # Longer keywords (e.g. 'aadhaar', 'financial', 'password', 'latitude') can match substrings
                     if kw in clean or any(kw in t for t in clean_tokens):
                         return pii_type
 
@@ -201,10 +189,8 @@ class PiiDetector:
 
     @classmethod
     def scan_text(cls, text: str, line_no: int = 1, default_flow: DataFlow = "exposed") -> List[PiiDetection]:
-        """Scan raw string content for PII patterns with cryptographic and syntax validators."""
         detections: List[PiiDetection] = []
 
-        # 1. Aadhaar
         for m in cls.AADHAAR_REGEX.finditer(text):
             val = m.group(0)
             if validate_verhoeff(val):
@@ -217,7 +203,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("aadhaar", val)
                 ))
 
-        # 2. PAN
         for m in cls.PAN_REGEX.finditer(text):
             val = m.group(0)
             valid_4th = ("P", "C", "H", "F", "A", "T", "B", "L", "J", "G")
@@ -231,7 +216,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("pan", val)
                 ))
 
-        # 3. Credit / Debit Card
         for m in cls.CARD_REGEX.finditer(text):
             val = m.group(0)
             if validate_luhn(val):
@@ -244,7 +228,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("financial", val)
                 ))
 
-        # 4. UPI
         for m in cls.UPI_REGEX.finditer(text):
             val = m.group(0)
             detections.append(PiiDetection(
@@ -256,7 +239,6 @@ class PiiDetector:
                 value_snippet=cls.mask_value("financial", val)
             ))
 
-        # 5. Email
         for m in cls.EMAIL_REGEX.finditer(text):
             val = m.group(0)
             if not val.endswith(".example.com") and not val.endswith(".local"):
@@ -269,7 +251,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("email", val)
                 ))
 
-        # 6. Phone
         for m in cls.PHONE_REGEX.finditer(text):
             val = m.group(0)
             digits = re.sub(r"\D", "", val)
@@ -283,7 +264,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("phone", val)
                 ))
 
-        # 7. IP Address
         for m in cls.IPV4_REGEX.finditer(text):
             val = m.group(0)
             if val not in ("127.0.0.1", "0.0.0.0") and not val.startswith("192.168.") and not val.startswith("10."):
@@ -296,7 +276,6 @@ class PiiDetector:
                     value_snippet=cls.mask_value("ip", val)
                 ))
 
-        # 8. DOB
         for m in cls.DOB_REGEX.finditer(text):
             val = m.group(0)
             detections.append(PiiDetection(
@@ -312,7 +291,6 @@ class PiiDetector:
 
     @classmethod
     def mask_value(cls, pii_type: PiiType, val: str) -> str:
-        """Mask sensitive values to prevent report leaks."""
         clean = val.strip()
         if pii_type == "aadhaar":
             digits = re.sub(r"\D", "", clean)
@@ -337,16 +315,12 @@ class PiiDetector:
 
     @classmethod
     def mask_snippet(cls, snippet: str) -> str:
-        """Mask secrets and PII occurrences inside code snippets."""
         res = snippet
-        # Mask password / secret assignments
         res = re.sub(
             r"""(?i)(password|passwd|secret|apikey|token|private_key)\s*[:=]\s*["']([^"']+)["']""",
             r'\1: "[REDACTED_SECRET]"',
             res
         )
-        # Mask email
         res = cls.EMAIL_REGEX.sub(lambda m: cls.mask_value("email", m.group(0)), res)
-        # Mask phone
         res = cls.PHONE_REGEX.sub(lambda m: cls.mask_value("phone", m.group(0)), res)
         return res

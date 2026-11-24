@@ -8,7 +8,6 @@ from ..core.dpdp_mapper import DpdpMapper
 from ..core.file_walker import FileWalker
 
 class SchemaAnalyzer:
-    """Specialized analyzer for SQL DDL, Prisma models, Mongoose schemas, and DB definitions."""
 
     SENSITIVE_COLUMNS = {
         "aadhaar": ["aadhaar", "aadhar", "uidai"],
@@ -29,15 +28,12 @@ class SchemaAnalyzer:
         except Exception:
             return findings
 
-        # 1. Prisma schema (.prisma)
         if fname.endswith(".prisma"):
             cls._scan_prisma(lines, rel_path, rules, findings)
 
-        # 2. SQL schema (.sql)
         elif fname.endswith(".sql"):
             cls._scan_sql(lines, rel_path, rules, findings)
 
-        # 3. Mongoose / Sequelize / TypeScript Models (*model*.ts/js, *schema*.ts/js)
         elif any(k in fname for k in ("model", "schema")):
             cls._scan_js_ts_schema(lines, rel_path, rules, findings)
 
@@ -69,7 +65,6 @@ class SchemaAnalyzer:
                     field_name = parts[0]
                     pii_type = PiiDetector.match_identifier(field_name)
                     if pii_type in ("aadhaar", "pan", "financial", "health"):
-                        # Check if encrypted attribute @encrypted is absent
                         if "@encrypted" not in clean and "@hash" not in clean:
                             if not FileWalker.has_ignore_comment(line, rule_sto.id):
                                 sev, just = RiskScorer.calculate_risk([pii_type], "stored", "storage", rule_sto.severity)
@@ -138,7 +133,6 @@ class SchemaAnalyzer:
             if clean.startswith("//") or clean.startswith("/*"):
                 continue
 
-            # Check Mongoose field definition: e.g. aadhaarNumber: { type: String }
             field_match = re.search(r"^([a-zA-Z0-9_]+)\s*:\s*\{", clean)
             if field_match and rule_sto:
                 field_name = field_match.group(1)

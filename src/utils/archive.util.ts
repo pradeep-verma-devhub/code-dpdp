@@ -12,9 +12,7 @@ export interface ExtractionResult {
 }
 
 export class ArchiveUtil {
-  /**
-   * Safely extract a .zip archive into a dedicated directory.
-   */
+
   public static extractZip(zipFilePath: string, destinationDir: string): ExtractionResult {
     const dest = PathUtil.ensureDirSync(destinationDir);
 
@@ -28,7 +26,7 @@ export class ArchiveUtil {
     }
 
     try {
-      // Execute unzip command
+
       const res = spawnSync('unzip', ['-q', '-o', zipFilePath, '-d', dest], {
         encoding: 'utf-8',
         maxBuffer: 50 * 1024 * 1024,
@@ -43,7 +41,6 @@ export class ArchiveUtil {
         };
       }
 
-      // Count extracted files
       let count = 0;
       const walk = (d: string) => {
         const entries = fs.readdirSync(d, { withFileTypes: true });

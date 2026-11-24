@@ -8,11 +8,6 @@ from typing import List, Dict, Any, Optional, Tuple
 from .ollama_service import OllamaService
 
 class RagPipeline:
-    """
-    Advanced Retrieval-Augmented Generation (RAG) pipeline for DPDP Act 2023 & DPDP Rules 2025.
-    Connects code findings and natural language compliance queries directly to the official
-    statutory rulebook and Gazette provisions.
-    """
 
     _knowledge_base: Optional[List[Dict[str, Any]]] = None
     _kb_by_key: Optional[Dict[str, Dict[str, Any]]] = None
@@ -45,7 +40,6 @@ class RagPipeline:
                 data = json.load(f)
                 cls._knowledge_base = data
                 
-                # Build lookup indices for fast exact matching
                 by_key: Dict[str, Dict[str, Any]] = {}
                 for item in data:
                     item_id = item.get("id", "").upper()
@@ -53,8 +47,6 @@ class RagPipeline:
                     by_key[item_id] = item
                     by_key[sec] = item
                     
-                    # Also map standard normalization keys
-                    # e.g., DPDP-ACT-SEC-8-5 -> ACT_SEC_8_5, Section 8(5) -> SEC_8_5
                     clean_id = re.sub(r'[^A-Z0-9]', '_', item_id)
                     by_key[clean_id] = item
                     if "SEC" in clean_id:
@@ -78,10 +70,6 @@ class RagPipeline:
 
     @classmethod
     def retrieve_statutory_context(cls, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
-        """
-        Retrieves top matching statutory sections from the complete DPDP Act 2023 & Rules 2025 rulebook
-        using multi-tier BM25/keyword/statute semantic scoring.
-        """
         kb = cls.load_knowledge_base()
         if not kb:
             return []
@@ -89,7 +77,6 @@ class RagPipeline:
         query_lower = query.lower()
         query_tokens = set(cls.tokenize(query))
 
-        # Check for explicit section/rule mentions (e.g. "section 9", "sec 8(5)", "rule 6", "16")
         explicit_sec_match = re.search(r'\b(?:section|sec\.?)\s*([0-9]+(?:\([0-9]+\))?)', query_lower)
         explicit_rule_match = re.search(r'\b(?:rule)\s*([0-9]+(?:\s*(?:&|and)\s*[0-9]+)?)', query_lower)
         
@@ -105,78 +92,61 @@ class RagPipeline:
             category_lower = item.get("category", "").lower()
             keywords = [k.lower() for k in item.get("keywords", [])]
 
-            # 1. Direct explicit statute number match (Highest priority)
             if target_sec and target_sec in sec_lower:
                 score += 50.0
             if target_rule and target_rule in sec_lower:
                 score += 50.0
 
-            # 2. Keyword exact & substring matches
             for q in query_tokens:
                 if q in keywords:
                     score += 8.0
                 elif any(q in kw or kw in q for kw in keywords if len(kw) > 3):
                     score += 3.0
 
-            # 3. Category match
             if category_lower and category_lower in query_lower:
                 score += 10.0
 
-            # 4. Title & section token overlap
             title_tokens = set(cls.tokenize(title_lower))
             sec_tokens = set(cls.tokenize(sec_lower))
             score += len(query_tokens.intersection(title_tokens)) * 4.0
             score += len(query_tokens.intersection(sec_tokens)) * 5.0
 
-            # 5. Technical implication & Official Gazette text overlap
             tech_tokens = set(cls.tokenize(item.get("technical_implication", "").lower()))
             score += len(query_tokens.intersection(tech_tokens)) * 2.0
 
             text_tokens = set(cls.tokenize(item.get("official_text", "").lower()))
             score += len(query_tokens.intersection(text_tokens)) * 1.0
 
-            # 6. Specific Concept Anchors
-            # Children / Minors
             if any(w in query_lower for w in ["child", "minor", "parent", "guardian", "under 18", "age"]):
                 if "9" in sec_lower or item.get("category") == "children":
                     score += 25.0
-            # SQLi / XSS / RCE / Security safeguards
             if any(w in query_lower for w in ["sql", "sqli", "injection", "xss", "rce", "ssrf", "eval", "safeguard", "vulnerability"]):
                 if "8(5)" in sec_lower or "rule 6" in sec_lower:
                     score += 20.0
-            # Plaintext / Password / Encryption / TLS / MD5 / Hashing
             if any(w in query_lower for w in ["password", "md5", "sha1", "crypto", "tls", "encryption", "hash", "argon2", "bcrypt", "cookie"]):
                 if "rule 6" in sec_lower or "8(5)" in sec_lower:
                     score += 20.0
-            # Data Breach Notice / Alerts / PagerDuty / 6 hours
             if any(w in query_lower for w in ["breach notice", "breach reporting", "intimation", "alerting", "telemetry", "incident"]):
                 if "8(6)" in sec_lower or "rule 7" in sec_lower:
                     score += 25.0
-            # Consent / Opt-in / Dark pattern
             if any(w in query_lower for w in ["consent", "affirmative", "checkbox", "pre-ticked", "opt-in", "unbundled"]):
                 if "6(1)" in sec_lower or "rule 3" in sec_lower:
                     score += 20.0
-            # Consent withdrawal / Opt-out
             if any(w in query_lower for w in ["withdraw", "opt-out", "revoke", "revocation"]):
                 if "6(4)" in sec_lower or "rule 4" in sec_lower:
                     score += 25.0
-            # Retention / Erasure / Purge / Delete account
             if any(w in query_lower for w in ["retention", "erasure", "deletion", "ttl", "purge", "soft delete", "forget"]):
                 if "8(7)" in sec_lower or "12" in sec_lower:
                     score += 25.0
-            # Notice / Languages / 8th schedule
             if any(w in query_lower for w in ["notice", "multilingual", "language", "eighth schedule", "itemised"]):
                 if "5" in sec_lower:
                     score += 25.0
-            # Grievance / DPO / Contact
             if any(w in query_lower for w in ["grievance", "dpo", "officer", "complaint", "redressal"]):
                 if "8(10)" in sec_lower or "13" in sec_lower or "rule 9" in sec_lower:
                     score += 25.0
-            # Egress / Cross-border / Third-party / Foreign
             if any(w in query_lower for w in ["egress", "cross-border", "transfer", "overseas", "foreign", "meta pixel", "analytics"]):
                 if "16" in sec_lower or "rule 5" in sec_lower:
                     score += 20.0
-            # Significant Data Fiduciary / DPIA
             if any(w in query_lower for w in ["significant", "sdf", "dpia", "audit"]):
                 if "10" in sec_lower:
                     score += 20.0
@@ -198,17 +168,11 @@ class RagPipeline:
         data_flow: str = "",
         fallback_ref: str = ""
     ) -> Dict[str, Any]:
-        """
-        Dynamically connects a code finding or rule to its precise DPDP Act 2023 or Rules 2025 provision.
-        Eliminates hardcoded repetitiveness by querying the full rulebook via semantic RAG.
-        """
         cls.load_knowledge_base()
 
-        # If fallback_ref directly names a specific section in KB, verify it
         cleaned_ref = fallback_ref.strip().upper().replace(" ", "_").replace("-", "_")
         if cls._kb_by_key and cleaned_ref in cls._kb_by_key:
             target = cls._kb_by_key[cleaned_ref]
-            # Avoid generic default fallbacks if context shows a more specific requirement
             if not (cleaned_ref in ("ACT_SEC_8_6", "SEC_8_6") and any(w in (title + " " + category).lower() for w in ["child", "consent", "notice", "retention", "injection", "crypto"])):
                 return {
                     "sectionOrRule": target["section"],
@@ -220,7 +184,6 @@ class RagPipeline:
                     "technical_implication": target["technical_implication"]
                 }
 
-        # Build dynamic RAG query
         pii_str = " ".join(pii_types or [])
         query = f"{title} {category} {data_flow} {pii_str} {snippet[:200]}"
         matches = cls.retrieve_statutory_context(query, top_k=1)
@@ -237,7 +200,6 @@ class RagPipeline:
                 "technical_implication": statute["technical_implication"]
             }
 
-        # Default standard fallback grounded in Section 8(5) Reasonable Security Safeguards
         return {
             "sectionOrRule": "Section 8(5)",
             "statutory_citation": "DPDP Act 2023, Section 8(5) read with Schedule Item 1",
@@ -256,7 +218,6 @@ class RagPipeline:
         file_path: str,
         current_fix: str
     ) -> Dict[str, Any]:
-        """Enriches a finding using RAG statutory retrieval and local Ollama or expert synthesis."""
         query = f"{finding_title} {current_fix} {file_path}"
         matches = cls.retrieve_statutory_context(query, top_k=1)
 
@@ -266,7 +227,6 @@ class RagPipeline:
         official_text = statute["official_text"] if statute else ""
         tech_implication = statute.get("technical_implication", "") if statute else ""
 
-        # Local Ollama RAG generation
         ai_advice = None
         if OllamaService.is_available():
             rag_prompt = (
@@ -284,7 +244,6 @@ class RagPipeline:
             )
             ai_advice = OllamaService.generate_remediation(finding_title, snippet, rag_prompt)
         else:
-            # Deterministic, expert engineering defense brief based on retrieved statute
             ai_advice = f"Mandate under {statute_citation}: {tech_implication}. Fix file {file_path}: {current_fix}"
 
         return {
@@ -296,7 +255,6 @@ class RagPipeline:
 
     @classmethod
     def query_rulebook(cls, user_query: str) -> Dict[str, Any]:
-        """Interactive RAG query on DPDP Act 2023 & DPDP Rules 2025."""
         matches = cls.retrieve_statutory_context(user_query, top_k=3)
 
         if not matches:
@@ -325,7 +283,6 @@ class RagPipeline:
             )
             ai_response = OllamaService.generate(prompt)
         else:
-            # High-grade offline synthesis from top match
             top_m = matches[0] if matches else {}
             ai_response = (
                 f"According to {top_m.get('statutory_citation', 'the DPDP Act 2023')}, "

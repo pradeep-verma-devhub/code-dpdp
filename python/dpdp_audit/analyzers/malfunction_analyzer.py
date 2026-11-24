@@ -60,7 +60,6 @@ MALFUNCTION_CHECKS = [
 ]
 
 class MalfunctionAnalyzer:
-    """Detects software malfunctions, silent failure patterns, and security vulnerabilities."""
 
     @classmethod
     def analyze_file(cls, file_path: Path, root: Path) -> List[Dict[str, Any]]:

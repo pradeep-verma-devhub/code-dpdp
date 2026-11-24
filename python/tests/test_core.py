@@ -57,7 +57,7 @@ def test_rules_loading():
 
 def test_consent_analyzer():
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Create dummy file with consent
+        consent_file = Path(tmpdir) / "consent.ts"
         consent_file = Path(tmpdir) / "consent.ts"
         consent_file.write_text("""
         export function saveConsent(userId: string) {
@@ -88,13 +88,11 @@ def test_scan_and_pdf_generation():
         result = RulesEngine.scan_target(tmpdir)
         assert result.summary.findings_count > 0
 
-        # Generate PDF report
         pdf_out = Path(tmpdir) / "test_report.pdf"
         PdfGenerator.generate(result, str(pdf_out))
         assert pdf_out.exists()
         assert pdf_out.stat().st_size > 1000
 
-        # Generate HTML report
         html_out = Path(tmpdir) / "test_report.html"
         HtmlGenerator.generate(result, str(html_out))
         assert html_out.exists()

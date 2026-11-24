@@ -17,7 +17,6 @@ from ..analyzers.real_vuln_scanner import RealVulnScanner
 from ..analyzers.semgrep_analyzer import SemgrepAnalyzer
 
 class RulesEngine:
-    """Core rules orchestration, evaluation, and aggregation engine."""
 
     _cached_rules: Optional[List[RuleDefinition]] = None
 
@@ -26,7 +25,6 @@ class RulesEngine:
         if cls._cached_rules:
             return cls._cached_rules
 
-        # Find rules directory
         curr = Path(__file__).resolve()
         rules_dir = None
         for parent in [curr.parent, curr.parent.parent, curr.parent.parent.parent, curr.parent.parent.parent.parent]:
@@ -85,7 +83,6 @@ class RulesEngine:
             fname = file_path.name.lower()
             ext = file_path.suffix.lower()
 
-            # 1. Config & Infrastructure
             if (
                 fname.startswith(".env")
                 or "dockerfile" in fname
@@ -94,11 +91,9 @@ class RulesEngine:
             ):
                 all_findings.extend(ConfigAnalyzer.analyze_file(file_path, rules, root))
 
-            # 2. Database schemas & models
             elif ext in (".prisma", ".sql") or "model" in fname or "schema" in fname:
                 all_findings.extend(SchemaAnalyzer.analyze_file(file_path, rules, root))
 
-            # 3. Real Vulnerability & AST Code Inspection
             if ext in (
                 ".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs", ".py", ".go", ".java",
                 ".php", ".rb", ".sh", ".html", ".env", ".yaml", ".yml", ".json",
@@ -108,17 +103,14 @@ class RulesEngine:
             ):
                 all_findings.extend(RealVulnScanner.scan_file(file_path, root))
 
-            # 4. Code AST & Malfunction Analyzers
             if ext in (".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs", ".py", ".go", ".java", ".php"):
                 all_findings.extend(AstAnalyzer.analyze_file(file_path, rules, root))
                 all_third_party.extend(ThirdPartyAnalyzer.analyze_file(file_path, root))
                 all_malfunctions.extend(MalfunctionAnalyzer.analyze_file(file_path, root))
 
-        # 5. Semgrep AST & Taint Static Code Analysis
         semgrep_findings = SemgrepAnalyzer.scan_target(target_path, str(root))
         all_findings.extend(semgrep_findings)
 
-        # Deduplicate findings by (file, line, rule_id)
         deduped_findings: List[Finding] = []
         seen = set()
         for f in all_findings:
@@ -127,11 +119,9 @@ class RulesEngine:
                 seen.add(key)
                 deduped_findings.append(f)
 
-        # Sort findings: critical -> high -> medium -> low
         sev_rank = {"critical": 0, "high": 1, "medium": 2, "low": 3}
         deduped_findings.sort(key=lambda x: (sev_rank.get(x.severity, 4), x.file, x.line))
 
-        # Compute statistics
         by_sev: Dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
         by_cat: Dict[str, int] = {}
         by_flow: Dict[str, int] = {}

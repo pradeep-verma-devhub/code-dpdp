@@ -3,7 +3,6 @@ from typing import List, Dict, Any
 from ..core.models import ScanResult
 
 class HtmlGenerator:
-    """Generates modern, interactive HTML reports for DPDP compliance audits."""
 
     @classmethod
     def generate(cls, scan_result: ScanResult, output_path: str) -> str:
@@ -190,7 +189,6 @@ class HtmlGenerator:
     </div>
 """
 
-        # Consent Scorecard Section (Bonus A)
         if cs:
             html += f"""
     <section>
@@ -226,7 +224,6 @@ class HtmlGenerator:
     </section>
 """
 
-        # DPDP Statutory Coverage Table
         html += """
     <section>
       <h2>DPDP Act 2023 & Rules 2025 Statutory Provision Coverage</h2>
@@ -259,7 +256,6 @@ class HtmlGenerator:
     </section>
 """
 
-        # Detailed Findings Section
         html += f"""
     <section>
       <h2>Detailed Findings & Remediation Instructions ({len(scan_result.findings)})</h2>

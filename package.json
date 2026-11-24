@@ -22,6 +22,8 @@
     "coderabbit": "./bin/code-dpdp coderabbit",
     "info": "./bin/code-dpdp info",
     "cli": "./bin/code-dpdp",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit",
     "test": ".venv/bin/pytest python/tests"
   },
   "keywords": [

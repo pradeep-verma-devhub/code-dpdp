@@ -22,18 +22,15 @@ IGNORE_FILENAMES = {
 }
 
 class FileWalker:
-    """Fast, safe directory walker with ignore rules and comment-level suppression."""
 
     @classmethod
     def walk(cls, root_path: str, max_files: int = 25000) -> Generator[Path, None, None]:
         root = Path(root_path).resolve()
         count = 0
 
-        # Load .dpdp-audit.yaml or .dpdprc.yaml if exists
         custom_ignores = cls._load_project_config(root)
 
         for dirpath, dirnames, filenames in os.walk(root):
-            # Prune ignored directory trees in-place
             dirnames[:] = [
                 d for d in dirnames
                 if d not in IGNORE_DIRS and d not in custom_ignores and not d.startswith(".cache")
@@ -49,12 +46,10 @@ class FileWalker:
                 if ext in IGNORE_EXTENSIONS:
                     continue
 
-                # Relative path match against custom ignores
                 rel_path = str(file_path.relative_to(root))
                 if any(rel_path.startswith(ig) for ig in custom_ignores):
                     continue
 
-                # Skip files larger than 1MB (minified bundles, dumps)
                 try:
                     if file_path.stat().st_size > 1024 * 1024:
                         continue
@@ -82,9 +77,5 @@ class FileWalker:
 
     @classmethod
     def has_ignore_comment(cls, line_content: str, rule_id: str) -> bool:
-        """
-        Check if line contains inline suppression comment:
-        // dpdp-ignore: DPDP-LOG-001 reason or # dpdp-ignore: DPDP-LOG-001
-        """
         pattern = rf"(?://|#|/\*)\s*dpdp-ignore:\s*({re.escape(rule_id)}|ALL)"
         return bool(re.search(pattern, line_content, re.IGNORECASE))

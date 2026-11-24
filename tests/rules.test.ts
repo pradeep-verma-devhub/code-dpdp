@@ -8,7 +8,6 @@ describe('Rule Loader & DPDP Mapping Verification', () => {
     expect(Object.keys(dpdpMap).length).toBeGreaterThanOrEqual(15);
     expect(rules.length).toBeGreaterThanOrEqual(40);
 
-    // Verify all rules have valid references in dpdp-map.yaml
     for (const rule of rules) {
       expect(dpdpMap[rule.dpdpRef]).toBeDefined();
       expect(dpdpMap[rule.dpdpRef].provision).toBeDefined();

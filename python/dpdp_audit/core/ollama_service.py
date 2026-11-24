@@ -5,11 +5,6 @@ import urllib.error
 from typing import Optional, Dict, Any, List
 
 class OllamaService:
-    """
-    Local Ollama LLM client for defensive code auditing, real vulnerability explanations,
-    and DPDP Act 2023 compliance remediation.
-    Runs 100% locally on localhost:11434 with zero data leakage.
-    """
 
     DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
     TIMEOUT = 12
@@ -23,7 +18,6 @@ class OllamaService:
 
     @classmethod
     def is_available(cls) -> bool:
-        """Check if local Ollama server is running and accessible."""
         try:
             url = f"{cls.get_base_url()}/api/tags"
             req = urllib.request.Request(url, method="GET")
@@ -34,7 +28,6 @@ class OllamaService:
 
     @classmethod
     def get_available_models(cls) -> List[str]:
-        """Fetch list of models available in local Ollama instance."""
         try:
             url = f"{cls.get_base_url()}/api/tags"
             req = urllib.request.Request(url, method="GET")
@@ -47,7 +40,6 @@ class OllamaService:
 
     @classmethod
     def get_active_model(cls) -> str:
-        """Get preferred model: env OLLAMA_MODEL -> first available local model -> llama3.2:1b."""
         custom = os.environ.get("OLLAMA_MODEL")
         if custom:
             return custom
@@ -58,7 +50,6 @@ class OllamaService:
 
     @classmethod
     def generate(cls, prompt: str, system: Optional[str] = None) -> Optional[str]:
-        """Send prompt to local Ollama generate API."""
         if not cls.is_available():
             return None
 
@@ -101,9 +92,6 @@ class OllamaService:
         code_snippet: str,
         dpdp_ref: str
     ) -> Optional[str]:
-        """
-        Ask local Ollama to provide a clear defensive explanation and fix for a vulnerability.
-        """
         system = (
             "You are a senior software cybersecurity and India DPDP Act 2023 compliance defense expert. "
             "Your job is to provide defensive code remediation. Be concise, actionable, and practical in 2-3 sentences."

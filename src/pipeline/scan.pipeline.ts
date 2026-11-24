@@ -20,10 +20,7 @@ export interface PipelineExecutionResult {
 }
 
 export class ScanPipeline {
-  /**
-   * Execute the full scanning pipeline: reads codebase, dispatches AST & config analyzers,
-   * detects third-party egress, checks code malfunctions, and writes PDF/patches into sessionDir.
-   */
+
   public static async execute(options: PipelineOptions): Promise<PipelineExecutionResult> {
     const startTime = Date.now();
     const { targetPath, sessionDir } = options;
@@ -77,7 +74,7 @@ export class ScanPipeline {
         data: outputJson.data as ScanResult,
       };
     } catch (parseErr: any) {
-      // Check if out.json was written to disk
+
       const jsonFile = path.join(sessionDir, 'out.json');
       if (fs.existsSync(jsonFile)) {
         const fileData = JSON.parse(fs.readFileSync(jsonFile, 'utf-8'));

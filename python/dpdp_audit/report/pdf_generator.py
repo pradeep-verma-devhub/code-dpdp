@@ -16,7 +16,6 @@ from ..core.models import ScanResult, Finding
 from ..core.rag_pipeline import RagPipeline
 
 class NumberedCanvas(canvas.Canvas):
-    """Two-pass canvas that computes total pages and prints running header and 'Page X of Y' footer."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,12 +35,10 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_decorations(self, total_pages: int):
         if self._pageNumber == 1:
-            # Skip decorations on cover page
             return
 
         self.saveState()
 
-        # Running Header (Top)
         self.setFont("Helvetica-Bold", 7.5)
         self.setFillColor(colors.HexColor("#0A192F"))
         self.drawString(32, 762, "CODE-DPDP // STATUTORY COMPLIANCE & CYBER DEFENSE AUDIT")
@@ -53,7 +50,6 @@ class NumberedCanvas(canvas.Canvas):
         self.setLineWidth(0.6)
         self.line(32, 755, 580, 755)
 
-        # Running Footer (Bottom)
         self.line(32, 38, 580, 38)
         self.setFont("Helvetica-Bold", 7.5)
         self.setFillColor(colors.HexColor("#BE123C"))
@@ -64,11 +60,9 @@ class NumberedCanvas(canvas.Canvas):
 
         self.restoreState()
 
-
 class PdfGenerator:
-    """Generates executive-grade, publication-ready DPDP Act 2023 & Semgrep SAST Audit PDF Reports."""
 
-    PAGE_WIDTH = 548  # 612 - 64 pt printable width
+    PAGE_WIDTH = 548
 
     SEV_PALETTE = {
         "critical": {
@@ -107,7 +101,6 @@ class PdfGenerator:
 
     @classmethod
     def calculate_statutory_penalty(cls, findings: List[Finding]) -> Tuple[str, str, str]:
-        """Compute maximum statutory fine exposure under DPDP Act 2023 Schedule."""
         if not findings:
             return "Rs. 0", "Compliant - No statutory violations detected", "#16A34A"
 
@@ -135,13 +128,11 @@ class PdfGenerator:
 
     @classmethod
     def format_code_snippet(cls, snippet: str) -> str:
-        """Safely format and wrap code snippets for clean ReportLab rendering."""
         if not snippet:
             return "<i>No code snippet available</i>"
         lines = snippet.strip().split("\n")
         formatted = []
         for line in lines[:10]:
-            # Wrap long code lines so they never blow out table boundaries
             wrapped_sublines = textwrap.wrap(line, width=78) if len(line) > 78 else [line]
             for sub in wrapped_sublines:
                 esc = html.escape(sub)
@@ -150,7 +141,6 @@ class PdfGenerator:
 
     @classmethod
     def format_diff(cls, diff_text: str) -> str:
-        """Format unified diff with color highlighting for ReportLab."""
         if not diff_text:
             return ""
         lines = diff_text.strip().split("\n")
@@ -185,19 +175,17 @@ class PdfGenerator:
 
         styles = getSampleStyleSheet()
 
-        # Premium Executive Palette
         c_navy = colors.HexColor("#0A192F")
         c_dark_slate = colors.HexColor("#0F172A")
         c_gold = colors.HexColor("#F59E0B")
-        c_critical = colors.HexColor("#BE123C")   # Crimson Ruby
-        c_high = colors.HexColor("#EA580C")       # Vivid Orange
-        c_medium = colors.HexColor("#D97706")     # Amber
-        c_low = colors.HexColor("#0284C7")        # Cyan Blue
+        c_critical = colors.HexColor("#BE123C")
+        c_high = colors.HexColor("#EA580C")
+        c_medium = colors.HexColor("#D97706")
+        c_low = colors.HexColor("#0284C7")
         c_light = colors.HexColor("#F8FAFC")
         c_border = colors.HexColor("#CBD5E1")
         c_border_light = colors.HexColor("#E2E8F0")
 
-        # Typography
         title_style = ParagraphStyle(
             'CoverTitle',
             parent=styles['Heading1'],
@@ -279,10 +267,6 @@ class PdfGenerator:
 
         story = []
 
-        # ==========================================
-        # 1. EXECUTIVE COVER PAGE
-        # ==========================================
-        # Decorative Top Header Badge
         badge_table = Table([[
             Paragraph(
                 "<font color='#0A192F'><b>CONFIDENTIAL // STATUTORY CYBER DEFENSE & COMPLIANCE ASSESSMENT REPORT</b></font>",
@@ -297,7 +281,6 @@ class PdfGenerator:
         story.append(badge_table)
         story.append(Spacer(1, 12))
 
-        # Main Title & Subtitle
         story.append(Paragraph("CODE-DPDP STATUTORY COMPLIANCE & CYBER DEFENSE AUDIT", title_style))
         story.append(Paragraph("DIGITAL PERSONAL DATA PROTECTION ACT 2023 & NOTIFIED DPDP RULES 2025", subtitle_style))
         story.append(Paragraph(
@@ -306,7 +289,6 @@ class PdfGenerator:
         ))
         story.append(HRFlowable(width="100%", thickness=2, color=c_gold, spaceBefore=0, spaceAfter=14))
 
-        # Executive KPI Cards (Compliance Score & Statutory Fine Liability)
         score_val = scan_result.summary.compliance_score
         score_bg = colors.HexColor("#FEE2E2") if score_val < 50 else (colors.HexColor("#FEF3C7") if score_val < 80 else colors.HexColor("#DCFCE7"))
         score_txt = "#BE123C" if score_val < 50 else ("#D97706" if score_val < 80 else "#16A34A")
@@ -361,7 +343,6 @@ class PdfGenerator:
         story.append(kpi_table)
         story.append(Spacer(1, 12))
 
-        # Metadata Details Grid Table
         semgrep_findings_count = sum(1 for f in scan_result.findings if getattr(f, "engine", None) and "Semgrep" in f.engine)
         meta_data = [
             [Paragraph("<b>Target Codebase Scope:</b>", body_style), Paragraph(f"<font face='Courier' size='7.5'>{html.escape(scan_result.target_path)}</font>", body_style)],
@@ -384,7 +365,6 @@ class PdfGenerator:
         story.append(meta_table)
         story.append(Spacer(1, 12))
 
-        # Severity Summary Tiles
         sev_counts = scan_result.summary.by_severity
         pill_data = [
             [
@@ -433,9 +413,6 @@ class PdfGenerator:
 
         story.append(PageBreak())
 
-        # ==========================================
-        # 2. STATUTORY COMPLIANCE EXECUTIVE SUMMARY
-        # ==========================================
         story.append(Paragraph("1. Statutory Compliance & Cyber Defense Executive Summary", h1_style))
         story.append(Paragraph(
             "This statutory audit evaluates the target application codebase against India's <b>Digital Personal Data "
@@ -448,7 +425,6 @@ class PdfGenerator:
         ))
         story.append(Spacer(1, 8))
 
-        # Data Flow Risk Breakdown Table
         flow_counts = scan_result.summary.by_data_flow
         matrix_data = [
             [Paragraph("<b>Data Flow Lifecycle Stage</b>", body_style), Paragraph("<b>Violations</b>", body_style), Paragraph("<b>Statutory Impact & Legal Obligations</b>", body_style)],
@@ -468,7 +444,6 @@ class PdfGenerator:
         story.append(matrix_table)
         story.append(Spacer(1, 10))
 
-        # Vulnerability Categories Distribution Table
         story.append(Paragraph("Vulnerability Classification & Threat Breakdown", h2_style))
         cat_counts = scan_result.summary.by_category
         cat_data = [
@@ -490,9 +465,6 @@ class PdfGenerator:
 
         story.append(Spacer(1, 10))
 
-        # ==========================================
-        # 3. CONSENT ARCHITECTURE AUDIT
-        # ==========================================
         story.append(Paragraph("2. DPDP Consent Architecture Scorecard (Sections 5 & 6, Rules 3 & 4)", h1_style))
         cs = scan_result.consent_scorecard
         if cs:
@@ -527,9 +499,6 @@ class PdfGenerator:
 
         story.append(Spacer(1, 10))
 
-        # ==========================================
-        # 4. DPDP STATUTORY PROVISION COVERAGE
-        # ==========================================
         story.append(Paragraph("3. DPDP Act 2023 & DPDP Rules 2025 Provision Coverage", h1_style))
         cov_rows = [
             [Paragraph("<b>Provision</b>", body_style), Paragraph("<b>Governing Law</b>", body_style), Paragraph("<b>Statutory Title & Scope</b>", body_style), Paragraph("<b>Audit Status</b>", body_style)]
@@ -553,9 +522,6 @@ class PdfGenerator:
 
         story.append(PageBreak())
 
-        # ==========================================
-        # 5. MASTER INVENTORY OF ALL FINDINGS
-        # ==========================================
         story.append(Paragraph("4. Master Inventory of All Detected Bugs, Vulnerabilities & Violations", h1_style))
         story.append(Paragraph(
             "Every vulnerability, defect, and compliance violation detected across the codebase is sequentially indexed below. "
@@ -604,9 +570,6 @@ class PdfGenerator:
 
         story.append(PageBreak())
 
-        # ==========================================
-        # 6. DEEP TECHNICAL CODE ANALYSIS & REMEDIATION DOSSIER
-        # ==========================================
         story.append(Paragraph("5. Detailed Technical Code Breakdown & Remediation Guidance", h1_style))
         story.append(Paragraph(
             "This section provides an exhaustive, line-by-line technical breakdown of <b>every single vulnerability and bug</b> "
@@ -624,7 +587,6 @@ class PdfGenerator:
             ))
         else:
             statute_cache = {}
-            # Process ALL findings without truncation
             for idx, f in enumerate(scan_result.findings, 1):
                 sev_key = f.severity.lower()
                 sev_pal = cls.SEV_PALETTE.get(sev_key, cls.SEV_PALETTE["medium"])
@@ -635,7 +597,6 @@ class PdfGenerator:
                 cwe_tag = getattr(f, "cwe", None) or "CWE-693: Protection Mechanism Failure"
                 owasp_tag = getattr(f, "owasp", None) or "A03:2021-Injection"
 
-                # RAG statutory lookup from official DPDP Act 2023 rulebook
                 cache_key = f"{f.title} {f.rule_id}"
                 if cache_key not in statute_cache:
                     m = RagPipeline.retrieve_statutory_context(f"{f.title} {f.fix}", top_k=1)
@@ -646,7 +607,6 @@ class PdfGenerator:
                 penalty_ceiling = statute["penalty"] if statute else str(f.dpdp_ref.get("penaltyClause", "Up to Rs. 250 Crore")).replace("₹", "Rs. ")
                 official_mandate = statute["official_text"] if statute else f.dpdp_ref.get("explanation", "")
 
-                # Clean defect explanation: remove raw formula strings and ensure clear explanation
                 defect_raw = f.justification
                 defect_clean = re.sub(
                     r'Risk Score \d+/\d+:.*?\.\s*Evaluated against DPDP Act 2023 impact thresholds\.?',
@@ -657,7 +617,6 @@ class PdfGenerator:
                     defect_clean = f.dpdp_ref.get("explanation") or f.title or "Statutory security safeguards missing or improperly configured."
 
                 card_data = [
-                    # Row 0: Header with Finding Number, Title, Severity & Engine
                     [
                         Paragraph(f"<b>Finding #{idx}: [{f.id}] {f.title}</b>", card_header_style),
                         Paragraph(
@@ -665,7 +624,6 @@ class PdfGenerator:
                             ParagraphStyle('FSev', fontName='Helvetica-Bold', fontSize=8, textColor=colors.white, alignment=2)
                         ),
                     ],
-                    # Row 1: KIS LINE MAI GALTI HAI (Exact Code Location)
                     [
                         Paragraph(
                             f"<b>[LOCATION] Exact Code Coordinates:</b> <font face='Courier' color='#0A192F'><b>{html.escape(f.file)}</b> (Line {f.line}{f':{f.column}' if f.column else ''})</font><br/>"
@@ -675,7 +633,6 @@ class PdfGenerator:
                         ),
                         "",
                     ],
-                    # Row 2: KONSA LAW BREAK HUA HAI (Statutory Provision & Penalty Ceiling)
                     [
                         Paragraph(
                             f"<b>[LAW BROKEN] Statutory Law:</b> <font color='#0A192F'><b>{html.escape(statute_citation)}</b></font><br/>"
@@ -686,7 +643,6 @@ class PdfGenerator:
                         ),
                         "",
                     ],
-                    # Row 3: VULNERABLE CODE (Line Snippet)
                     [
                         Paragraph(
                             f"<b>Vulnerable Code (Line {f.line}):</b><br/>"
@@ -695,7 +651,6 @@ class PdfGenerator:
                         ),
                         "",
                     ],
-                    # Row 4: WHY THIS CODE BREAKS THE LAW (Defect Logic)
                     [
                         Paragraph(
                             f"<b>Defect &amp; Non-Compliance:</b> {html.escape(defect_clean)}",
@@ -703,7 +658,6 @@ class PdfGenerator:
                         ),
                         "",
                     ],
-                    # Row 5: HOW TO FIX (Engineering Remediation)
                     [
                         Paragraph(
                             f"<b>Remediation:</b> {html.escape(f.fix)}",
@@ -713,7 +667,6 @@ class PdfGenerator:
                     ],
                 ]
 
-                # Row 6 (Optional): Patch / Remediation Unified Diff
                 if f.patch_unified_diff:
                     card_data.append([
                         Paragraph(
@@ -724,7 +677,6 @@ class PdfGenerator:
                         "",
                     ])
 
-                # Row 7 (Optional): Ollama Local AI Defense Analysis
                 if getattr(f, "ai_remediation", None):
                     card_data.append([
                         Paragraph(
@@ -752,19 +704,16 @@ class PdfGenerator:
                 current_row = 6
                 if f.patch_unified_diff:
                     table_styles.append(('SPAN', (0, current_row), (1, current_row)))
-                    table_styles.append(('BACKGROUND', (0, current_row), (1, current_row), colors.HexColor("#F0FDF4")))  # Light green for patch
+                    table_styles.append(('BACKGROUND', (0, current_row), (1, current_row), colors.HexColor("#F0FDF4")))
                     current_row += 1
                 if getattr(f, "ai_remediation", None):
                     table_styles.append(('SPAN', (0, current_row), (1, current_row)))
-                    table_styles.append(('BACKGROUND', (0, current_row), (1, current_row), colors.HexColor("#ECFDF5")))  # Emerald for AI
+                    table_styles.append(('BACKGROUND', (0, current_row), (1, current_row), colors.HexColor("#ECFDF5")))
                     current_row += 1
 
                 f_table.setStyle(TableStyle(table_styles))
                 story.append(KeepTogether([f_table, Spacer(1, 10)]))
 
-        # ==========================================
-        # 7. CODE MALFUNCTIONS & RUNTIME CRASH HAZARDS
-        # ==========================================
         if scan_result.malfunctions:
             story.append(PageBreak())
             story.append(Paragraph("6. Code Malfunctions & Concurrency Hazards", h1_style))
@@ -797,9 +746,6 @@ class PdfGenerator:
             ]))
             story.append(malf_table)
 
-        # ==========================================
-        # 8. THIRD-PARTY TRACKERS & DATA EGRESS
-        # ==========================================
         if scan_result.third_party_egress:
             story.append(PageBreak())
             story.append(Paragraph("7. Third-Party Tracker & Data Egress Analysis", h1_style))
@@ -830,6 +776,5 @@ class PdfGenerator:
             ]))
             story.append(egress_table)
 
-        # Build Document with NumberedCanvas for Running Headers and Page X of Y Footers
         doc.build(story, canvasmaker=NumberedCanvas)
         return str(dest)

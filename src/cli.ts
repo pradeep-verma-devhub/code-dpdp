@@ -42,7 +42,6 @@ program
   .description("Automated Compliance Scanner for India's Digital Personal Data Protection Act 2023 & DPDP Rules 2025")
   .version('1.0.0');
 
-// 1. scan command
 program
   .command('scan [path]', { isDefault: true })
   .description('Scan an application directory for DPDP non-compliance and personal data mishandling')
@@ -68,7 +67,6 @@ program
     runPythonCli(pythonArgs);
   });
 
-// 2. pii command
 program
   .command('pii [path]')
   .description('Detect Indian PII (Aadhaar, PAN, Passport, Voter ID, phone, cards, secrets)')
@@ -81,7 +79,6 @@ program
     runPythonCli(pythonArgs);
   });
 
-// 3. consent command
 program
   .command('consent [path]')
   .description('Assess application consent architecture against DPDP Act Sections 5 & 6 and Rules 3 & 4')
@@ -89,7 +86,6 @@ program
     runPythonCli(['consent', targetPath]);
   });
 
-// 4. egress command
 program
   .command('egress [path]')
   .description('Audit third-party tracker & SDK data egress without affirmative consent')
@@ -97,7 +93,6 @@ program
     runPythonCli(['egress', targetPath]);
   });
 
-// 5. live command
 program
   .command('live <baseUrl>')
   .description('Execute non-destructive live API compliance tests against a running endpoint')
@@ -105,7 +100,6 @@ program
     runPythonCli(['live', baseUrl]);
   });
 
-// 6. penalty command
 program
   .command('penalty [path]')
   .description('Calculate statutory penalty exposure under the DPDP Act 2023 Schedule (Up to ₹250 Crore)')
@@ -113,7 +107,6 @@ program
     runPythonCli(['penalty', targetPath]);
   });
 
-// 7. patch command
 program
   .command('patch [path]')
   .description('Generate unified remediation diff patches (.patch) for detected violations')
@@ -125,7 +118,6 @@ program
     runPythonCli(pythonArgs);
   });
 
-// 8. coderabbit command
 program
   .command('coderabbit [path]')
   .description('Generate DPDP Act 2023 compliant .coderabbit.yaml rule contract for PR review gating')
@@ -133,7 +125,6 @@ program
     runPythonCli(['coderabbit', targetPath]);
   });
 
-// 9. list-rules / rules command
 program
   .command('rules')
   .description('List all registered static analysis checks, rules, and DPDP provisions')
@@ -148,7 +139,6 @@ program
     runPythonCli(['list-rules']);
   });
 
-// 10. info command
 program
   .command('info')
   .description('Display engine health, active rules count, and system information')

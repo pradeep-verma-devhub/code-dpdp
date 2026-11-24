@@ -40,7 +40,6 @@ def print_banner():
     console.print(Panel(banner_text, box=box.ROUNDED, border_style="cyan"))
 
 def calculate_penalty_details(findings: List[Any]) -> Dict[str, Any]:
-    """Evaluate financial exposure under the DPDP Act 2023 Schedule."""
     if not findings:
         return {
             "tier": "Tier 0 (Compliant)",
@@ -111,7 +110,6 @@ def run_scan(args):
     summary = result.summary
     penalty = calculate_penalty_details(result.findings)
 
-    # Ollama Local LLM & RAG Enrichment
     if use_ai:
         if OllamaService.is_available():
             from .core.rag_pipeline import RagPipeline
@@ -126,7 +124,6 @@ def run_scan(args):
         else:
             console.print(f"[dim yellow][!] Local Ollama is not active on http://localhost:11434. Continuing without LLM enrichment.[/dim yellow]")
 
-    # 1. Summary Cards
     score_color = "bold green" if summary.compliance_score >= 80 else ("bold yellow" if summary.compliance_score >= 50 else "bold red")
 
     summary_table = Table(box=box.SIMPLE_HEAVY, show_header=False)
@@ -145,7 +142,6 @@ def run_scan(args):
 
     console.print(Panel(summary_table, title="[bold white]Audit Executive Summary[/bold white]", border_style="cyan"))
 
-    # 2. Detailed Findings Table
     if result.findings:
         findings_to_show = result.findings
         if getattr(args, "severity", None):
@@ -182,7 +178,6 @@ def run_scan(args):
     else:
         console.print("\n[bold green][✓] Perfect Score! No DPDP Act 2023 or DPDP Rules 2025 non-compliance violations detected.[/bold green]\n")
 
-    # 3. Export PDF Report
     pdf_target = getattr(args, "pdf", None) or getattr(args, "out", None)
     if pdf_target:
         pdf_path = os.path.abspath(pdf_target)
@@ -190,20 +185,17 @@ def run_scan(args):
         PdfGenerator.generate(result, pdf_path)
         console.print(f"[bold green][✓] Official PDF Compliance Report Generated:[/bold green] [bold cyan]{pdf_path}[/bold cyan] ({len(result.findings)} total findings included)")
 
-    # 4. Export JSON Report
     if getattr(args, "json", None):
         json_path = os.path.abspath(args.json)
         with open(json_path, "w", encoding="utf-8") as jf:
             json.dump(result.to_dict(), jf, indent=2)
         console.print(f"[bold green][✓] JSON Findings Exported:[/bold green] [bold cyan]{json_path}[/bold cyan]")
 
-    # 5. Export HTML Report
     if getattr(args, "html", None):
         html_path = os.path.abspath(args.html)
         HtmlGenerator.generate(result, html_path)
         console.print(f"[bold green][✓] HTML Interactive Report Generated:[/bold green] [bold cyan]{html_path}[/bold cyan]")
 
-    # 6. Generate Patches
     if getattr(args, "patches", None):
         patch_res = PatchGenerator.generate_patches(
             result.findings,
@@ -218,7 +210,6 @@ def run_scan(args):
     if not pdf_target:
         console.print("[dim]💡 Tip: Run `code-dpdp --pdf result.pdf` to generate an official PDF containing all findings.[/dim]\n")
 
-    # Fail-on severity threshold
     if getattr(args, "fail_on", None):
         fail_sev = args.fail_on.lower()
         severities = ["low", "medium", "high", "critical"]
@@ -517,10 +508,7 @@ def run_patch(args):
 def run_coderabbit(args):
     target = os.path.abspath(args.path)
     cfg_path = Path(target) / ".coderabbit.yaml"
-    content = """# CodeRabbit AI Review Configuration
-# Enforcing India's DPDP Act 2023 & DPDP Rules 2025
-
-language: "en-US"
+    content = """language: "en-US"
 reviews:
   profile: "assertive"
   request_changes_workflow: true
@@ -592,7 +580,6 @@ def run_info():
 def main():
     raw_args = sys.argv[1:]
 
-    # Preprocess arguments:
     if not raw_args:
         raw_args = ["scan", "."]
     elif raw_args[0] not in KNOWN_COMMANDS and not raw_args[0].startswith("-"):
@@ -608,7 +595,6 @@ def main():
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
-    # Command: scan (default)
     scan_parser = subparsers.add_parser("scan", help="Scan code and configs for DPDP compliance & security violations")
     scan_parser.add_argument("path", nargs="?", default=".", help="Target directory to scan (default: current directory)")
     scan_parser.add_argument("--pdf", "-o", "--out", default=None, help="Output path for PDF compliance report (e.g. result.pdf)")
@@ -620,57 +606,45 @@ def main():
     scan_parser.add_argument("--fail-on", choices=["critical", "high", "medium", "low"], help="Exit with non-zero status code if findings match")
     scan_parser.add_argument("--ollama", "--ai", dest="ollama", action="store_true", help="Use local Ollama LLM (localhost:11434) for AI remediation analysis")
 
-    # Command: ai (scan with local Ollama enabled)
     ai_parser = subparsers.add_parser("ai", help="Scan with local Ollama LLM defensive remediation analysis")
     ai_parser.add_argument("path", nargs="?", default=".", help="Target directory to scan")
     ai_parser.add_argument("--pdf", "-o", "--out", default=None, help="Output path for PDF compliance report (e.g. result.pdf)")
     ai_parser.add_argument("--json", "-j", default=None, help="Output path for JSON report")
 
-    # Command: explain (query Ollama about a vulnerability)
     explain_parser = subparsers.add_parser("explain", help="Consult local Ollama LLM about a security flaw or DPDP requirement")
     explain_parser.add_argument("query", help="Vulnerability name, CWE, or DPDP provision (e.g. 'SQL injection' or 'Aadhaar masking')")
 
-    # Command: rag (RAG query on official rulebook)
     rag_parser = subparsers.add_parser("rag", help="Query DPDP Act 2023 & Rules 2025 rulebook via RAG pipeline")
     rag_parser.add_argument("query", help="Compliance question, vulnerability, or statutory section to query")
 
-    # Command: pii
     pii_parser = subparsers.add_parser("pii", help="Scan for Indian PII (Aadhaar, PAN, phone, cards, passwords)")
     pii_parser.add_argument("path", nargs="?", default=".", help="Target directory to scan")
     pii_parser.add_argument("--no-redact", dest="redact", action="store_false", default=True, help="Display unredacted values in terminal")
     pii_parser.add_argument("--json", "-j", default=None, help="Export PII detections to JSON")
 
-    # Command: consent
     consent_parser = subparsers.add_parser("consent", help="Assess 5-pillar consent architecture (DPDP Sec 5 & 6)")
     consent_parser.add_argument("path", nargs="?", default=".", help="Target directory to audit")
 
-    # Command: egress
     egress_parser = subparsers.add_parser("egress", help="Detect third-party SDK and tracking egress without consent")
     egress_parser.add_argument("path", nargs="?", default=".", help="Target directory to audit")
 
-    # Command: live
     live_parser = subparsers.add_parser("live", help="Non-destructive live API privacy and security probe")
     live_parser.add_argument("baseUrl", help="Target base URL (e.g. http://localhost:3000)")
 
-    # Command: penalty
     penalty_parser = subparsers.add_parser("penalty", help="Calculate statutory penalty exposure under DPDP Act Schedule")
     penalty_parser.add_argument("path", nargs="?", default=".", help="Target directory to evaluate")
 
-    # Command: patch
     patch_parser = subparsers.add_parser("patch", help="Generate auto-fix remediation patches")
     patch_parser.add_argument("path", nargs="?", default=".", help="Target directory to patch")
     patch_parser.add_argument("--patches-dir", default="patches", help="Directory for patch files")
     patch_parser.add_argument("--apply", action="store_true", help="Apply patches directly")
 
-    # Command: coderabbit
     coderabbit_parser = subparsers.add_parser("coderabbit", help="Generate DPDP Act .coderabbit.yaml rule contract")
     coderabbit_parser.add_argument("path", nargs="?", default=".", help="Target directory to generate contract into")
 
-    # Command: rules / list-rules
     subparsers.add_parser("rules", help="List all statutory DPDP rules and statutory penalty ceilings")
     subparsers.add_parser("list-rules", help="List all statutory DPDP rules and statutory penalty ceilings")
 
-    # Command: info
     subparsers.add_parser("info", help="Display system information, active rules count, and Ollama status")
 
     args = parser.parse_args(raw_args)

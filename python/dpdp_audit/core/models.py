@@ -152,7 +152,7 @@ class LiveTestFinding:
     test_name: str
     endpoint: str
     method: str
-    status: str  # FAIL, PASS, WARN
+    status: str
     details: str
     dpdp_ref: str
     severity: Severity
