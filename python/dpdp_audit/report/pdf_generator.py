@@ -14,6 +14,7 @@ from reportlab.platypus import (
 from reportlab.pdfgen import canvas
 from ..core.models import ScanResult, Finding
 from ..core.rag_pipeline import RagPipeline
+from ..core.statutory_resolver import StatutoryResolver
 
 class NumberedCanvas(canvas.Canvas):
 
@@ -551,12 +552,21 @@ class PdfGenerator:
                 sev_col = sev_pal["hex"]
                 is_semgrep = (getattr(f, "engine", None) and "Semgrep" in f.engine)
                 engine_badge = "<font color='#6366F1'><b>[Semgrep AST]</b></font>" if is_semgrep else "<font color='#0284C7'><b>[code-dpdp SAST]</b></font>"
+                dossier = StatutoryResolver.resolve_dossier(
+                    rule_id=f.rule_id,
+                    title=f.title,
+                    pii_types=f.pii_types,
+                    snippet=f.snippet,
+                    file_path=f.file
+                )
+                short_law = dossier["law"].split("read with")[0].strip()
+                short_pen = dossier["penalty"].split(" under ")[0].strip()
                 inv_rows.append([
                     Paragraph(f"<b>#{idx}</b>", body_style),
                     Paragraph(f"<font color='{sev_col}'><b>{f.severity.upper()}</b></font>", body_style),
                     Paragraph(f"{engine_badge} {html.escape(f.title)}", body_style),
                     Paragraph(f"<font face='Courier' size='7'>{html.escape(f.file)}:{f.line}</font>", body_style),
-                    Paragraph(f"{f.dpdp_ref.get('sectionOrRule', '')}<br/><font color='#BE123C' size='6.5'>Up to Rs. 250 Cr</font>", body_small),
+                    Paragraph(f"{html.escape(short_law)}<br/><font color='#BE123C' size='6.5'>{html.escape(short_pen)}</font>", body_small),
                 ])
             inv_table = Table(inv_rows, colWidths=[36, 60, 186, 170, 96])
             inv_table.setStyle(TableStyle([
@@ -586,7 +596,6 @@ class PdfGenerator:
                 body_style
             ))
         else:
-            statute_cache = {}
             for idx, f in enumerate(scan_result.findings, 1):
                 sev_key = f.severity.lower()
                 sev_pal = cls.SEV_PALETTE.get(sev_key, cls.SEV_PALETTE["medium"])
@@ -594,18 +603,20 @@ class PdfGenerator:
                 card_border = sev_pal["border"]
                 snippet_tint = sev_pal["tint"]
                 engine_tag = getattr(f, "engine", "code-dpdp AST Engine") or "code-dpdp AST Engine"
-                cwe_tag = getattr(f, "cwe", None) or "CWE-693: Protection Mechanism Failure"
-                owasp_tag = getattr(f, "owasp", None) or "A03:2021-Injection"
 
-                cache_key = f"{f.title} {f.rule_id}"
-                if cache_key not in statute_cache:
-                    m = RagPipeline.retrieve_statutory_context(f"{f.title} {f.fix}", top_k=1)
-                    statute_cache[cache_key] = m[0] if m else None
-                statute = statute_cache[cache_key]
+                dossier = StatutoryResolver.resolve_dossier(
+                    rule_id=f.rule_id,
+                    title=f.title,
+                    pii_types=f.pii_types,
+                    snippet=f.snippet,
+                    file_path=f.file
+                )
 
-                statute_citation = statute["statutory_citation"] if statute else f.dpdp_ref.get("sectionOrRule", "DPDP Act 2023 Sec 8(5)")
-                penalty_ceiling = statute["penalty"] if statute else str(f.dpdp_ref.get("penaltyClause", "Up to Rs. 250 Crore")).replace("₹", "Rs. ")
-                official_mandate = statute["official_text"] if statute else f.dpdp_ref.get("explanation", "")
+                cwe_tag = getattr(f, "cwe", None) or dossier["cwe"]
+                owasp_tag = getattr(f, "owasp", None) or dossier["owasp"]
+                statute_citation = dossier["law"]
+                penalty_ceiling = dossier["penalty"]
+                official_mandate = dossier["mandate"]
 
                 defect_raw = f.justification
                 defect_clean = re.sub(
@@ -660,7 +671,8 @@ class PdfGenerator:
                     ],
                     [
                         Paragraph(
-                            f"<b>Remediation:</b> {html.escape(f.fix)}",
+                            f"<b>Remediation:</b> {html.escape(f.fix)}<br/>"
+                            f"<b>Mandate Implementation:</b> <font color='#065F46'>{html.escape(dossier['implication'])}</font>",
                             body_style
                         ),
                         "",

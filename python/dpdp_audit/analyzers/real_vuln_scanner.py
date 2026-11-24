@@ -592,6 +592,9 @@ class RealVulnScanner:
                         fix=r["fix"],
                         patch_available=bool(patch_diff),
                         patch_unified_diff=patch_diff,
+                        cwe=statutory_res.get("cwe"),
+                        owasp=statutory_res.get("owasp"),
+                        engine="code-dpdp AST Engine"
                     ))
 
             pii_matches = PiiDetector.scan_text(clean, line_no=line_no)
@@ -604,7 +607,7 @@ class RealVulnScanner:
                         snippet=clean,
                         pii_types=[pm.type],
                         data_flow="exposed",
-                        fallback_ref="RULE_6"
+                        fallback_ref=rule_id
                     )
                     findings.append(Finding(
                         id=f"{rule_id}-{abs(hash(rel_path + str(line_no) + pm.type)) % 10000:04d}",
@@ -626,6 +629,9 @@ class RealVulnScanner:
                         fix=f"Remove or mask cleartext {pm.type} data. Load credentials securely from environment variables.",
                         patch_available=True,
                         patch_unified_diff=f"--- a/{rel_path}\n+++ b/{rel_path}\n@@ -{line_no},1 +{line_no},1 @@\n-{clean}\n+// [REDACTED_{pm.type.upper()}_DATA]",
+                        cwe=statutory_res.get("cwe"),
+                        owasp=statutory_res.get("owasp"),
+                        engine="code-dpdp AST Engine"
                     ))
 
         return findings

@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import List, Dict, Any
+import html as pyhtml
 from ..core.models import ScanResult
+from ..core.statutory_resolver import StatutoryResolver
 
 class HtmlGenerator:
 
@@ -262,6 +264,15 @@ class HtmlGenerator:
 """
         for idx, f in enumerate(scan_result.findings, 1):
             bg_cls = f"bg-{f.severity}"
+            dossier = StatutoryResolver.resolve_dossier(
+                rule_id=f.rule_id,
+                title=f.title,
+                pii_types=f.pii_types,
+                snippet=f.snippet,
+                file_path=f.file
+            )
+            cwe_tag = getattr(f, "cwe", None) or dossier["cwe"]
+            owasp_tag = getattr(f, "owasp", None) or dossier["owasp"]
             html += f"""
       <div class="finding-card">
         <div class="finding-header {bg_cls}">
@@ -270,10 +281,12 @@ class HtmlGenerator:
         </div>
         <div class="finding-body">
           <p><b>Location:</b> <code>{f.file}:{f.line}</code> &nbsp;|&nbsp; <b>Flow:</b> <code>{f.data_flow.upper()}</code> &nbsp;|&nbsp; <b>PII:</b> {', '.join(f.pii_types) if f.pii_types else 'Infrastructure'}</p>
-          <p style="margin-top:4px;"><b>Statutory Provision:</b> {f.dpdp_ref.get('sectionOrRule', '')} &mdash; <i>{f.dpdp_ref.get('explanation', '')}</i></p>
-          <p style="margin-top:4px; color:#475569;"><b>Risk Logic:</b> {f.justification}</p>
-          <div class="code-box">{f.snippet}</div>
-          <div class="fix-box"><b>Recommended Fix:</b> {f.fix}</div>
+          <p style="margin-top:4px;"><b>Statutory Law:</b> <strong style="color:var(--primary);">{pyhtml.escape(dossier['law'])}</strong></p>
+          <p style="margin-top:2px;"><b>Maximum Fine:</b> <span style="color:#DC2626; font-weight:700;">{pyhtml.escape(dossier['penalty'])}</span> &nbsp;|&nbsp; <b>Standard:</b> <span style="color:#0284C7;">{pyhtml.escape(cwe_tag)}</span> &nbsp;|&nbsp; {pyhtml.escape(owasp_tag)}</p>
+          <p style="margin-top:6px; font-style:italic; color:#334155; background:#F8FAFC; padding:8px 12px; border-left:3px solid #0F2B5C; border-radius:4px;"><b>Official Gazette Mandate:</b> "{pyhtml.escape(dossier['mandate'])}"</p>
+          <p style="margin-top:6px; color:#475569;"><b>Risk Logic:</b> {f.justification}</p>
+          <div class="code-box">{pyhtml.escape(f.snippet)}</div>
+          <div class="fix-box"><b>Recommended Fix:</b> {f.fix}<br/><span style="color:#065F46; font-size:11px;"><b>Mandate Implementation:</b> {pyhtml.escape(dossier['implication'])}</span></div>
         </div>
       </div>
 """

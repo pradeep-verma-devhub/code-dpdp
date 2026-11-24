@@ -168,6 +168,33 @@ class RagPipeline:
         data_flow: str = "",
         fallback_ref: str = ""
     ) -> Dict[str, Any]:
+        from .statutory_resolver import StatutoryResolver
+
+        dossier = StatutoryResolver.resolve_dossier(
+            rule_id=fallback_ref,
+            title=title,
+            category=category,
+            pii_types=pii_types,
+            snippet=snippet,
+            file_path=""
+        )
+
+        if dossier.get("key") != "GENERAL_SAFEGUARDS":
+            sec = dossier["law"].split("read with")[0].strip() if "read with" in dossier["law"] else dossier["law"]
+            if "," in sec:
+                sec = sec.split(",")[0].strip()
+            return {
+                "sectionOrRule": sec,
+                "statutory_citation": dossier["law"],
+                "title": dossier["title"],
+                "explanation": dossier["mandate"],
+                "penaltyClause": dossier["penalty"],
+                "official_text": dossier["mandate"],
+                "technical_implication": dossier["implication"],
+                "cwe": dossier["cwe"],
+                "owasp": dossier["owasp"],
+            }
+
         cls.load_knowledge_base()
 
         cleaned_ref = fallback_ref.strip().upper().replace(" ", "_").replace("-", "_")
@@ -181,7 +208,9 @@ class RagPipeline:
                     "explanation": target["official_text"][:250] + ("..." if len(target["official_text"]) > 250 else ""),
                     "penaltyClause": target["penalty"],
                     "official_text": target["official_text"],
-                    "technical_implication": target["technical_implication"]
+                    "technical_implication": target["technical_implication"],
+                    "cwe": dossier["cwe"],
+                    "owasp": dossier["owasp"],
                 }
 
         pii_str = " ".join(pii_types or [])
@@ -197,17 +226,21 @@ class RagPipeline:
                 "explanation": statute["official_text"][:250] + ("..." if len(statute["official_text"]) > 250 else ""),
                 "penaltyClause": statute["penalty"],
                 "official_text": statute["official_text"],
-                "technical_implication": statute["technical_implication"]
+                "technical_implication": statute["technical_implication"],
+                "cwe": dossier["cwe"],
+                "owasp": dossier["owasp"],
             }
 
         return {
             "sectionOrRule": "Section 8(5)",
-            "statutory_citation": "DPDP Act 2023, Section 8(5) read with Schedule Item 1",
-            "title": "Obligation to take Reasonable Security Safeguards to Prevent Personal Data Breach",
-            "explanation": "A Data Fiduciary shall protect personal data by taking reasonable security safeguards to prevent personal data breach.",
-            "penaltyClause": "Schedule Item 1: Up to Rs. 250 Crore",
-            "official_text": "A Data Fiduciary shall protect personal data in its possession or under its control, including in respect of any processing undertaken by it or on its behalf by a Data Processor, by taking reasonable security safeguards to prevent personal data breach.",
-            "technical_implication": "Mandates parameterized queries, strict input validation, end-to-end encryption, and role-based access control."
+            "statutory_citation": dossier["law"],
+            "title": dossier["title"],
+            "explanation": dossier["mandate"],
+            "penaltyClause": dossier["penalty"],
+            "official_text": dossier["mandate"],
+            "technical_implication": dossier["implication"],
+            "cwe": dossier["cwe"],
+            "owasp": dossier["owasp"],
         }
 
     @classmethod
