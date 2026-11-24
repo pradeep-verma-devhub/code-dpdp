@@ -8,6 +8,23 @@
 [![DPDP Act 2023](https://img.shields.io/badge/Compliance-DPDP%20Act%202023-FF9933.svg)](#)
 [![DPDP Rules 2025](https://img.shields.io/badge/Compliance-DPDP%20Rules%202025-138808.svg)](#)
 [![RAG Grounded](https://img.shields.io/badge/RAG-Statutory%20Knowledge%20Base-8A2BE2.svg)](#)
+[![Demo Video](https://img.shields.io/badge/Project%20Demo-1080p%20Video-E11D48.svg)](code-dpdp-project-demo.mp4)
+
+---
+
+## 🎬 Project Submission Demo Video
+
+A complete 1080p Full HD video presentation and live demonstration walkthrough is included directly in the root of this repository:
+- **Video File**: [`code-dpdp-project-demo.mp4`](code-dpdp-project-demo.mp4)
+- **Duration**: ~2 minutes 15 seconds
+- **Resolution**: 1920x1080 Full HD (H.264 / AAC)
+- **Content**:
+  1. *Statutory Mandate & Risk*: Legal background on DPDP Act 2023 & DPDP Rules 2025 with ₹250 Crore penalty thresholds.
+  2. *System Architecture*: Full Gazette knowledge base & hybrid RAG pipeline eliminating section repetition.
+  3. *Live CLI RAG Demo*: Natural language legal queries mapped to official Gazette provisions.
+  4. *Live Codebase Scan*: AST flow analysis, Verhoeff Aadhaar/PAN validation, and real penalty exposures.
+  5. *Automated Remediation*: One-click `.patch` generation and executive PDF compliance reports.
+  6. *Cross-Platform Setup*: Linux (`./setup.sh`) and Windows (`setup.bat` / `setup.ps1`) deployment.
 
 ---
 
