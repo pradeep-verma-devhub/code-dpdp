@@ -2,6 +2,7 @@
 
 > **Automated CLI Compliance & Security Scanner for India's Digital Personal Data Protection Act 2023 & DPDP Rules 2025 with Integrated Statutory RAG Engine**
 
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](#)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![CLI](https://img.shields.io/badge/CLI-code--dpdp-00CED1.svg)](#)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB.svg)](https://python.org/)

@@ -646,6 +646,7 @@ def main():
     subparsers.add_parser("list-rules", help="List all statutory DPDP rules and statutory penalty ceilings")
 
     subparsers.add_parser("info", help="Display system information, active rules count, and Ollama status")
+    subparsers.add_parser("version", help="Display code-dpdp version")
 
     args = parser.parse_args(raw_args)
 
@@ -653,7 +654,10 @@ def main():
         parser.print_help()
         sys.exit(0)
 
-    if args.command in ("scan", "ai"):
+    if args.command == "version":
+        print(f"code-dpdp v{VERSION}")
+        sys.exit(0)
+    elif args.command in ("scan", "ai"):
         print_banner()
         run_scan(args)
     elif args.command == "explain":
