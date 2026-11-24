@@ -1,0 +1,12 @@
+language: "en-US"
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true
+knowledge_base:
+  instructions: |
+    Audit all code changes against India DPDP Act 2023 & Rules 2025:
+    1. Reject unencrypted personal data (Aadhaar, PAN, phone, email, health records).
+    2. Require affirmative consent checks before third-party data egress (Sec 6 & 16).
+    3. Block logging of credentials or personal data in console/syslog (Sec 8(6)).
+    4. Mandate data erasure endpoints (Right to be Forgotten - Sec 12).
+    5. Block behavioural tracking of minors (Sec 9).
