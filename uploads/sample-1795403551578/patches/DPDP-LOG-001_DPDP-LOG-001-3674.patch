@@ -1,5 +1,0 @@
---- a/frontend/src/assets/private/three.js
-+++ b/frontend/src/assets/private/three.js
-@@ -15603,1 +15603,1 @@
--console.log( "THREE.Mesh.getMorphTargetIndexByName: morph target " + name + " does not exist. Returning 0." );
-+// [DPDP-LOG-001] Redacted PII logging call

@@ -1,5 +1,0 @@
---- a/frontend/src/assets/private/three.js
-+++ b/frontend/src/assets/private/three.js
-@@ -31444,1 +31444,1 @@
--console.log( "THREE.AnimationHandler.add: Warning! " + name + " doesn't exists in library. Doing nothing." );
-+// [DPDP-LOG-001] Redacted PII logging call

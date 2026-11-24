@@ -122,7 +122,7 @@ class LiveTester:
                         method=method,
                         status="FAIL",
                         details=f"Unauthenticated endpoint returned sensitive personal data: {', '.join(types)}.",
-                        dpdp_ref="Section 8(6) & Rule 6",
+                        dpdp_ref="Section 8(5) & Rule 6",
                         severity="critical",
                         evidence=f"Detections: {len(pii_detections)} PII items",
                     ))
@@ -136,7 +136,7 @@ class LiveTester:
                         method=method,
                         status="FAIL",
                         details=f"Route '{route}' returned HTTP 200 OK without requiring authentication tokens.",
-                        dpdp_ref="Section 8(6) & Rule 6",
+                        dpdp_ref="Section 8(5) & Rule 6",
                         severity="critical",
                         evidence=f"Response status: {r_status}",
                     ))

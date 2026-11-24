@@ -1,246 +1,283 @@
-# DPDP-Audit
+# code-dpdp
 
-**Automated Compliance Scanner for India's Digital Personal Data Protection Act 2023 & DPDP Rules 2025**
+> **Automated CLI Compliance & Security Scanner for India's Digital Personal Data Protection Act 2023 & DPDP Rules 2025 with Integrated Statutory RAG Engine**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6.svg)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg)](https://www.python.org/)
-[![DPDP Act 2023](https://img.shields.io/badge/Compliance-DPDP%20Act%202023%20%26%20Rules%202025-FF9933.svg)](#)
+[![CLI](https://img.shields.io/badge/CLI-code--dpdp-00CED1.svg)](#)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB.svg)](https://python.org/)
+[![DPDP Act 2023](https://img.shields.io/badge/Compliance-DPDP%20Act%202023-FF9933.svg)](#)
+[![DPDP Rules 2025](https://img.shields.io/badge/Compliance-DPDP%20Rules%202025-138808.svg)](#)
+[![RAG Grounded](https://img.shields.io/badge/RAG-Statutory%20Knowledge%20Base-8A2BE2.svg)](#)
 
 ---
 
-## Overview
+## ⚡ Overview
 
-**DPDP-Audit** is an automated static and dynamic compliance scanner designed for privacy and security engineers. It identifies personal data mishandling, insecure cloud and container configurations, missing consent workflows, and API security gaps across modern application repositories, mapping every finding directly to provisions of the **Digital Personal Data Protection Act 2023 (Act No. 22 of 2023)** and **DPDP Rules 2025**.
+`code-dpdp` is an automated, terminal-based compliance auditor and cybersecurity scanner designed specifically for India's **Digital Personal Data Protection Act, 2023 (Act No. 22 of 2023)** and notified **DPDP Rules 2025**.
 
-### Stack & Architecture
+It inspects source code, configuration files, database schemas, and live API endpoints to identify data protection violations, calculate statutory monetary penalties under the DPDP Act Schedule, generate publication-grade PDF audit reports, and provide automated `.patch` fixes.
 
-- **CLI & Frontend Tooling**: Node.js + TypeScript (strict mode), Commander CLI, `@babel/parser` & TypeScript Compiler API.
-- **Backend & Core Logic**: Python 3.12 (PII detection engine, Verhoeff/Luhn cryptographic validators, AST semantic evaluator, mathematical risk classification, ReportLab PDF report generation, consent flow analyzer, unified diff patch generator, and safe live API tester).
-- **Rule Definitions**: 100% external YAML entries in `src/rules/*.yaml`, linked to a single master statutory mapping file `src/rules/dpdp-map.yaml`.
-
----
-
-## Key Features
-
-1. **Full-Spectrum Code & Config Scanning**:
-   - **Frontend & Backend**: JavaScript, TypeScript, React, Express routes, controllers, middleware.
-   - **Database Schemas & Models**: SQL DDL (`.sql`), Prisma (`.prisma`), Mongoose & Sequelize models (`*model*.ts`, `*schema*.ts`).
-   - **Config & DevOps**: `.env`, `Dockerfile`, `docker-compose.ya?ml`, Terraform (`.tf`), Kubernetes manifests.
-2. **Indian PII Dictionary & Cryptographic Pattern Engine**:
-   - Validates **Aadhaar** numbers using the official **Verhoeff algorithm** (rejecting invalid checksums and disallowing leading 0/1).
-   - Validates **PAN** cards (format + 4th character holder status: Individual `P`, Company `C`, etc.).
-   - Validates **Credit/Debit Cards** via the **Luhn algorithm**.
-   - Detects Indian mobile phone numbers (+91), Indian PIN codes (6-digit), UPI VPAs, IFSC codes, Passports, Voter IDs, Biometrics, Health records, Passwords, Geolocation coordinates, and Children's data.
-   - Classifies data flow as `collected`, `stored`, `logged`, `transferred`, or `exposed`.
-   - Automatic redaction/masking of sensitive values in terminal and report snippets.
-3. **DPDP Statutory Mapping**:
-   - Single source of truth: [`src/rules/dpdp-map.yaml`](src/rules/dpdp-map.yaml).
-   - Maps each rule to Sections 4, 5, 6, 8, 9, 11, 12, 13, 16, and Rules 3, 4, 5, 6, 7, 8, 9, 10.
-   - Tracks statutory financial penalty clauses (e.g. Section 8(6) up to ₹250 Cr, Section 9 child data violations up to ₹200 Cr).
-4. **Documented Risk Classification**:
-   - Severity: `critical`, `high`, `medium`, `low`.
-   - Mathematical formula:
-     $$\text{Risk Score} = \text{Data Sensitivity } (1-5) \times \text{Exposure Vector } (1-5) \times \text{Ease of Exploit } (1-5) \in [1, 125]$$
-   - Critical ($\ge 60$), High ($30-59$), Medium ($12-29$), Low ($<12$).
-5. **Executive PDF & HTML Reports**:
-   - Cover page, Executive Summary, Severity breakdown, DPDP statutory provision coverage table, Consent Scorecard, and detailed finding cards with redacted snippets and remediation steps.
-6. **Bonus A: 5-Pillar Consent Flow Assessment**:
-   - Evaluates whether consent is (1) recorded with timestamp/purpose/version, (2) withdrawable via endpoint/UI, (3) enforced in backend before data use, (4) granular per purpose, and (5) accompanied by a plain language notice.
-7. **Bonus B: Unified Diff Auto-Fix Patches**:
-   - Generates standard `.patch` unified diffs.
-   - `--apply` mode creates a clean git branch `dpdp-remediation-<timestamp>` and a PR-ready markdown summary (`PR_REMEDIATION.md`).
-8. **Bonus C: Safe Live API Tester**:
-   - Non-destructive probes verifying TLS, mandatory security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options), rate limiting headers, unauthenticated PII leakage, verbose error disclosures, and statutory erasure/export endpoints.
+### 🧠 Grounded in a Real Statutory RAG System
+Unlike simple static tools that repeat generic section numbers, `code-dpdp` is directly powered by a **Retrieval-Augmented Generation (RAG) engine** connected to the official DPDP Act 2023 rulebook:
+- Covers all **44 Sections across all 9 Chapters**, the **Statutory Penalties Schedule (Items 1 to 7)**, and **DPDP Rules 2025 (Rules 1 to 12)**.
+- Every detected code finding is dynamically matched to its exact legal provision (e.g. **Section 9(3)** for children's tracking, **Section 8(5)** for security safeguards, **Section 8(6)** for breach notification, **Section 6(4)** for consent withdrawal, **Section 16** for cross-border egress, **Rule 6** for cryptographic encryption).
+- Built-in interactive command `code-dpdp rag "<query>"` lets you query the entire Gazette law directly from the command line.
 
 ---
 
-## Directory Structure
+## 🚀 One-Click Installation & Setup Guide
+
+Whether you **cloned the repo from GitHub** or **downloaded and extracted the ZIP file**, you can set up everything with **a single command**.
+
+### 🐧 For Linux & macOS
+
+1. Open terminal and navigate to the project directory:
+   ```bash
+   cd code-dpdp
+   ```
+
+2. Run the automated installer:
+   ```bash
+   ./setup.sh
+   ```
+   *(Or `bash setup.sh`)*
+
+3. **What the script does automatically:**
+   - Detects Python 3 (requires Python 3.10+)
+   - Creates an isolated virtual environment (`.venv`)
+   - Installs all dependencies from `requirements.txt`
+   - Installs optional Node/npm packages if available
+   - Symlinks `code-dpdp` to `~/.local/bin/code-dpdp` (accessible from any terminal)
+   - Runs a self-test to verify installation
+
+4. Verify installation:
+   ```bash
+   code-dpdp --version
+   ```
+
+---
+
+### 🪟 For Windows (Command Prompt or PowerShell)
+
+#### Option A: Command Prompt (CMD)
+1. Open Command Prompt (`cmd.exe`) in the extracted `code-dpdp` folder:
+   ```cmd
+   cd code-dpdp
+   ```
+
+2. Run the automated setup script:
+   ```cmd
+   setup.bat
+   ```
+
+#### Option B: PowerShell
+1. Open PowerShell in the extracted folder:
+   ```powershell
+   cd code-dpdp
+   .\setup.ps1
+   ```
+
+3. **What the script does automatically:**
+   - Detects Python 3.10+ (alerts if missing from PATH)
+   - Creates Python virtual environment (`.venv`)
+   - Installs all dependencies via `pip`
+   - Sets up Windows CLI wrappers (`code-dpdp.cmd` / `code-dpdp.bat`)
+   - Copies launcher to `%USERPROFILE%\.local\bin`
+   - Runs verification self-test
+
+4. Verify installation:
+   ```cmd
+   code-dpdp --version
+   ```
+
+---
+
+## 🛠️ Command-Line Interface (CLI) Reference
+
+| Command | Description |
+| :--- | :--- |
+| `code-dpdp scan [path]` | Full AST, config, schema, and vulnerability audit with dynamic statutory mapping |
+| `code-dpdp scan . --pdf report.pdf` | Generates official executive PDF audit report with all findings and citations |
+| `code-dpdp rag "<query>"` | Queries official DPDP Act 2023 Gazette & DPDP Rules 2025 rulebook via RAG |
+| `code-dpdp pii [path]` | Indian PII Radar: detects Aadhaar (Verhoeff), PAN, Indian phone (+91), cards (Luhn) |
+| `code-dpdp consent [path]` | 5-Pillar Consent Architecture assessment (DPDP Sec 5 & 6, Rules 3 & 4) |
+| `code-dpdp egress [path]` | Audits third-party SDK trackers (Meta Pixel, Google Analytics, foreign egress) |
+| `code-dpdp penalty [path]` | Computes financial penalty exposure under the DPDP Act Schedule (up to ₹250 Cr) |
+| `code-dpdp live <baseUrl>` | Non-destructive live API compliance & security probe (HTTPS, headers, routes) |
+| `code-dpdp patch [path]` | Generates unified git diff patches (`.patch`) for detected vulnerabilities |
+| `code-dpdp coderabbit [path]` | Auto-generates compliant `.coderabbit.yaml` rule contract for CI/CD PR reviews |
+| `code-dpdp rules` | Lists all statutory DPDP Act & Rules checks with legal citations & penalty limits |
+| `code-dpdp info` | Displays system status, active rules count, and local Ollama daemon status |
+
+---
+
+## 📖 Detailed Examples & Usage
+
+### 1. Full Compliance Scan & PDF Report
+```bash
+# Scan current repository and generate official PDF report
+code-dpdp scan . --pdf result.pdf
+
+# Export structured JSON findings for CI/CD pipelines
+code-dpdp scan . --json out.json
+
+# Filter output by severity
+code-dpdp scan . --severity critical
+
+# Enforce CI failure threshold (exits with non-zero status on critical violations)
+code-dpdp scan . --fail-on critical
+```
+
+### 2. Interactive Statutory RAG Search (`code-dpdp rag`)
+Query any topic, section number, or rule. The RAG engine retrieves the official Gazette text, technical mandate, and maximum fine:
+```bash
+# Search by topic:
+code-dpdp rag "parental consent for children"
+
+# Search by section:
+code-dpdp rag "Section 9"
+code-dpdp rag "Section 16 cross-border transfer"
+code-dpdp rag "breach notification timeline 6 hours"
+code-dpdp rag "storage limitation and data erasure"
+```
+
+### 3. Indian PII & Credentials Radar (`code-dpdp pii`)
+Identifies sensitive Indian personal data and unencrypted credentials:
+- **Aadhaar Numbers**: Validated via **Verhoeff checksum algorithm**
+- **PAN Cards**: Validated via Income Tax PAN regex `[A-Z]{5}[0-9]{4}[A-Z]`
+- **Indian Mobile Numbers**: `+91` and 10-digit formats starting with 6, 7, 8, or 9
+- **Credit / Debit Cards**: Validated via **Luhn checksum algorithm**
+- **Plaintext Passwords, API Keys, Tokens, and Private Keys**
+```bash
+# Scan and show masked PII
+code-dpdp pii .
+
+# Export PII findings to JSON
+code-dpdp pii . --json pii.json
+
+# Display unredacted values (audit mode)
+code-dpdp pii . --no-redact
+```
+
+### 4. 5-Pillar Consent Architecture (`code-dpdp consent`)
+Evaluates consent mechanisms under Sections 5 & 6 and Rules 3 & 4:
+1. **Notice Specification**: Itemised collection notices in English and Eighth Schedule languages
+2. **Affirmative Action**: No pre-ticked checkboxes or deceptive dark patterns
+3. **Granular Purpose Separation**: Unbundled service agreements and marketing opt-ins
+4. **Comparable Ease of Withdrawal**: 1-click user settings revocation
+5. **Consent Recordkeeping**: Audit trail and Consent Manager API integration
+
+```bash
+code-dpdp consent .
+```
+
+### 5. Third-Party Trackers & Data Egress (`code-dpdp egress`)
+Audits unconsented third-party telemetry and cross-border data flows:
+```bash
+code-dpdp egress .
+```
+
+### 6. Statutory Financial Penalty Exposure (`code-dpdp penalty`)
+Evaluates monetary liability under the official **DPDP Act 2023 Schedule**:
+- **Schedule Item 1 (Sec 8(5) / Rule 6)**: Failure to take reasonable security safeguards (Up to **₹250 Crore**)
+- **Schedule Item 2 (Sec 8(6) / Rule 7)**: Failure to notify personal data breach (Up to **₹200 Crore**)
+- **Schedule Item 3 (Sec 9 / Rule 8)**: Breach of obligations regarding children (Up to **₹200 Crore**)
+- **Schedule Item 4 (Sec 10 / Rule 10)**: Significant Data Fiduciary breach (Up to **₹150 Crore**)
+- **Schedule Item 7 (Sec 5, 6, 8(7), 16)**: Breach of consent, notice, retention, or cross-border rules (Up to **₹50 Crore**)
+
+```bash
+code-dpdp penalty .
+```
+
+### 7. Automated Remediation Patches (`code-dpdp patch`)
+Generates unified git `.patch` files for detected security flaws:
+```bash
+# Generate patches in a folder
+code-dpdp patch . --patches patches/
+
+# Generate and apply patches directly to the codebase
+code-dpdp patch . --patches patches/ --apply
+```
+
+### 8. Live API Endpoint Security Probe (`code-dpdp live`)
+Non-destructive active probe of running HTTP services:
+```bash
+code-dpdp live https://api.example.com
+```
+
+---
+
+## 🤖 Local AI & Ollama Integration (Optional)
+
+`code-dpdp` is 100% functional offline without requiring any LLM. However, if you have [Ollama](https://ollama.ai) running locally, `code-dpdp` automatically leverages it for deep legal-technical defense synthesis:
+
+1. Start your local Ollama daemon:
+   ```bash
+   ollama run llama3   # or mistral, codellama, qwen2.5-coder
+   ```
+
+2. Run scan with AI copilot:
+   ```bash
+   code-dpdp scan . --ai
+   ```
+
+3. Explain any vulnerability or compliance mandate:
+   ```bash
+   code-dpdp explain "SQL injection under DPDP Section 8(5)"
+   ```
+
+---
+
+## 📂 Project Structure
 
 ```
-dpdp-anti/
+code-dpdp/
 ├── bin/
-│   └── dpdp-audit.js              # Executable CLI wrapper
-├── package.json
-├── tsconfig.json                  # TypeScript strict mode configuration
-├── vitest.config.ts               # Vitest test suite config
-├── src/
-│   ├── cli.ts                     # Commander CLI interface
-│   ├── index.ts                   # Library exports
-│   ├── types.ts                   # Core TypeScript type contracts
-│   ├── pii/                       # PII dictionary, patterns & classifier
-│   ├── rules/                     # External YAML rules & dpdp-map.yaml
-│   └── docs/                      # Auto-generator for RULES.md
+│   ├── code-dpdp           # Linux/macOS executable launcher
+│   ├── code-dpdp.cmd       # Windows CMD launcher
+│   └── dpdp-audit.js       # Node wrapper (optional)
+├── data/
+│   └── knowledge_base/
+│       ├── dpdp_rulebook.json           # Comprehensive 40+ statutory sections (RAG knowledge base)
+│       ├── dpdp_act_2023_full_text.txt  # Complete official Gazette text (Act No. 22 of 2023)
+│       └── dpdp_act_2023_official.pdf   # Official Gazette PDF publication
 ├── python/
 │   └── dpdp_audit/
-│       ├── cli.py                 # Core CLI entrypoint
-│       ├── core/
-│       │   ├── models.py          # Data models
-│       │   ├── pii_detector.py    # Verhoeff, Luhn & PII regex engine
-│       │   ├── risk_scorer.py     # Sensitivity x Exposure x Exploit scoring
-│       │   ├── rules_engine.py    # Multi-analyzer scanner & deduplicator
-│       │   ├── dpdp_mapper.py     # Legal provision mapper
-│       │   └── file_walker.py     # High-speed file walker & comment ignore parser
-│       ├── analyzers/
-│       │   ├── config_analyzer.py # .env, Dockerfile, Compose, k8s, Terraform
-│       │   ├── schema_analyzer.py # SQL, Prisma, Mongoose schemas
-│       │   ├── ast_analyzer.py    # Code AST and flow analyzer
-│       │   ├── consent_analyzer.py# 5-Pillar Consent Flow Evaluator
-│       │   ├── patch_generator.py # Unified diff & git branch PR creator
-│       │   └── live_tester.py     # Safe live API tester
-│       └── report/
-│           ├── pdf_generator.py   # Vector PDF Compliance Report
-│           └── html_generator.py  # Interactive HTML Report
-├── docs/
-│   └── RULES.md                   # Auto-generated documentation of all 46 rules
-├── tests/                         # Vitest test suite
-└── target/                        # Benchmark target (OWASP Juice Shop)
+│       ├── analyzers/      # Real vulnerability, AST, schema, consent, egress, live testers
+│       ├── core/           # RAG pipeline, rules engine, PII detector, risk scorer, models
+│       ├── report/         # Vector PDF report generator, HTML generator
+│       └── cli.py          # Central CLI command controller
+├── src/
+│   └── rules/              # YAML rules definitions mapped to DPDP provisions
+├── setup.sh                # Linux/macOS one-click installation script
+├── setup.bat               # Windows Command Prompt one-click installation script
+├── setup.ps1               # Windows PowerShell installation script
+├── requirements.txt        # Python dependency manifest
+├── package.json            # Node project configuration
+└── README.md               # Complete documentation & setup guide
 ```
 
 ---
 
-## Installation & Setup
+## 🧪 Running Tests
 
-### Prerequisites
-- Node.js >= 18.0.0
-- Python >= 3.10
-- Git
-
-### Quick Setup
-
+To run the automated test suite:
 ```bash
-# 1. Install Node dependencies and compile TypeScript
-npm install
-npm run build
+# Linux/macOS
+.venv/bin/pytest python/tests
 
-# 2. Setup Python backend virtual environment
-python3 -m venv .venv
-.venv/bin/pip install reportlab pyyaml requests pytest
-
-# 3. Verify installation
-./bin/dpdp-audit.js --help
+# Windows
+.venv\Scripts\pytest.exe python\tests
 ```
 
 ---
 
-## Web Platform (Interactive Dashboard & ZIP Upload)
+## ⚖️ Legal Disclaimer
 
-Launch the full-featured, real interactive web platform:
-
-```bash
-# Start the Web Platform on http://localhost:4000
-npm run web
-# or:
-./bin/dpdp-audit.js web --port 4000
-```
-
-Features in the Web UI:
-- **Drag-and-Drop `.zip` Upload**: Upload any codebase as a `.zip` archive for immediate automated extraction and deep analysis.
-- **One-Click Sample Analysis**: Includes a *"🚀 Try Sample: OWASP Juice Shop"* button for instantaneous live judge demonstrations.
-- **Unauthorized Third-Party Egress Radar**: Explicitly detects tracking SDKs (Meta Pixel, Google Analytics, Mixpanel, Segment, TikTok) and external unencrypted HTTP endpoints transferring personal data without verified consent (DPDP Section 6(1) & Section 16).
-- **Code Malfunctions & Bugs Panel**: Flags empty catch blocks, SQLi via concatenation, dangerous `eval()`, prototype pollution, and unhandled promise rejections.
-- **Interactive DPDP Privacy Findings Explorer**: Searchable and filterable by severity and category with syntax-highlighted and masked code snippets.
-- **Direct Downloads**: 1-click downloads for official ReportLab PDF reports and unified diff `.patch` files.
+`code-dpdp` is an automated technical and architectural compliance scanner designed to assist engineering teams and privacy officers in identifying software vulnerabilities and adherence to statutory privacy frameworks. It does not constitute formal legal counsel. Formal compliance audits should be reviewed by qualified legal practitioners.
 
 ---
 
-## CLI Usage
+## 📄 License
 
-### 1. Static & Config Compliance Scan
-```bash
-# Scan target directory and generate PDF, JSON, and Auto-Fix patches
-./bin/dpdp-audit.js scan ./target --out report.pdf --json out.json --patches ./patches
-
-# Automatically apply patches to a new git branch in the target repo
-./bin/dpdp-audit.js scan ./target --patches ./patches --apply
-```
-
-### 2. Consent Flow Assessment (Bonus A)
-```bash
-./bin/dpdp-audit.js consent ./target
-```
-
-### 3. Safe Live API Testing (Bonus C)
-```bash
-./bin/dpdp-audit.js live http://localhost:3000
-```
-
-### 4. Catalog Registered Rules
-```bash
-./bin/dpdp-audit.js list-rules
-```
-
----
-
-## Benchmark Results: OWASP Juice Shop
-
-Scanning **OWASP Juice Shop** (`./target`):
-
-| Metric | Result |
-| :--- | :--- |
-| **Total Files Scanned** | **1,371 files** |
-| **Execution Duration** | **5.6 seconds** |
-| **Findings Identified** | **171 violations** |
-| **Critical Severity** | **109 findings** (e.g. unencrypted transit, hardcoded secrets, open ports) |
-| **High Severity** | **59 findings** (e.g. missing cookie flags, full user entity exposure) |
-| **Medium Severity** | **3 findings** (e.g. verbose error disclosures) |
-| **Overall Health Score** | **0 / 100** |
-| **Consent Maturity** | **Grade F** (Missing purpose-level consent checks) |
-| **Auto-Fix Patches** | **117 unified diffs generated** |
-
-Generated Artifacts:
-- [`report.pdf`](report.pdf): Full statutory compliance report.
-- [`out.json`](out.json): Machine-readable scan export.
-- [`patches/all_remediations.patch`](patches/all_remediations.patch): Unified diff patch bundle.
-- [`docs/RULES.md`](docs/RULES.md): Exhaustive catalog of all 46 rules and statutory citations.
-
----
-
-## Running Test Suites
-
-Both Vitest (TypeScript) and Pytest (Python) suites run with 100% test passing:
-
-```bash
-# Run TypeScript Vitest suite
-npm test
-
-# Run Python Pytest suite
-PYTHONPATH=python .venv/bin/pytest python/tests
-
-# Run both in sequence
-npm test && PYTHONPATH=python .venv/bin/pytest python/tests
-```
-
----
-
-## 5-Minute Hackathon Demo Script
-
-Here is an effective 5-minute presentation script for pitching **DPDP-Audit** at a hackathon or executive demo:
-
-### **Minute 0:00 - 1:00: The Problem & The Regulatory Stakes**
-> *"India's Digital Personal Data Protection Act 2023 and the DPDP Rules 2025 introduce some of the strictest data privacy obligations in the world, with fines reaching up to ₹250 Crore per violation for failing to maintain reasonable security safeguards. Today, engineering teams have no automated tool to audit their code, database schemas, and cloud configs specifically against the DPDP Act. That is why we built **DPDP-Audit**."*
-
-### **Minute 1:00 - 2:00: Scanning OWASP Juice Shop Live**
-> *"Let's test DPDP-Audit against a complex application: OWASP Juice Shop. With one command:  
-> `dpdp-audit scan ./target --out report.pdf --json out.json --patches ./patches`  
-> In just 5 seconds, our hybrid TypeScript + Python engine walks 1,371 files—analyzing TypeScript ASTs, Prisma schemas, Dockerfiles, and `.env` configs. It identified 171 statutory non-compliance points with zero false positives on Aadhaar (using Verhoeff verification) and PAN cards."*
-
-### **Minute 2:00 - 3:00: Executive PDF Compliance Report**
-> *(Open `report.pdf`)*  
-> *"Here is the generated Compliance Report. Notice the Cover Page with an overall compliance health score (0/100). The Executive Summary quantifies the legal fine exposure under the Act's Schedule. The statutory coverage matrix directly correlates each finding to Sections 6, 8, 9, 12 of the Act and Rules 6 and 8. Notice how sensitive passwords and PII values in code snippets are automatically masked to prevent secondary leaks."*
-
-### **Minute 3:00 - 4:00: Consent Flow Assessment & Live API Testing**
-> *"Compliance isn't just about static secrets—it's about user consent. Let's run:  
-> `dpdp-audit consent ./target`  
-> In seconds, it evaluates the 5 statutory pillars of consent: Recordation with timestamps, ease of withdrawal, backend pre-processing enforcement, granular purposes, and plain notice.  
-> Next, our safe live tester (`dpdp-audit live http://localhost:3000`) probes running endpoints for missing HSTS headers, unauthenticated PII leakage, and statutory erasure endpoints."*
-
-### **Minute 4:00 - 5:00: Auto-Fix Patches & PR Generation**
-> *"Finding problems is good; fixing them automatically is great. DPDP-Audit generated 117 unified diff patches. When we pass `--apply`, it creates a new git branch in the repository, applies the fixes (adding `secure: true, httpOnly: true` to cookies, upgrading ciphers, and securing Docker configs), and generates a PR-ready `PR_REMEDIATION.md`.  
-> DPDP-Audit turns compliance from a 6-month legal audit into a 5-second automated CI/CD privacy pipeline."*
-
----
-
-## License
-
-Distributed under the **Apache-2.0** License.
+Licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE) for details.

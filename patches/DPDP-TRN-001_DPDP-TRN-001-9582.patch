@@ -1,5 +1,0 @@
---- a/test/server/redirect.unit.test.ts
-+++ b/test/server/redirect.unit.test.ts
-@@ -42,1 +42,1 @@
--req.query.to = 'http://kimminich.de'
-+req.query.to = 'https://kimminich.de'

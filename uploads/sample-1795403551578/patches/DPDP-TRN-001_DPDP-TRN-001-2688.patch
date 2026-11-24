@@ -1,5 +1,0 @@
---- a/test/api/user-profile.test.ts
-+++ b/test/api/user-profile.test.ts
-@@ -194,1 +194,1 @@
--.set('Origin', 'http://attacker.com')
-+.set('Origin', 'https://attacker.com')

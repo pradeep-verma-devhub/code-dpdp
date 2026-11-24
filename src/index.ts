@@ -8,6 +8,3 @@ export * from './utils/path.util.js';
 export * from './utils/archive.util.js';
 export * from './pipeline/scan.pipeline.js';
 export * from './services/audit.service.js';
-export * from './controllers/audit.controller.js';
-export * from './routes/index.js';
-export * from './main.js';

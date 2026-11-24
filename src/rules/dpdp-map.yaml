@@ -2,191 +2,312 @@
 # Official References: Digital Personal Data Protection Act 2023 (Act No. 22 of 2023)
 # and Digital Personal Data Protection Rules 2025.
 
+ACT_SEC_1:
+  law: "Act 2023"
+  provision: "Section 1"
+  title: "Short Title and Commencement"
+  summary: "Applies across digital applications processing digital personal data of Indian citizens."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_2:
+  law: "Act 2023"
+  provision: "Section 2"
+  title: "Statutory Definitions (Data Fiduciary, Principal, Breach)"
+  summary: "Defines legal roles, responsibilities, and the definition of personal data breach."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_3:
+  law: "Act 2023"
+  provision: "Section 3"
+  title: "Application and Extraterritorial Reach"
+  summary: "Applies to digital processing within India and offshore processing offering goods/services to Indian principals."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
 ACT_SEC_4:
   law: "Act 2023"
   provision: "Section 4"
   title: "Grounds for Processing Personal Data"
-  summary: "Personal data may be processed only for a lawful purpose for which the Data Principal has given consent or for certain legitimate uses."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Personal data may be processed only for a lawful purpose for which consent is given or for legitimate uses."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_5_1:
   law: "Act 2023"
   provision: "Section 5(1)"
-  title: "Notice for Seeking Consent"
-  summary: "Data Fiduciary must provide an itemised notice stating the personal data to be collected, purpose of processing, grievance contact, and right to withdraw consent."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Itemised Notice for Seeking Consent"
+  summary: "Data Fiduciary must provide an itemised notice stating data collected, purpose, rights, and grievance contact."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_5_3:
   law: "Act 2023"
   provision: "Section 5(3)"
-  title: "Language Options for Notice"
-  summary: "Data Principal must be given option to access the notice and consent request in English or any language specified in the Eighth Schedule to the Constitution."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Language Options for Notice (Eighth Schedule)"
+  summary: "Data Principal must be given option to access notice in English or any Eighth Schedule Indian language."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_6_1:
   law: "Act 2023"
   provision: "Section 6(1)"
-  title: "Consent Requirements"
-  summary: "Consent must be free, specific, informed, unconditional, unambiguous with clear affirmative action, and limited to necessary personal data."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Consent Requirements (Free, Specific, Informed, Affirmative)"
+  summary: "Consent must be free, specific, informed, unconditional, unambiguous with clear affirmative action."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_6_4:
   law: "Act 2023"
   provision: "Section 6(4)"
-  title: "Right to Withdraw Consent"
-  summary: "Data Principal has the right to withdraw consent at any time, with ease of withdrawal comparable to the ease with which consent was given."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Right to Withdraw Consent with Comparable Ease"
+  summary: "Data Principal has right to withdraw consent with ease comparable to the ease of giving consent."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_6_6:
   law: "Act 2023"
   provision: "Section 6(6)"
   title: "Cessation of Processing on Consent Withdrawal"
-  summary: "Data Fiduciary and its Data Processors must cease processing personal data within a reasonable time upon receipt of consent withdrawal."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Data Fiduciary and processors must cease processing personal data upon receipt of consent withdrawal."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_7:
+  law: "Act 2023"
+  provision: "Section 7"
+  title: "Certain Legitimate Uses"
+  summary: "Processing allowed for specified voluntary purposes, state subsidies, legal obligations, or medical emergencies."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_8_2:
+  law: "Act 2023"
+  provision: "Section 8(2)"
+  title: "Engagement of Data Processor under Valid Contract"
+  summary: "A Data Fiduciary may involve a Data Processor only under a valid data protection contract."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_8_3:
   law: "Act 2023"
   provision: "Section 8(3)"
   title: "Accuracy and Completeness of Personal Data"
-  summary: "Data Fiduciary must ensure personal data processed is accurate, complete, and consistent if used to make a decision or disclosed to another Data Fiduciary."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Data Fiduciary must ensure personal data processed is accurate, complete, and consistent."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_8_4:
   law: "Act 2023"
   provision: "Section 8(4)"
-  title: "Notification of Personal Data Breach"
-  summary: "In the event of a personal data breach, Data Fiduciary must intimate the Data Protection Board of India and each affected Data Principal."
-  penaltyClause: "Schedule Item 2: Up to ₹200 Crore"
+  title: "Implementation of Technical and Organisational Measures"
+  summary: "Data Fiduciary shall implement appropriate technical and organisational measures to ensure observance of Act."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_8_5:
   law: "Act 2023"
   provision: "Section 8(5)"
-  title: "Erasure of Personal Data / Storage Limitation"
-  summary: "Data Fiduciary must erase personal data as soon as the purpose for which it was collected is no longer served, or upon withdrawal of consent."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Obligation to take Reasonable Security Safeguards"
+  summary: "Data Fiduciary shall protect personal data by taking reasonable security safeguards to prevent personal data breach."
+  penaltyClause: "Schedule Item 1: Up to ₹250 Crore"
 
 ACT_SEC_8_6:
   law: "Act 2023"
   provision: "Section 8(6)"
-  title: "Reasonable Security Safeguards"
-  summary: "Data Fiduciary must protect personal data in its possession or under its control by taking reasonable security safeguards to prevent personal data breach."
-  penaltyClause: "Schedule Item 1: Up to ₹250 Crore"
+  title: "Mandatory Notification of Personal Data Breach"
+  summary: "In the event of a personal data breach, Data Fiduciary must intimate Board and affected Data Principals."
+  penaltyClause: "Schedule Item 2: Up to ₹200 Crore"
 
 ACT_SEC_8_7:
   law: "Act 2023"
   provision: "Section 8(7)"
-  title: "Publication of Grievance Redressal Contact"
-  summary: "Data Fiduciary must publish the business contact information of the Data Protection Officer or person authorized to respond to Data Principal communications."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Erasure of Personal Data / Storage Limitation"
+  summary: "Data Fiduciary must erase personal data as soon as purpose is fulfilled or consent is withdrawn."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_8_8:
   law: "Act 2023"
   provision: "Section 8(8)"
+  title: "Processor Data Erasure Mandate"
+  summary: "Data Fiduciary shall cause its Data Processors to erase personal data upon purpose completion."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_8_9:
+  law: "Act 2023"
+  provision: "Section 8(9)"
   title: "Establishment of Grievance Redressal Mechanism"
-  summary: "Data Fiduciary must establish an effective mechanism to redress grievances of Data Principals in respect of obligations under the Act."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Data Fiduciary must establish an effective mechanism to redress grievances of Data Principals."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_8_10:
+  law: "Act 2023"
+  provision: "Section 8(10)"
+  title: "Publication of Grievance Officer Contact Details"
+  summary: "Data Fiduciary must publish business contact details of Data Protection Officer or Grievance Officer."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_9_1:
   law: "Act 2023"
   provision: "Section 9(1)"
   title: "Verifiable Parental Consent for Children"
-  summary: "Data Fiduciary must obtain verifiable consent of parent or lawful guardian before processing any personal data of a child (individual below 18 years)."
+  summary: "Data Fiduciary must obtain verifiable consent of parent or lawful guardian before processing child data."
   penaltyClause: "Schedule Item 3: Up to ₹200 Crore"
 
 ACT_SEC_9_2:
   law: "Act 2023"
   provision: "Section 9(2)"
   title: "Protection Against Detrimental Processing of Child Data"
-  summary: "Data Fiduciary shall not undertake such processing of personal data that is likely to cause any detrimental effect on the well-being of a child."
+  summary: "Data Fiduciary shall not undertake processing likely to cause any detrimental effect on a child."
   penaltyClause: "Schedule Item 3: Up to ₹200 Crore"
 
 ACT_SEC_9_3:
   law: "Act 2023"
   provision: "Section 9(3)"
-  title: "Prohibition of Tracking and Behavioural Monitoring of Children"
-  summary: "Data Fiduciary shall not undertake tracking or behavioural monitoring of children or targeted advertising directed at children."
+  title: "Prohibition of Tracking and Targeted Advertising on Children"
+  summary: "Data Fiduciary shall not undertake tracking, behavioural monitoring or targeted ads on children."
   penaltyClause: "Schedule Item 3: Up to ₹200 Crore"
+
+ACT_SEC_10:
+  law: "Act 2023"
+  provision: "Section 10"
+  title: "Significant Data Fiduciary Obligations (DPO, DPIA, Audits)"
+  summary: "Significant Data Fiduciaries must appoint resident DPO, independent auditor, and conduct periodic DPIAs."
+  penaltyClause: "Schedule Item 4: Up to ₹150 Crore"
 
 ACT_SEC_11:
   law: "Act 2023"
   provision: "Section 11"
-  title: "Right to Access Information About Personal Data"
-  summary: "Data Principal has the right to obtain a summary of personal data being processed, processing activities, and identities of all third parties shared with."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Right to Access Information on Personal Data"
+  summary: "Data Principal has right to obtain summary of data processed and third parties shared with."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_12:
   law: "Act 2023"
   provision: "Section 12"
   title: "Right to Correction and Erasure of Personal Data"
-  summary: "Data Principal has the right to correction of inaccurate data, completion of incomplete data, updating of data, and erasure of personal data."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Data Principal has right to correction, completion, updating and erasure of personal data."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 ACT_SEC_13:
   law: "Act 2023"
   provision: "Section 13"
   title: "Right of Grievance Redressal"
-  summary: "Data Principal has the right to readily available means of grievance redressal provided by Data Fiduciary or Consent Manager."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  summary: "Data Principal has right to readily available means of grievance redressal with binding SLA."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_14:
+  law: "Act 2023"
+  provision: "Section 14"
+  title: "Right to Nominate"
+  summary: "Data Principal has right to nominate representative in event of death or incapacity."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_15:
+  law: "Act 2023"
+  provision: "Section 15"
+  title: "Duties of Data Principal"
+  summary: "Data Principal must not impersonate, suppress facts, or register false/frivolous complaints."
+  penaltyClause: "Schedule Item 5: Up to ₹10,000"
 
 ACT_SEC_16:
   law: "Act 2023"
   provision: "Section 16"
-  title: "Transfer of Personal Data Outside India"
-  summary: "Data Fiduciary may transfer personal data outside India subject to restrictions, prohibited countries, or conditions notified by the Central Government."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Cross-Border Transfer Restrictions Outside India"
+  summary: "Central Government may restrict transfer of personal data to notified countries or territories."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
+ACT_SEC_17:
+  law: "Act 2023"
+  provision: "Section 17"
+  title: "Statutory Exemptions"
+  summary: "Exemptions for legal claims, judicial functions, research, statistics, and eligible startups."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_28:
+  law: "Act 2023"
+  provision: "Section 28"
+  title: "Appeals to Appellate Tribunal (TDSAT)"
+  summary: "Appeals against Board decisions to Telecom Disputes Settlement and Appellate Tribunal."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+ACT_SEC_33:
+  law: "Act 2023"
+  provision: "Section 33 & Schedule"
+  title: "Statutory Financial Penalties Schedule"
+  summary: "Prescribes statutory fines up to ₹250 Crore for security safeguards failure under Schedule Item 1."
+  penaltyClause: "The Schedule: Up to ₹250 Crore"
+
+# DPDP RULES 2025 PROVISIONS
 RULE_3:
   law: "Rules 2025"
   provision: "Rule 3"
-  title: "Itemised Notice and Clear Consent Formats"
-  summary: "Prescribes itemised details required in privacy notices including discrete purpose enumeration, retention periods, and plain language standards."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "SARAL Standalone Consent Notice Requirements"
+  summary: "Plain language, unbundled consent notices independent of general terms and conditions."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 RULE_4:
   law: "Rules 2025"
   provision: "Rule 4"
-  title: "Mechanisms for Consent Withdrawal"
-  summary: "Requires automated technical mechanisms for instant consent revocation and cascading deletion signals to third-party processors."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Consent Manager Integration and Withdrawal Architecture"
+  summary: "Direct API integration with registered Consent Managers and accessible revocation workflows."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 RULE_5:
   law: "Rules 2025"
   provision: "Rule 5"
-  title: "Verifiable Parental Consent and Tokenized Verification"
-  summary: "Prescribes standards for verifiable parental consent including age-gating mechanisms, tokenized verification, and zero storage of raw child credentials."
-  penaltyClause: "Schedule Item 3: Up to ₹200 Crore"
+  title: "Cross-Border Transfer Safeguards & Due Diligence"
+  summary: "Standard contractual clauses, destination vetting, and encryption for overseas transfers."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 RULE_6:
   law: "Rules 2025"
   provision: "Rule 6"
-  title: "Reasonable Security Safeguards and Technical Standards"
-  summary: "Specifies technical standards: end-to-end encryption in transit (TLS 1.3), encryption at rest (AES-256), cryptographic key lifecycle, access auditing, and secure containerization."
-  penaltyClause: "Schedule Item 1: Up to ₹250 Crore"
+  title: "Mandatory Technical Security Safeguards & Encryption Standards"
+  summary: "Mandates AES-256 encryption at rest, TLS 1.3 in transit, Argon2id/bcrypt, RBAC, and secure cookies."
+  penaltyClause: "Schedule Item 1: Up to ₹250 Crore read with Section 8(5)"
 
 RULE_7:
   law: "Rules 2025"
   provision: "Rule 7"
-  title: "Breach Notification Timelines and Telemetry"
-  summary: "Prescribes reporting formats, root-cause telemetry, and mandatory 6-hour initial breach disclosure obligations to the Data Protection Board."
-  penaltyClause: "Schedule Item 2: Up to ₹200 Crore"
+  title: "6-Hour Incident Notification and Breach Protocols"
+  summary: "Preliminary intimation to DPB within 6 hours of discovery, followed by forensic reports."
+  penaltyClause: "Schedule Item 2: Up to ₹200 Crore read with Section 8(6)"
 
 RULE_8:
   law: "Rules 2025"
   provision: "Rule 8"
-  title: "Automated Data Retention & Erasure Schedules"
-  summary: "Requires programmatic TTL, scheduled deletion jobs, and automated purging of personal data once stated purpose is exhausted."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Age Verification & Parental Consent Standards"
+  summary: "Approved digital token, DigiLocker, or guardian ID verification protocols for minors."
+  penaltyClause: "Schedule Item 3: Up to ₹200 Crore read with Section 9"
 
 RULE_9:
   law: "Rules 2025"
   provision: "Rule 9"
-  title: "Grievance Redressal SLA and Communication Channels"
-  summary: "Mandates designated communication channels, ticket tracking, and maximum 7-day resolution SLAs for Data Principal grievances."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "Grievance Redressal Officer SLA Timelines"
+  summary: "24-hour acknowledgment and 15-day resolution for Data Principal privacy grievances."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
 
 RULE_10:
   law: "Rules 2025"
   provision: "Rule 10"
-  title: "Cross-Border Transfer Conditions and Model Clauses"
-  summary: "Regulates cross-border processing, mandating standard contractual privacy clauses, adequacy verification, and prohibition of transit through blacklisted jurisdictions."
-  penaltyClause: "Schedule Item 4: Up to ₹50 Crore"
+  title: "DPIA Methodology & Independent Data Audits"
+  summary: "Mandatory annual independent audits and DPIAs for algorithmic processing and AI models."
+  penaltyClause: "Schedule Item 4: Up to ₹150 Crore read with Section 10"
+
+RULE_11:
+  law: "Rules 2025"
+  provision: "Rule 11"
+  title: "DSAR Machine-Readable Data Portability Exports"
+  summary: "Structured, electronic JSON/CSV data export delivered within 7 business days."
+  penaltyClause: "Schedule Item 7: Up to ₹50 Crore"
+
+# Aliases for robust legacy matching
+"Rule 6":
+  law: "Rules 2025"
+  provision: "Rule 6"
+  title: "Mandatory Technical Security Safeguards & Encryption Standards"
+  summary: "AES-256 encryption at rest, TLS 1.3 in transit, Argon2id/bcrypt for credentials."
+  penaltyClause: "Schedule Item 1: Up to ₹250 Crore read with Section 8(5)"
+
+"Sec 8(5)":
+  law: "Act 2023"
+  provision: "Section 8(5)"
+  title: "Obligation to take Reasonable Security Safeguards"
+  summary: "Protect personal data by taking reasonable security safeguards to prevent personal data breach."
+  penaltyClause: "Schedule Item 1: Up to ₹250 Crore"
+
+"Sec 8(6)":
+  law: "Act 2023"
+  provision: "Section 8(6)"
+  title: "Mandatory Notification of Personal Data Breach"
+  summary: "In the event of a personal data breach, intimate Board and affected Data Principals."
+  penaltyClause: "Schedule Item 2: Up to ₹200 Crore"

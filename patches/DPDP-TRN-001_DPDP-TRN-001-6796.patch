@@ -1,5 +1,0 @@
---- a/lib/insecurity.ts
-+++ b/lib/insecurity.ts
-@@ -130,1 +130,1 @@
--'http://leanpub.com/juice-shop'
-+'https://leanpub.com/juice-shop'

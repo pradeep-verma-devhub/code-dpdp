@@ -1,5 +1,0 @@
---- a/lib/startup/validateConfig.ts
-+++ b/lib/startup/validateConfig.ts
-@@ -84,1 +84,1 @@
--logger.warn(`${matchingProducts.length} products are configured as ${colors.italic(name)} but only one is allowed (${colors.red('ERROR')})`)
-+// [DPDP-LOG-001] Redacted PII logging call

@@ -1,5 +1,0 @@
---- a/test/cypress/e2e/profile.spec.ts
-+++ b/test/cypress/e2e/profile.spec.ts
-@@ -107,1 +107,1 @@
--Origin: 'http://htmledit.squarefree.com', // FIXME Not allowed by browser due to "unsafe header not permitted"
-+Origin: 'https://htmledit.squarefree.com', // FIXME Not allowed by browser due to "unsafe header not permitted"

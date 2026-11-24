@@ -1,5 +1,0 @@
---- a/lib/insecurity.ts
-+++ b/lib/insecurity.ts
-@@ -127,1 +127,1 @@
--'http://shop.spreadshirt.com/juiceshop',
-+'https://shop.spreadshirt.com/juiceshop',

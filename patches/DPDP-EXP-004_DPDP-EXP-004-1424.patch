@@ -1,5 +1,0 @@
---- a/routes/likeProductReviews.ts
-+++ b/routes/likeProductReviews.ts
-@@ -56,1 +56,1 @@
--res.status(500).json(err)
-+res.status(500).json({ error: "Internal Server Error" })

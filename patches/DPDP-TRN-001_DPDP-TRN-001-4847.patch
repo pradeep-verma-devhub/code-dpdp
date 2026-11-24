@@ -1,5 +1,0 @@
---- a/test/api/product.test.ts
-+++ b/test/api/product.test.ts
-@@ -108,1 +108,1 @@
--assert.equal(res.body.data.description, '<a href="http://kimminich.de" target="_blank">More...</a>')
-+assert.equal(res.body.data.description, '<a href='https://kimminich.de" target="_blank">More...</a>')

@@ -1,5 +1,0 @@
---- a/data/datacreator.ts
-+++ b/data/datacreator.ts
-@@ -450,1 +450,1 @@
--logger.error(`Could not insert Product ${product.name}: ${utils.getErrorMessage(err)}`)
-+// [DPDP-LOG-001] Redacted PII logging call

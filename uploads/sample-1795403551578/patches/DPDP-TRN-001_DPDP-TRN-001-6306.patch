@@ -1,5 +1,0 @@
---- a/test/server/utils.unit.test.ts
-+++ b/test/server/utils.unit.test.ts
-@@ -52,1 +52,1 @@
--assert.equal(utils.extractFilename('http://bla.blubb/test.exe?bla=blubb&a=b'), 'test.exe')
-+assert.equal(utils.extractFilename('https://bla.blubb/test.exe?bla=blubb&a=b'), 'test.exe')

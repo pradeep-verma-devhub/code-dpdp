@@ -1,5 +1,0 @@
---- a/rsn/rsnOutput.ts
-+++ b/rsn/rsnOutput.ts
-@@ -5,1 +5,1 @@
--console.log(colors.green(colors.bold('All codefix files match the locked state. No action required.')))
-+// [DPDP-LOG-001] Redacted PII logging call

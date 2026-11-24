@@ -1,5 +1,0 @@
---- a/frontend/src/assets/private/three.js
-+++ b/frontend/src/assets/private/three.js
-@@ -7810,1 +7810,1 @@
--console.warn( 'THREE.Object3D.add: An object can\'t be added as a child of itself.' );
-+// [DPDP-LOG-001] Redacted PII logging call

@@ -1,5 +1,0 @@
---- a/lib/challengeUtils.ts
-+++ b/lib/challengeUtils.ts
-@@ -99,1 +99,1 @@
--logger.warn('Missing challenge with name: ' + challengeName)
-+// [DPDP-LOG-001] Redacted PII logging call

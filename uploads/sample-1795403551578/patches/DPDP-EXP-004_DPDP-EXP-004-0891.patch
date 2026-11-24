@@ -1,5 +1,0 @@
---- a/data/static/codefixes/noSqlReviewsChallenge_2.ts
-+++ b/data/static/codefixes/noSqlReviewsChallenge_2.ts
-@@ -11,1 +11,1 @@
--res.status(500).json(err)
-+res.status(500).json({ error: "Internal Server Error" })

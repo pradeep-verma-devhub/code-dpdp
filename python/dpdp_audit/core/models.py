@@ -72,6 +72,10 @@ class Finding:
     column: Optional[int] = None
     patch_available: bool = False
     patch_unified_diff: Optional[str] = None
+    ai_remediation: Optional[str] = None
+    cwe: Optional[str] = None
+    owasp: Optional[str] = None
+    engine: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

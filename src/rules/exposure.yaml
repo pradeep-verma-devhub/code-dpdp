@@ -2,126 +2,190 @@
   title: API route handler returning entire user entity model
   category: exposure
   severity: high
-  dpdpRef: ACT_SEC_8_6
-  description: Returning raw database user objects directly in API responses without projecting out sensitive attributes (password hash, tokens, internal flags).
-  piiTypes: [password, email, phone, address]
+  dpdpRef: ACT_SEC_8_5
+  description: Returning raw database user objects directly in API responses without
+    projecting out sensitive attributes (password hash, tokens, internal flags).
+  piiTypes:
+  - password
+  - email
+  - phone
+  - address
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
   targetType: ast
   astQuery:
     type: CallExpression
-    callee: "res\\.(json|send)"
-    property: "(user|userData|account)"
-  remediation: Use a Data Transfer Object (DTO) or serializer to strictly whitelist public fields returned to clients.
+    callee: res\.(json|send)
+    property: (user|userData|account)
+  remediation: Use a Data Transfer Object (DTO) or serializer to strictly whitelist
+    public fields returned to clients.
   patchTemplate: sanitize_user_response
-
 - id: DPDP-EXP-002
   title: Sensitive API route handler missing authentication/authorization
   category: exposure
   severity: critical
-  dpdpRef: ACT_SEC_8_6
-  description: API routes handling user data (profiles, settings, orders, documents) defined without authentication or session validation middleware.
-  piiTypes: [email, phone, address, financial, aadhaar]
+  dpdpRef: ACT_SEC_8_5
+  description: API routes handling user data (profiles, settings, orders, documents)
+    defined without authentication or session validation middleware.
+  piiTypes:
+  - email
+  - phone
+  - address
+  - financial
+  - aadhaar
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
   targetType: ast
   astQuery:
     type: CallExpression
-    callee: "(app|router)\\.(get|post|put|delete|patch)"
+    callee: (app|router)\.(get|post|put|delete|patch)
     context: missing_auth_middleware
-  remediation: Attach an authentication middleware (e.g. authenticateToken, requireAuth) before the route handler.
+  remediation: Attach an authentication middleware (e.g. authenticateToken, requireAuth)
+    before the route handler.
   patchTemplate: add_auth_middleware
-
 - id: DPDP-EXP-003
   title: Insecure Direct Object Reference (IDOR) pattern on user resources
   category: exposure
   severity: high
-  dpdpRef: ACT_SEC_8_6
-  description: Finding user data strictly by URL parameter ID without verifying that the requesting user owns or is authorized to view that resource.
-  piiTypes: [email, phone, address, financial]
+  dpdpRef: ACT_SEC_8_5
+  description: Finding user data strictly by URL parameter ID without verifying that
+    the requesting user owns or is authorized to view that resource.
+  piiTypes:
+  - email
+  - phone
+  - address
+  - financial
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
   targetType: regex
-  pattern: "findById\\s*\\(\\s*req\\.params\\.id\\s*\\)|WHERE\\s+id\\s*=\\s*\\$\\d+"
-  remediation: Enforce tenant / ownership validation by scoping database queries to the authenticated user ID (e.g. req.user.id).
-
+  pattern: findById\s*\(\s*req\.params\.id\s*\)|WHERE\s+id\s*=\s*\$\d+
+  remediation: Enforce tenant / ownership validation by scoping database queries to
+    the authenticated user ID (e.g. req.user.id).
 - id: DPDP-EXP-004
   title: Verbose error leakage in HTTP response
   category: exposure
   severity: medium
   dpdpRef: RULE_6
-  description: Express error handlers sending raw error objects or error stacks in HTTP responses, leaking database internals or user data.
-  piiTypes: [name, email]
+  description: Express error handlers sending raw error objects or error stacks in
+    HTTP responses, leaking database internals or user data.
+  piiTypes:
+  - name
+  - email
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
   targetType: regex
-  pattern: "res\\.(status\\(\\d+\\)\\.)?(send|json)\\s*\\(\\s*(err|error)(\\.stack|\\.message)?"
-  remediation: Return generic error messages to clients while logging error details securely to internal monitoring.
+  pattern: res\.(status\(\d+\)\.)?(send|json)\s*\(\s*(err|error)(\.stack|\.message)?
+  remediation: Return generic error messages to clients while logging error details
+    securely to internal monitoring.
   patchTemplate: generic_error_response
-
 - id: DPDP-EXP-005
   title: Overly permissive CORS wildcard configuration with credentials
   category: exposure
   severity: high
   dpdpRef: RULE_6
-  description: CORS headers allowing origin '*' while credentials are enabled, allowing untrusted sites to read authenticated user responses.
-  piiTypes: [password, email, phone]
+  description: CORS headers allowing origin '*' while credentials are enabled, allowing
+    untrusted sites to read authenticated user responses.
+  piiTypes:
+  - password
+  - email
+  - phone
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js", "*.yaml"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
+  - '*.yaml'
   targetType: regex
-  pattern: "(origin\\s*:\\s*['\"]\\*['\"].*credentials\\s*:\\s*true|Access-Control-Allow-Origin['\"]?\\s*:\\s*['\"]\\*['\"])"
-  remediation: Specify explicit allowed origins instead of wildcard '*' and restrict credentials to trusted origins.
+  pattern: (origin\s*:\s*['"]\*['"].*credentials\s*:\s*true|Access-Control-Allow-Origin['"]?\s*:\s*['"]\*['"])
+  remediation: Specify explicit allowed origins instead of wildcard '*' and restrict
+    credentials to trusted origins.
   patchTemplate: fix_cors_origin
-
 - id: DPDP-EXP-006
   title: Public cloud storage bucket or ACL containing personal data
   category: exposure
   severity: critical
-  dpdpRef: ACT_SEC_8_6
-  description: S3 or cloud storage bucket configured with public-read or unrestricted ACLs where customer documents or avatars may reside.
-  piiTypes: [aadhaar, pan, address, health]
+  dpdpRef: ACT_SEC_8_5
+  description: S3 or cloud storage bucket configured with public-read or unrestricted
+    ACLs where customer documents or avatars may reside.
+  piiTypes:
+  - aadhaar
+  - pan
+  - address
+  - health
   dataFlow: exposed
-  targetFiles: ["*.tf", "*.yaml", "*.yml", "*.json"]
+  targetFiles:
+  - '*.tf'
+  - '*.yaml'
+  - '*.yml'
+  - '*.json'
   targetType: regex
-  pattern: "(acl\\s*[:=]\\s*['\"]public-read['\"]|allUsers|allAuthenticatedUsers)"
-  remediation: Set bucket ACLs to private and enable S3 Block Public Access across all storage containers.
-
+  pattern: (acl\s*[:=]\s*['"]public-read['"]|allUsers|allAuthenticatedUsers)
+  remediation: Set bucket ACLs to private and enable S3 Block Public Access across
+    all storage containers.
 - id: DPDP-EXP-007
   title: Database port bound to public interface (0.0.0.0)
   category: exposure
   severity: critical
   dpdpRef: RULE_6
-  description: Database ports (5432 PostgreSQL, 27017 MongoDB, 3306 MySQL, 6379 Redis) mapped to all interfaces in container or orchestration configs.
-  piiTypes: [financial, aadhaar, pan, password, email]
+  description: Database ports (5432 PostgreSQL, 27017 MongoDB, 3306 MySQL, 6379 Redis)
+    mapped to all interfaces in container or orchestration configs.
+  piiTypes:
+  - financial
+  - aadhaar
+  - pan
+  - password
+  - email
   dataFlow: exposed
-  targetFiles: ["docker-compose*.yml", "docker-compose*.yaml", "*.tf"]
+  targetFiles:
+  - docker-compose*.yml
+  - docker-compose*.yaml
+  - '*.tf'
   targetType: regex
-  pattern: "['\"](0\\.0\\.0\\.0:)?(5432:5432|27017:27017|3306:3306|6379:6379)['\"]"
-  remediation: Bind database ports strictly to localhost (127.0.0.1:port) or keep within an isolated private Docker network.
+  pattern: '[''"](0\.0\.0\.0:)?(5432:5432|27017:27017|3306:3306|6379:6379)[''"]'
+  remediation: Bind database ports strictly to localhost (127.0.0.1:port) or keep
+    within an isolated private Docker network.
   patchTemplate: bind_db_to_localhost
-
 - id: DPDP-EXP-008
   title: Debug or verbose development mode enabled in production
   category: exposure
   severity: medium
   dpdpRef: RULE_6
-  description: Environment configuration setting DEBUG=true or NODE_ENV=development in production settings, triggering detailed debug dumps.
-  piiTypes: [password, email]
+  description: Environment configuration setting DEBUG=true or NODE_ENV=development
+    in production settings, triggering detailed debug dumps.
+  piiTypes:
+  - password
+  - email
   dataFlow: exposed
-  targetFiles: ["*.env*", "*.yaml", "*.json"]
+  targetFiles:
+  - '*.env*'
+  - '*.yaml'
+  - '*.json'
   targetType: regex
-  pattern: "(DEBUG\\s*=\\s*['\"]?(true|\\*)['\"]?|NODE_ENV\\s*=\\s*['\"]?development['\"]?)"
-  remediation: Ensure NODE_ENV=production and disable verbose debug flags in deployment artifacts.
-
+  pattern: (DEBUG\s*=\s*['"]?(true|\*)['"]?|NODE_ENV\s*=\s*['"]?development['"]?)
+  remediation: Ensure NODE_ENV=production and disable verbose debug flags in deployment
+    artifacts.
 - id: DPDP-EXP-009
   title: Interactive API documentation (Swagger/OpenAPI) exposed publicly
   category: exposure
   severity: low
-  dpdpRef: ACT_SEC_8_6
-  description: Swagger UI endpoints (/swagger-ui, /api-docs) enabled without authentication, exposing internal schema definitions and test endpoints.
-  piiTypes: [name, email]
+  dpdpRef: ACT_SEC_8_5
+  description: Swagger UI endpoints (/swagger-ui, /api-docs) enabled without authentication,
+    exposing internal schema definitions and test endpoints.
+  piiTypes:
+  - name
+  - email
   dataFlow: exposed
-  targetFiles: ["*.ts", "*.js"]
+  targetFiles:
+  - '*.ts'
+  - '*.js'
   targetType: regex
-  pattern: "app\\.use\\s*\\(\\s*['\"]/(api-docs|swagger)['\"],\\s*swaggerUi\\.serve"
-  remediation: Protect Swagger UI routes behind internal network policies or authentication middleware.
+  pattern: app\.use\s*\(\s*['"]/(api-docs|swagger)['"],\s*swaggerUi\.serve
+  remediation: Protect Swagger UI routes behind internal network policies or authentication
+    middleware.

@@ -1,5 +1,0 @@
---- a/test/server/verify.unit.test.ts
-+++ b/test/server/verify.unit.test.ts
-@@ -93,1 +93,1 @@
--req.url = 'http://juice-sh.op/public/images/padding/19px.png'
-+req.url = 'https://juice-sh.op/public/images/padding/19px.png'

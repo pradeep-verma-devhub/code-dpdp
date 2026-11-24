@@ -2,75 +2,110 @@
   title: Secrets or private credentials committed in .env files
   category: config
   severity: critical
-  dpdpRef: ACT_SEC_8_6
-  description: Plaintext database passwords, API tokens, or encryption keys found committed inside .env or .env.production files.
-  piiTypes: [password]
+  dpdpRef: RULE_6
+  description: Plaintext database passwords, API tokens, or encryption keys found
+    committed inside .env or .env.production files.
+  piiTypes:
+  - password
   dataFlow: stored
-  targetFiles: [".env", ".env.*"]
+  targetFiles:
+  - .env
+  - .env.*
   targetType: config
-  remediation: Add .env to .gitignore and utilize dynamic secret injection (e.g. AWS Secrets Manager, Vault, or sealed secrets).
-
+  remediation: Add .env to .gitignore and utilize dynamic secret injection (e.g. AWS
+    Secrets Manager, Vault, or sealed secrets).
 - id: DPDP-CFG-002
   title: Docker container process running as root user
   category: config
   severity: high
   dpdpRef: RULE_6
-  description: Dockerfile does not specify a non-root USER instruction or explicitly runs as root, increasing blast radius of remote code execution.
-  piiTypes: [password, financial, aadhaar]
+  description: Dockerfile does not specify a non-root USER instruction or explicitly
+    runs as root, increasing blast radius of remote code execution.
+  piiTypes:
+  - password
+  - financial
+  - aadhaar
   dataFlow: exposed
-  targetFiles: ["Dockerfile", "Dockerfile.*", "*.dockerfile"]
+  targetFiles:
+  - Dockerfile
+  - Dockerfile.*
+  - '*.dockerfile'
   targetType: config
-  remediation: Create and switch to a dedicated non-root user (e.g. USER node or USER appuser) in the Dockerfile.
+  remediation: Create and switch to a dedicated non-root user (e.g. USER node or USER
+    appuser) in the Dockerfile.
   patchTemplate: add_docker_non_root_user
-
 - id: DPDP-CFG-003
   title: Dockerfile missing HEALTHCHECK instruction
   category: config
   severity: low
   dpdpRef: RULE_6
-  description: Container configuration lacks HEALTHCHECK instruction, preventing orchestration from identifying compromised or hung state.
+  description: Container configuration lacks HEALTHCHECK instruction, preventing orchestration
+    from identifying compromised or hung state.
   piiTypes: []
   dataFlow: exposed
-  targetFiles: ["Dockerfile", "Dockerfile.*"]
+  targetFiles:
+  - Dockerfile
+  - Dockerfile.*
   targetType: config
-  remediation: Add a HEALTHCHECK instruction (e.g. HEALTHCHECK --interval=30s CMD curl -f http://localhost:3000/health || exit 1).
+  remediation: Add a HEALTHCHECK instruction (e.g. HEALTHCHECK --interval=30s CMD
+    curl -f http://localhost:3000/health || exit 1).
   patchTemplate: add_docker_healthcheck
-
 - id: DPDP-CFG-004
   title: Container running with privileged flag or full capabilities
   category: config
   severity: critical
   dpdpRef: RULE_6
-  description: "Container execution configured with privileged: true, allowing container escape and compromise of host storage and keys."
-  piiTypes: [password, financial, aadhaar]
+  description: 'Container execution configured with privileged: true, allowing container
+    escape and compromise of host storage and keys.'
+  piiTypes:
+  - password
+  - financial
+  - aadhaar
   dataFlow: exposed
-  targetFiles: ["docker-compose*.yml", "docker-compose*.yaml", "*.tf"]
+  targetFiles:
+  - docker-compose*.yml
+  - docker-compose*.yaml
+  - '*.tf'
   targetType: regex
-  pattern: "privileged\\s*:\\s*true"
-  remediation: "Remove privileged: true and grant only explicit, minimal Linux capabilities needed by the service."
+  pattern: privileged\s*:\s*true
+  remediation: 'Remove privileged: true and grant only explicit, minimal Linux capabilities
+    needed by the service.'
   patchTemplate: disable_privileged_container
-
 - id: DPDP-CFG-005
   title: Permissive IAM policy granting wildcard actions on data resources
   category: config
   severity: high
   dpdpRef: RULE_6
-  description: IAM policy definitions granting '*' action or access to '*' resources on S3, DynamoDB, or RDS containing personal data.
-  piiTypes: [financial, aadhaar, pan, email]
+  description: IAM policy definitions granting '*' action or access to '*' resources
+    on S3, DynamoDB, or RDS containing personal data.
+  piiTypes:
+  - financial
+  - aadhaar
+  - pan
+  - email
   dataFlow: exposed
-  targetFiles: ["*.tf", "*.json", "*.yaml", "*.yml"]
+  targetFiles:
+  - '*.tf'
+  - '*.json'
+  - '*.yaml'
+  - '*.yml'
   targetType: regex
-  pattern: "\"Action\"\\s*:\\s*\"\\*\"|\"Action\"\\s*:\\s*\\[\"[^\"]*\\*[^\"]*\"\\]"
-  remediation: "Follow principle of least privilege: scope IAM policies to specific actions and explicit resource ARNs."
-
+  pattern: '"Action"\s*:\s*"\*"|"Action"\s*:\s*\["[^"]*\*[^"]*"\]'
+  remediation: 'Follow principle of least privilege: scope IAM policies to specific
+    actions and explicit resource ARNs.'
 - id: DPDP-CFG-006
   title: Missing container memory and CPU resource limits
   category: config
   severity: medium
-  dpdpRef: ACT_SEC_8_6
-  description: Service containers configured without memory or CPU limits in docker-compose or Kubernetes manifests, exposing them to denial of service.
+  dpdpRef: ACT_SEC_8_4
+  description: Service containers configured without memory or CPU limits in docker-compose
+    or Kubernetes manifests, exposing them to denial of service.
   piiTypes: []
   dataFlow: exposed
-  targetFiles: ["docker-compose*.yml", "docker-compose*.yaml", "*.k8s.yaml"]
+  targetFiles:
+  - docker-compose*.yml
+  - docker-compose*.yaml
+  - '*.k8s.yaml'
   targetType: config
-  remediation: Define explicit deploy.resources.limits (memory and cpus) for each service.
+  remediation: Define explicit deploy.resources.limits (memory and cpus) for each
+    service.

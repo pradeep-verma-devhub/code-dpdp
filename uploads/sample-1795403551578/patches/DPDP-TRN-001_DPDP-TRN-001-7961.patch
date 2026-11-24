@@ -1,5 +1,0 @@
---- a/test/server/utils.unit.test.ts
-+++ b/test/server/utils.unit.test.ts
-@@ -332,1 +332,1 @@
--assert.ok(utils.isUrl('http://test.com'))
-+assert.ok(utils.isUrl('https://test.com'))

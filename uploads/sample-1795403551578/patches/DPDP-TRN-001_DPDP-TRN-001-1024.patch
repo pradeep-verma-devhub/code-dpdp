@@ -1,5 +1,0 @@
---- a/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
-+++ b/frontend/src/app/ctf-system-wide-notification/ctf-system-wide-notification.component.spec.ts
-@@ -90,1 +90,1 @@
--ctf: { systemWideNotifications: { url: 'http://example.com/notify' } }
-+ctf: { systemWideNotifications: { url: 'https://example.com/notify' } }

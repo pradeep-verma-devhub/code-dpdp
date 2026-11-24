@@ -1,5 +1,0 @@
---- a/test/api/passkey.test.ts
-+++ b/test/api/passkey.test.ts
-@@ -254,1 +254,1 @@
--const res = await loginVerify({ assertion: sign(victim, challenge, { origin: 'http://evil.example:3000' }), authToken })
-+const res = await loginVerify({ assertion: sign(victim, challenge, { origin: 'https://evil.example:3000' }), authToken })

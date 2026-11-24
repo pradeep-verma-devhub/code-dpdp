@@ -1,0 +1,447 @@
+rules:
+  # -------------------------------------------------------------
+  # 1. SQL INJECTION (OWASP A03 / CWE-89)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-sqli-concatenation
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "SQL Injection via dynamic string concatenation in database query. Violates DPDP Act 2023 Sec 8(5) reasonable security safeguards."
+    metadata:
+      cwe: "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "injection"
+      remediation: "Use parameterized queries or prepared statements ($1, ? placeholders) instead of string concatenation."
+    patterns:
+      - pattern-either:
+          - pattern: $DB.query("..." + $X, ...)
+          - pattern: $DB.raw("..." + $X, ...)
+          - pattern: $DB.execute("..." + $X, ...)
+          - pattern: pool.query("..." + $X, ...)
+          - pattern: client.query("..." + $X, ...)
+
+  - id: semgrep-dpdp-sqli-template-literal
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "SQL Injection via template literal interpolation in database query. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "injection"
+      remediation: "Replace template literal interpolation with parameterized SQL bindings."
+    patterns:
+      - pattern-either:
+          - pattern: "$DB.query(`...${$X}...`, ...)"
+          - pattern: "$DB.raw(`...${$X}...`, ...)"
+          - pattern: "$DB.execute(`...${$X}...`, ...)"
+          - pattern: "pool.query(`...${$X}...`, ...)"
+          - pattern: "client.query(`...${$X}...`, ...)"
+
+  - id: semgrep-dpdp-python-sqli
+    languages: [python]
+    severity: ERROR
+    message: "Python SQL Injection via formatted string in cursor.execute. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "injection"
+      remediation: "Pass query parameters as a separate tuple/dict argument to cursor.execute(query, params)."
+    patterns:
+      - pattern-either:
+          - pattern: $CUR.execute(f"...")
+          - pattern: $CUR.execute("..." % (...))
+          - pattern: $CUR.execute("...".format(...))
+          - pattern: $CUR.execute("..." + $X)
+
+  # -------------------------------------------------------------
+  # 2. CROSS-SITE SCRIPTING (OWASP A03 / CWE-79)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-dom-xss
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Cross-Site Scripting (DOM XSS) via direct innerHTML/outerHTML manipulation. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "xss"
+      remediation: "Use textContent / innerText or sanitize HTML with DOMPurify before assigning to innerHTML."
+    patterns:
+      - pattern-either:
+          - pattern: $EL.innerHTML = ...
+          - pattern: $EL.outerHTML = ...
+          - pattern: document.write(...)
+
+  - id: semgrep-dpdp-react-dangerouslysetinnerhtml
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "React dangerouslySetInnerHTML unescaped HTML injection hazard. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-79: Cross-Site Scripting (XSS)"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "xss"
+      remediation: "Sanitize markup using DOMPurify.sanitize() before passing to dangerouslySetInnerHTML."
+    patterns:
+      - pattern: "<$TAG ... dangerouslySetInnerHTML={{ __html: $X }} ... />"
+
+  # -------------------------------------------------------------
+  # 3. REMOTE CODE EXECUTION & COMMAND INJECTION (OWASP A03 / CWE-78 / CWE-95)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-eval-injection
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Dangerous Dynamic Code Execution via eval() or Function constructor. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "rce"
+      remediation: "Refactor to use static logic, standard mathematical functions, or JSON.parse(). Never use eval()."
+    patterns:
+      - pattern-either:
+          - pattern: eval(...)
+          - pattern: Function(...)
+          - pattern: window.eval(...)
+
+  - id: semgrep-dpdp-command-injection-node
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "OS Command Injection via child_process.exec. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "rce"
+      remediation: "Use child_process.execFile() or spawn() with argument arrays and shell: false."
+    patterns:
+      - pattern-either:
+          - pattern: child_process.exec(...)
+          - pattern: exec($CMD, ...)
+          - pattern: cp.exec(...)
+
+  - id: semgrep-dpdp-command-injection-python
+    languages: [python]
+    severity: ERROR
+    message: "Python OS Command Injection via system or shell=True. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-78: OS Command Injection"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "rce"
+      remediation: "Use subprocess.run(['cmd', arg], shell=False) with parameterized argument lists."
+    patterns:
+      - pattern-either:
+          - pattern: os.system(...)
+          - pattern: os.popen(...)
+          - pattern: subprocess.call(..., shell=True, ...)
+          - pattern: subprocess.Popen(..., shell=True, ...)
+          - pattern: subprocess.run(..., shell=True, ...)
+
+  # -------------------------------------------------------------
+  # 4. PATH TRAVERSAL & ARBITRARY FILE ACCESS (OWASP A01 / CWE-22)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-path-traversal-node
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Path Traversal & Arbitrary File Read Hazard. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      owasp: "A01:2021-Broken Access Control"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "traversal"
+      remediation: "Resolve paths with path.resolve() and verify they start with the authorized base directory."
+    patterns:
+      - pattern-either:
+          - pattern: fs.readFile(..., ...)
+          - pattern: fs.readFileSync(..., ...)
+          - pattern: fs.createReadStream(...)
+
+  - id: semgrep-dpdp-path-traversal-python
+    languages: [python]
+    severity: ERROR
+    message: "Python Path Traversal via dynamic file open(). Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-22: Path Traversal"
+      owasp: "A01:2021-Broken Access Control"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "traversal"
+      remediation: "Validate paths using os.path.abspath() and confirm path.startswith(allowed_directory)."
+    patterns:
+      - pattern: open($PATH, ...)
+
+  # -------------------------------------------------------------
+  # 5. SERVER-SIDE REQUEST FORGERY (OWASP A10 / CWE-918)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-ssrf-node
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Server-Side Request Forgery (SSRF) via dynamic outbound HTTP request. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-918: Server-Side Request Forgery (SSRF)"
+      owasp: "A10:2021-Server-Side Request Forgery"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "ssrf"
+      remediation: "Validate destination URLs against an allowlist and block private IP ranges (127.0.0.1, 10.0.0.0/8, 169.254.169.254)."
+    patterns:
+      - pattern-either:
+          - pattern: axios.get($URL, ...)
+          - pattern: axios.post($URL, ...)
+          - pattern: fetch($URL, ...)
+          - pattern: request($URL, ...)
+
+  - id: semgrep-dpdp-ssrf-python
+    languages: [python]
+    severity: ERROR
+    message: "Python SSRF via requests library dynamic URL. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-918: Server-Side Request Forgery (SSRF)"
+      owasp: "A10:2021-Server-Side Request Forgery"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "ssrf"
+      remediation: "Validate outbound URLs against a strict whitelist of schemes and trusted domains."
+    patterns:
+      - pattern-either:
+          - pattern: requests.get($URL, ...)
+          - pattern: requests.post($URL, ...)
+          - pattern: urllib.request.urlopen($URL, ...)
+
+  # -------------------------------------------------------------
+  # 6. BROKEN CRYPTOGRAPHY (OWASP A02 / CWE-328 / CWE-338)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-crypto-md5-sha1-node
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Broken or Deprecated Hash Algorithm (MD5/SHA1). Violates DPDP Rules 2025 Rule 6."
+    metadata:
+      cwe: "CWE-328: Use of Weak Hash"
+      owasp: "A02:2021-Cryptographic Failures"
+      dpdp_section: "Rule 6"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "crypto"
+      remediation: "Use SHA-256 / SHA-512 for data integrity, and Argon2id or bcrypt for password hashing."
+    patterns:
+      - pattern-either:
+          - pattern: crypto.createHash("md5")
+          - pattern: crypto.createHash("sha1")
+          - pattern: crypto.createHash('md5')
+          - pattern: crypto.createHash('sha1')
+
+  - id: semgrep-dpdp-crypto-md5-sha1-python
+    languages: [python]
+    severity: ERROR
+    message: "Python Insecure Hash (hashlib.md5 or hashlib.sha1). Violates DPDP Rules 2025 Rule 6."
+    metadata:
+      cwe: "CWE-328: Use of Weak Hash"
+      owasp: "A02:2021-Cryptographic Failures"
+      dpdp_section: "Rule 6"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "crypto"
+      remediation: "Use hashlib.sha256() or hashlib.sha512() for integrity verification."
+    patterns:
+      - pattern-either:
+          - pattern: hashlib.md5(...)
+          - pattern: hashlib.sha1(...)
+
+  - id: semgrep-dpdp-weak-prng
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: "Cryptographically Insecure Random Number Generator (Math.random) used in sensitive context. Violates DPDP Rules 2025 Rule 6."
+    metadata:
+      cwe: "CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"
+      owasp: "A02:2021-Cryptographic Failures"
+      dpdp_section: "Rule 6"
+      category: "crypto"
+      remediation: "Use crypto.randomBytes() or crypto.getRandomValues() for security-sensitive tokens, IDs, and salts."
+    patterns:
+      - pattern: Math.random()
+
+  # -------------------------------------------------------------
+  # 7. INSECURE TRANSPORT & TLS BYPASS (OWASP A07 / CWE-295)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-tls-disabled-node
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "TLS Certificate Verification Disabled (rejectUnauthorized: false). Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-295: Improper Certificate Validation"
+      owasp: "A07:2021-Identification and Authentication Failures"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "transit"
+      remediation: "Enable TLS certificate validation by setting rejectUnauthorized: true."
+    patterns:
+      - pattern: "rejectUnauthorized: false"
+
+  - id: semgrep-dpdp-tls-disabled-python
+    languages: [python]
+    severity: ERROR
+    message: "Python TLS Verification Disabled (verify=False). Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-295: Improper Certificate Validation"
+      owasp: "A07:2021-Identification and Authentication Failures"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "transit"
+      remediation: "Enable verify=True or provide a path to a trusted CA bundle."
+    patterns:
+      - pattern-either:
+          - pattern: requests.get(..., verify=False, ...)
+          - pattern: requests.post(..., verify=False, ...)
+
+  # -------------------------------------------------------------
+  # 8. SENSITIVE DATA LOGGING & EXPOSURE (OWASP A09 / CWE-532)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-logging-req-body
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Direct logging of incoming HTTP request body containing personal data. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-532: Insertion of Sensitive Information into Log File"
+      owasp: "A09:2021-Security Logging and Monitoring Failures"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "logging"
+      remediation: "Redact or filter personal data (passwords, tokens, Aadhaar, PAN) before logging HTTP requests."
+    patterns:
+      - pattern-either:
+          - pattern: console.log(..., req.body, ...)
+          - pattern: console.info(..., req.body, ...)
+          - pattern: logger.info(..., req.body, ...)
+          - pattern: logger.debug(..., req.body, ...)
+
+  # -------------------------------------------------------------
+  # 9. INSECURE COOKIE ATTRIBUTES (OWASP A05 / CWE-614)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-cookie-missing-flags
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Cookie set without httpOnly or secure flag. Violates DPDP Rules 2025 Rule 6."
+    metadata:
+      cwe: "CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute"
+      owasp: "A05:2021-Security Misconfiguration"
+      dpdp_section: "Rule 6"
+      category: "config"
+      remediation: "Set httpOnly: true, secure: true, and sameSite: 'strict' on all session and auth cookies."
+    patterns:
+      - pattern-either:
+          - pattern: "res.cookie($NAME, $VAL, { httpOnly: false, ... })"
+          - pattern: "res.cookie($NAME, $VAL, { secure: false, ... })"
+
+  # -------------------------------------------------------------
+  # 10. GO LANGUAGE AST RULES (OWASP Top 10 / DPDP Act)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-go-sqli
+    languages: [go]
+    severity: ERROR
+    message: "Go SQL Injection via string concatenation or Sprintf formatting. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "injection"
+      remediation: "Use parameterized queries ($1, ? placeholders) in db.Query and db.Exec."
+    patterns:
+      - pattern-either:
+          - pattern: $DB.Query(fmt.Sprintf(...), ...)
+          - pattern: $DB.Exec(fmt.Sprintf(...), ...)
+          - pattern: $DB.QueryRow(fmt.Sprintf(...), ...)
+          - pattern: $DB.Query("..." + $X, ...)
+          - pattern: $DB.Exec("..." + $X, ...)
+
+  - id: semgrep-dpdp-go-command-injection
+    languages: [go]
+    severity: ERROR
+    message: "Go OS Command Injection via exec.Command with shell. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-78: OS Command Injection"
+      owasp: "A03:2021-Injection"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "rce"
+      remediation: "Execute binaries directly without invoking a shell ('sh', 'bash') with untrusted arguments."
+    patterns:
+      - pattern-either:
+          - pattern: exec.Command("sh", "-c", ...)
+          - pattern: exec.Command("bash", "-c", ...)
+
+  - id: semgrep-dpdp-go-tls-insecure
+    languages: [go]
+    severity: ERROR
+    message: "Go TLS Verification Disabled (InsecureSkipVerify: true). Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-295: Improper Certificate Validation"
+      owasp: "A07:2021-Identification and Authentication Failures"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "transit"
+      remediation: "Set InsecureSkipVerify: false and provide a valid CA certificate pool."
+    patterns:
+      - pattern: "InsecureSkipVerify: true"
+
+  - id: semgrep-dpdp-go-weak-hash
+    languages: [go]
+    severity: ERROR
+    message: "Go Insecure Hash Function (md5 or sha1). Violates DPDP Rules 2025 Rule 6."
+    metadata:
+      cwe: "CWE-328: Use of Weak Hash"
+      owasp: "A02:2021-Cryptographic Failures"
+      dpdp_section: "Rule 6"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "crypto"
+      remediation: "Use crypto/sha256 or crypto/sha512 for data integrity."
+    patterns:
+      - pattern-either:
+          - pattern: md5.New()
+          - pattern: sha1.New()
+
+  # -------------------------------------------------------------
+  # 11. PYTHON EXTENDED AST RULES (OWASP Top 10 / DPDP Act)
+  # -------------------------------------------------------------
+  - id: semgrep-dpdp-python-unsafe-deserialization
+    languages: [python]
+    severity: ERROR
+    message: "Python Unsafe Deserialization via pickle. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+      owasp: "A08:2021-Software and Data Integrity Failures"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 250 Crore under DPDP Act Schedule Item 1"
+      category: "rce"
+      remediation: "Use safe serialization formats like JSON (json.loads) or yaml.safe_load(). Never unpickle untrusted data."
+    patterns:
+      - pattern-either:
+          - pattern: pickle.loads(...)
+          - pattern: pickle.load(...)
+          - pattern: _pickle.loads(...)
+
+  - id: semgrep-dpdp-python-open-redirect
+    languages: [python]
+    severity: WARNING
+    message: "Python Open Redirect via unvalidated user parameter. Violates DPDP Act 2023 Sec 8(5)."
+    metadata:
+      cwe: "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      owasp: "A01:2021-Broken Access Control"
+      dpdp_section: "Sec 8(5)"
+      penalty_clause: "Up to Rs. 200 Crore under DPDP Act Schedule Item 2"
+      category: "exposure"
+      remediation: "Validate destination URLs against a strict domain whitelist or use relative path redirects."
+    patterns:
+      - pattern-either:
+          - pattern: flask.redirect(request.args.get(...))
+          - pattern: redirect(request.args.get(...))

@@ -1,5 +1,0 @@
---- a/frontend/src/assets/private/three.js
-+++ b/frontend/src/assets/private/three.js
-@@ -36855,1 +36855,1 @@
--console.warn( "animation[" + name + "] undefined" );
-+// [DPDP-LOG-001] Redacted PII logging call

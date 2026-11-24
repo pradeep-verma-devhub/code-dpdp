@@ -1,5 +1,0 @@
---- a/frontend/src/app/login/login.component.spec.ts
-+++ b/frontend/src/app/login/login.component.spec.ts
-@@ -381,1 +381,1 @@
--expect(component.redirectUri).toBe('http://proxy.local')
-+expect(component.redirectUri).toBe('https://proxy.local')

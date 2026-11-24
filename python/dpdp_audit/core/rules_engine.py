@@ -13,6 +13,8 @@ from ..analyzers.ast_analyzer import AstAnalyzer
 from ..analyzers.consent_analyzer import ConsentAnalyzer
 from ..analyzers.third_party_analyzer import ThirdPartyAnalyzer
 from ..analyzers.malfunction_analyzer import MalfunctionAnalyzer
+from ..analyzers.real_vuln_scanner import RealVulnScanner
+from ..analyzers.semgrep_analyzer import SemgrepAnalyzer
 
 class RulesEngine:
     """Core rules orchestration, evaluation, and aggregation engine."""
@@ -96,11 +98,25 @@ class RulesEngine:
             elif ext in (".prisma", ".sql") or "model" in fname or "schema" in fname:
                 all_findings.extend(SchemaAnalyzer.analyze_file(file_path, rules, root))
 
-            # 3. Code (TS, JS, JSX, TSX)
-            if ext in (".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs"):
+            # 3. Real Vulnerability & AST Code Inspection
+            if ext in (
+                ".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs", ".py", ".go", ".java",
+                ".php", ".rb", ".sh", ".html", ".env", ".yaml", ".yml", ".json",
+                ".vue", ".svelte", ".sql", ".prisma", ".graphql", ".gql",
+                ".c", ".cpp", ".cs", ".rs", ".kt", ".swift", ".xml", ".conf", ".ini", ".toml",
+                ".bat", ".ps1"
+            ):
+                all_findings.extend(RealVulnScanner.scan_file(file_path, root))
+
+            # 4. Code AST & Malfunction Analyzers
+            if ext in (".ts", ".js", ".tsx", ".jsx", ".mjs", ".cjs", ".py", ".go", ".java", ".php"):
                 all_findings.extend(AstAnalyzer.analyze_file(file_path, rules, root))
                 all_third_party.extend(ThirdPartyAnalyzer.analyze_file(file_path, root))
                 all_malfunctions.extend(MalfunctionAnalyzer.analyze_file(file_path, root))
+
+        # 5. Semgrep AST & Taint Static Code Analysis
+        semgrep_findings = SemgrepAnalyzer.scan_target(target_path, str(root))
+        all_findings.extend(semgrep_findings)
 
         # Deduplicate findings by (file, line, rule_id)
         deduped_findings: List[Finding] = []
@@ -124,7 +140,28 @@ class RulesEngine:
         for f in deduped_findings:
             by_sev[f.severity] = by_sev.get(f.severity, 0) + 1
             rule = next((r for r in rules if r.id == f.rule_id), None)
-            cat = rule.category if rule else "general"
+            if rule:
+                cat = rule.category
+            elif "sqli" in f.rule_id.lower() or "injection" in f.rule_id.lower():
+                cat = "injection"
+            elif "xss" in f.rule_id.lower():
+                cat = "xss"
+            elif "rce" in f.rule_id.lower() or "eval" in f.rule_id.lower() or "command" in f.rule_id.lower():
+                cat = "rce"
+            elif "traversal" in f.rule_id.lower() or "path" in f.rule_id.lower():
+                cat = "traversal"
+            elif "ssrf" in f.rule_id.lower():
+                cat = "ssrf"
+            elif "crypto" in f.rule_id.lower() or "md5" in f.rule_id.lower() or "sha1" in f.rule_id.lower():
+                cat = "crypto"
+            elif "cookie" in f.rule_id.lower() or "cfg" in f.rule_id.lower():
+                cat = "config"
+            elif "log" in f.rule_id.lower():
+                cat = "logging"
+            elif "pii" in f.rule_id.lower() or "aadhaar" in f.rule_id.lower() or "pan" in f.rule_id.lower():
+                cat = "storage"
+            else:
+                cat = "general"
             by_cat[cat] = by_cat.get(cat, 0) + 1
             by_flow[f.data_flow] = by_flow.get(f.data_flow, 0) + 1
 

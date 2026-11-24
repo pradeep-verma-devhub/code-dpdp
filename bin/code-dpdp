@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+# Resolve real project root even if invoked via symlink
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+ROOT_DIR="$(cd -P "$(dirname "$SOURCE")/.." >/dev/null 2>&1 && pwd)"
+
+# Select python binary (prefer project .venv)
+PYTHON_BIN=""
+if [ -x "$ROOT_DIR/.venv/bin/python" ]; then
+  PYTHON_BIN="$ROOT_DIR/.venv/bin/python"
+elif [ -x "$ROOT_DIR/.venv/bin/python3" ]; then
+  PYTHON_BIN="$ROOT_DIR/.venv/bin/python3"
+elif command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN="$(command -v python3)"
+else
+  echo "[!] Error: Python 3 not found. Please install Python 3." >&2
+  exit 1
+fi
+
+export PYTHONPATH="$ROOT_DIR/python${PYTHONPATH:+:$PYTHONPATH}"
+exec "$PYTHON_BIN" -m dpdp_audit.cli "$@"

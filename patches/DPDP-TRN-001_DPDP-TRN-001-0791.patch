@@ -1,5 +1,0 @@
---- a/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
-+++ b/data/static/codefixes/redirectCryptoCurrencyChallenge_4.ts
-@@ -8,1 +8,1 @@
--'http://leanpub.com/juice-shop'
-+'https://leanpub.com/juice-shop'

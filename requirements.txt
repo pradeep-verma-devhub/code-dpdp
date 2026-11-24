@@ -1,0 +1,11 @@
+# code-dpdp Python Dependencies
+# Automated Compliance & Security Scanner for India DPDP Act 2023 & DPDP Rules 2025
+
+rich>=13.7.0
+reportlab>=4.1.0
+PyYAML>=6.0.1
+requests>=2.31.0
+pytest>=8.0.0
+python-dotenv>=1.0.1
+pillow>=10.0.0
+semgrep>=1.60.0; sys_platform != "win32"

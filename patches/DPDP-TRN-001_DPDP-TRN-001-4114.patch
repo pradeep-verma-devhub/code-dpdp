@@ -1,5 +1,0 @@
---- a/data/datacreator.ts
-+++ b/data/datacreator.ts
-@@ -172,1 +172,1 @@
--.replace('http://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge')),
-+.replace('https://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge')),

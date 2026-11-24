@@ -1,5 +1,0 @@
---- a/analytics.js
-+++ b/analytics.js
-@@ -11,1 +11,1 @@
--axios.post('http://api.partner.com/sync', {
-+axios.post('https://api.partner.com/sync', {

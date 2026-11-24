@@ -1,5 +1,0 @@
---- a/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
-+++ b/frontend/src/app/Services/ctf-system-wide-notification.service.spec.ts
-@@ -28,1 +28,1 @@
--service.fetchNotification('http://example.com/notify').subscribe((data) => { response = data })
-+service.fetchNotification('https://example.com/notify').subscribe((data) => { response = data })

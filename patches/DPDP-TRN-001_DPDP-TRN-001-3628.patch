@@ -1,5 +1,0 @@
---- a/test/server/challengeUtils.unit.test.ts
-+++ b/test/server/challengeUtils.unit.test.ts
-@@ -114,1 +114,1 @@
--process.env.SOLUTIONS_WEBHOOK = 'http://webhook.test'
-+process.env.SOLUTIONS_WEBHOOK = 'https://webhook.test'

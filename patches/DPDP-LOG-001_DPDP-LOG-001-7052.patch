@@ -1,5 +1,0 @@
---- a/rsn/rsnOutput.ts
-+++ b/rsn/rsnOutput.ts
-@@ -18,1 +18,1 @@
--console.log(colors.cyan(colors.bold(`  Challenge: ${diff.challengeName}`)))
-+// [DPDP-LOG-001] Redacted PII logging call

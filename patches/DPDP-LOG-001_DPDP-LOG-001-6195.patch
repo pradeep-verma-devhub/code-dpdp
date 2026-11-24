@@ -1,5 +1,0 @@
---- a/lib/startup/validateConfig.ts
-+++ b/lib/startup/validateConfig.ts
-@@ -132,1 +132,1 @@
--logger.warn(`${matchingMemories.length} memories are configured as ${colors.italic(name)} but only one is allowed (${colors.red('ERROR')})`)
-+// [DPDP-LOG-001] Redacted PII logging call

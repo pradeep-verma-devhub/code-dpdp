@@ -10,6 +10,12 @@ import json
 import argparse
 import time
 from pathlib import Path
+
+# Ensure python directory is in sys.path
+_python_root = Path(__file__).resolve().parent.parent
+if str(_python_root) not in sys.path:
+    sys.path.insert(0, str(_python_root))
+
 from typing import Dict, Any, Optional
 
 from dpdp_audit.core.models import ScanResult

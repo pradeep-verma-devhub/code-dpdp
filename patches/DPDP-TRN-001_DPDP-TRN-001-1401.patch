@@ -1,5 +1,0 @@
---- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
-+++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
-@@ -173,1 +173,1 @@
--ChallengeDependencies: [{ name: 'Bar', missing: true, documentation: 'http://docs.example.com' }]
-+ChallengeDependencies: [{ name: 'Bar', missing: true, documentation: 'https://docs.example.com' }]

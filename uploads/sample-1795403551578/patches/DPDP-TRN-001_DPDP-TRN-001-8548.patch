@@ -1,5 +1,0 @@
---- a/data/datacreator.ts
-+++ b/data/datacreator.ts
-@@ -85,1 +85,1 @@
--description = description.replace('http://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge'))
-+description = description.replace('https://htmledit.squarefree.com', config.get<string>('challenges.overwriteUrlForCsrfChallenge'))

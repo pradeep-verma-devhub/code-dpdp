@@ -1,3 +1,11 @@
 #!/usr/bin/env node
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import '../dist/cli.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const binPath = path.join(__dirname, 'code-dpdp');
+
+const res = spawnSync(binPath, process.argv.slice(2), { stdio: 'inherit' });
+process.exit(res.status ?? 0);

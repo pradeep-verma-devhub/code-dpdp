@@ -1,5 +1,0 @@
---- a/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
-+++ b/frontend/src/app/score-board/components/challenge-card/challenge-card.component.spec.ts
-@@ -271,1 +271,1 @@
--expect(tag.getAttribute('href')).toBe('http://docs.example.com')
-+expect(tag.getAttribute('href')).toBe('https://docs.example.com')

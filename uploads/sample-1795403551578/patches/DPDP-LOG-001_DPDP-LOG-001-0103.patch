@@ -1,5 +1,0 @@
---- a/rsn/rsnOutput.ts
-+++ b/rsn/rsnOutput.ts
-@@ -39,1 +39,1 @@
--console.log('Only if diffs are intentional and codefixes are updated, lock the new state with ' + colors.bold('npm run rsn:update'))
-+// [DPDP-LOG-001] Redacted PII logging call

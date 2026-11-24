@@ -3,58 +3,102 @@
   category: lifecycle
   severity: high
   dpdpRef: ACT_SEC_12
-  description: Application codebase lacks endpoints or controller actions for user data deletion / account removal as mandated by Section 12.
-  piiTypes: [email, phone, name, address, financial]
+  description: Application codebase lacks endpoints or controller actions for user
+    data deletion / account removal as mandated by Section 12.
+  piiTypes:
+  - email
+  - phone
+  - name
+  - address
+  - financial
   dataFlow: stored
-  targetFiles: ["*routes*.ts", "*routes*.js", "*controller*.ts", "*controller*.js"]
+  targetFiles:
+  - '*routes*.ts'
+  - '*routes*.js'
+  - '*controller*.ts'
+  - '*controller*.js'
   targetType: schema
-  remediation: Implement an authenticated DELETE /api/user/me or /api/account endpoint that initiates cascading data erasure.
-
+  remediation: Implement an authenticated DELETE /api/user/me or /api/account endpoint
+    that initiates cascading data erasure.
 - id: DPDP-LIF-002
   title: Absence of data export endpoint (Right to Access Information)
   category: lifecycle
   severity: high
   dpdpRef: ACT_SEC_11
-  description: Application does not provide a programmatic mechanism or endpoint for users to obtain a machine-readable summary of their personal data.
-  piiTypes: [email, phone, name, address, financial]
+  description: Application does not provide a programmatic mechanism or endpoint for
+    users to obtain a machine-readable summary of their personal data.
+  piiTypes:
+  - email
+  - phone
+  - name
+  - address
+  - financial
   dataFlow: exposed
-  targetFiles: ["*routes*.ts", "*routes*.js", "*controller*.ts", "*controller*.js"]
+  targetFiles:
+  - '*routes*.ts'
+  - '*routes*.js'
+  - '*controller*.ts'
+  - '*controller*.js'
   targetType: schema
-  remediation: Implement a GET /api/user/export or /api/user/data-download endpoint delivering personal data in JSON/CSV format.
-
+  remediation: Implement a GET /api/user/export or /api/user/data-download endpoint
+    delivering personal data in JSON/CSV format.
 - id: DPDP-LIF-003
   title: Absence of personal data correction or update mechanism (Right to Correction)
   category: lifecycle
   severity: medium
   dpdpRef: ACT_SEC_12
-  description: Absence of user profile update or data correction endpoints to ensure personal data accuracy and completeness.
-  piiTypes: [name, email, phone, address]
+  description: Absence of user profile update or data correction endpoints to ensure
+    personal data accuracy and completeness.
+  piiTypes:
+  - name
+  - email
+  - phone
+  - address
   dataFlow: stored
-  targetFiles: ["*routes*.ts", "*routes*.js", "*controller*.ts", "*controller*.js"]
+  targetFiles:
+  - '*routes*.ts'
+  - '*routes*.js'
+  - '*controller*.ts'
+  - '*controller*.js'
   targetType: schema
-  remediation: Implement PUT/PATCH /api/user/profile allowing users to correct outdated or inaccurate personal data.
-
+  remediation: Implement PUT/PATCH /api/user/profile allowing users to correct outdated
+    or inaccurate personal data.
 - id: DPDP-LIF-004
   title: Absence of TTL or retention schedule for temporary personal data
   category: lifecycle
   severity: medium
-  dpdpRef: ACT_SEC_8_5
-  description: Ephemeral personal data (session tokens, OTPs, verification tokens, password reset links) stored without expiry TTL or cleanup jobs.
-  piiTypes: [phone, email, password]
+  dpdpRef: ACT_SEC_8_7
+  description: Ephemeral personal data (session tokens, OTPs, verification tokens,
+    password reset links) stored without expiry TTL or cleanup jobs.
+  piiTypes:
+  - phone
+  - email
+  - password
   dataFlow: stored
-  targetFiles: ["*.prisma", "*.sql", "*schema*.ts", "*model*.ts"]
+  targetFiles:
+  - '*.prisma'
+  - '*.sql'
+  - '*schema*.ts'
+  - '*model*.ts'
   targetType: schema
-  remediation: Add expiresAt TTL index or scheduled cron cleanup to purge expired verification and session records.
-
+  remediation: Add expiresAt TTL index or scheduled cron cleanup to purge expired
+    verification and session records.
 - id: DPDP-LIF-005
   title: Missing published Grievance Redressal Officer or DPO contact details
   category: lifecycle
   severity: medium
-  dpdpRef: ACT_SEC_8_7
-  description: Privacy notice or contact configuration does not publish an official Data Protection Officer (DPO) or Grievance Officer contact email.
+  dpdpRef: ACT_SEC_8_10
+  description: Privacy notice or contact configuration does not publish an official
+    Data Protection Officer (DPO) or Grievance Officer contact email.
   piiTypes: []
   dataFlow: collected
-  targetFiles: ["*privacy*.html", "*privacy*.md", "*terms*.html", "config*.ts", "config*.json"]
+  targetFiles:
+  - '*privacy*.html'
+  - '*privacy*.md'
+  - '*terms*.html'
+  - config*.ts
+  - config*.json
   targetType: regex
-  pattern: "(grievance|dpo|dataprotectionofficer)@(?!example\\.com)[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-  remediation: Publish designated Grievance Officer contact details (Name, Email, Physical Address) in compliance with Section 8(7) and Rule 9.
+  pattern: (grievance|dpo|dataprotectionofficer)@(?!example\.com)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+  remediation: Publish designated Grievance Officer contact details (Name, Email,
+    Physical Address) in compliance with Section 8(7) and Rule 9.

@@ -1,5 +1,0 @@
---- a/frontend/src/app/login/login.component.spec.ts
-+++ b/frontend/src/app/login/login.component.spec.ts
-@@ -375,1 +375,1 @@
--{ uri: 'http://localhost:4200', proxy: 'http://proxy.local' }
-+{ uri: 'https://localhost:4200', proxy: 'https://proxy.local' }

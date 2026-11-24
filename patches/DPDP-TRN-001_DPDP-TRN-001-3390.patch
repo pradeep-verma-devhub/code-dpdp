@@ -1,5 +1,0 @@
---- a/test/server/verify.unit.test.ts
-+++ b/test/server/verify.unit.test.ts
-@@ -157,1 +157,1 @@
--req.url = 'http://juice-sh.op/infrastructure/Dockerfile'
-+req.url = 'https://juice-sh.op/infrastructure/Dockerfile'
