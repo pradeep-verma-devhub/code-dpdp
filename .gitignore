@@ -1,34 +1,126 @@
-# Virtual environments & Python artifacts
+# ==============================================================================
+# Comprehensive .gitignore for code-dpdp
+# ==============================================================================
+
+# --- Python & Virtual Environments ---
 .venv/
 venv/
 ENV/
+env/
+env.bak/
+venv.bak/
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.pytest_cache/
-
-# Node.js artifacts
-node_modules/
-dist/
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Testing & Code Quality ---
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# --- Node.js & TypeScript ---
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.npm/
+.node_repl_history
+*.tsbuildinfo
+package-lock.json.bak
 
-# DPDP-Audit generated reports & runtime outputs
+# --- DPDP Scanner Runtime Outputs & Artifacts ---
 *.pdf
+result.pdf
+test_report.pdf
+audit-report.pdf
+report.pdf
+*.html.tmp
+test_report.html
+audit-report.html
+report.html
 out.json
 report.json
+scan-results.json
 patches/
 uploads/
 given-data/
+scratch/
+scratch_video/
+*.patch.tmp
 
-# Environment files
+# --- Temporary Media & Render Scratch ---
+*.mp3
+*.wav
+test_frame.png
+test_audio.mp3
+!code-dpdp-project-demo.mp4
+
+# --- Environment & Secret Variables ---
 .env
 .env.local
 .env.*.local
+.env.development
+.env.test
+.env.production
+!.env.example
 
-# OS generated files
+# --- IDE & Editor Artifacts ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+
+# --- Operating System Files ---
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
+
+# --- Logs & Temp ---
+logs/
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
